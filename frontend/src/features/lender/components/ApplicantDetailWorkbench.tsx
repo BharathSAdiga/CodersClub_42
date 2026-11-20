@@ -44,6 +44,7 @@ import {
   Cell
 } from 'recharts';
 import { mockPipelineApplications, PipelineItem } from '../data/mockPipeline';
+import { QuaiAnchorCard } from '@/components/interactive/QuaiAnchorCard';
 import { toast } from 'sonner';
 
 interface ApplicantDetailWorkbenchProps {
@@ -234,6 +235,13 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
           </Button>
         </div>
       </div>
+
+      {/* Quai Network Trust Anchor Banner */}
+      <QuaiAnchorCard
+        applicationId={application.id}
+        vitalityScore={application.acieScore}
+        scoreBand={application.scoreBand}
+      />
 
       {/* 5-Tab Navigation Pill Bar */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-brand-charcoal/5 rounded-2xl w-full overflow-x-auto">
