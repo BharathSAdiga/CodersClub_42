@@ -213,12 +213,12 @@ export function App() {
           />
         )}
         {borrowerView === '/borrower/apply' && (
-          <ApplicationCreationView 
+          <ApplicationCreationView
             onComplete={() => setBorrowerView('/borrower/tracking')}
           />
         )}
         {borrowerView === '/borrower/onboarding' && (
-          <OnboardingWizard 
+          <OnboardingWizard
             onComplete={() => setBorrowerView('/borrower/dashboard')}
           />
         )}
@@ -262,7 +262,7 @@ export function App() {
   // ==========================================
   return (
     <div className="min-h-screen bg-brand-ivory text-brand-charcoal flex flex-col justify-between selection:bg-brand-forest selection:text-white">
-      
+
       {/* Floating Capsule Navbar (Faithful to reference video) */}
       <Navbar
         activePersonaName={`${activePersona.name} (${activePersona.badge.split(' ')[0]})`}
@@ -289,7 +289,7 @@ export function App() {
 
       {/* Hero Section with Parallax Background Atmosphere */}
       <section id="hero-sec" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
-        
+
         {/* Cinematic Video Parallax Background Layer */}
         <CinematicHeroBackground />
 
@@ -301,14 +301,6 @@ export function App() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto mb-16">
-            
-            {/* Pill Tag with subtle reveal */}
-            <ScrollReveal direction="down" duration={0.6}>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-forest/10 border border-brand-forest/20 text-brand-forest text-xs font-mono font-medium tracking-wide mb-6">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>THE BIG HACK 2.0 • FINANCE TRACK F2</span>
-              </div>
-            </ScrollReveal>
 
             {/* Display Heading with Staggered Entrance */}
             <ScrollReveal direction="up" delay={0.1} duration={0.8}>
@@ -481,7 +473,7 @@ export function App() {
       {/* Full-width Brand Footer (Inspired by reference video) */}
       <footer className="w-full bg-brand-charcoal text-white pt-16 pb-12 overflow-hidden border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between min-h-[400px]">
-          
+
           {/* Top navigation row */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-12 border-b border-white/10">
             <div>
