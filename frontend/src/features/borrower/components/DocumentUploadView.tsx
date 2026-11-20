@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+<<<<<<< HEAD
 import { 
   UploadCloud, 
   FileText, 
@@ -13,6 +14,9 @@ import {
   ShieldAlert,
   Info
 } from 'lucide-react';
+=======
+import { UploadCloud, FileText, CheckCircle2, Lock, AlertCircle, Trash2 } from 'lucide-react';
+>>>>>>> origin/feature/harshitha-finance
 import { toast } from 'sonner';
 
 interface MockDocument {
@@ -21,6 +25,7 @@ interface MockDocument {
   size: string;
   type: string;
   status: 'VERIFIED' | 'UPLOADING';
+<<<<<<< HEAD
   provenance: 'INDEPENDENTLY_VERIFIED' | 'SOURCE_LABELLED' | 'SELF_REPORTED';
   recordCount?: number;
 }
@@ -32,11 +37,25 @@ export const DocumentUploadView: React.FC = () => {
     { id: 'doc_2', name: 'Udyam_Registration_Certificate.pdf', size: '850 KB', type: 'UDYAM', status: 'VERIFIED', provenance: 'INDEPENDENTLY_VERIFIED' },
     { id: 'doc_3', name: 'Shop_Establishment_License.jpg', size: '2.1 MB', type: 'LICENSE', status: 'VERIFIED', provenance: 'INDEPENDENTLY_VERIFIED' },
     { id: 'doc_4', name: 'Daily_Sales_Cashbook_Q3.csv', size: '340 KB', type: 'CASHBOOK_REGISTER', status: 'VERIFIED', provenance: 'SELF_REPORTED', recordCount: 184 },
+=======
+  progress?: number;
+}
+
+export const DocumentUploadView: React.FC = () => {
+  const [documents, setDocuments] = useState<MockDocument[]>([
+    { id: 'doc_1', name: 'PAN_Card_SriBalaji.pdf', size: '1.2 MB', type: 'PAN_CARD', status: 'VERIFIED' },
+    { id: 'doc_2', name: 'Udyam_Registration_Certificate.pdf', size: '850 KB', type: 'UDYAM', status: 'VERIFIED' },
+    { id: 'doc_3', name: 'Shop_Establishment_License.jpg', size: '2.1 MB', type: 'LICENSE', status: 'VERIFIED' },
+>>>>>>> origin/feature/harshitha-finance
   ]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
+<<<<<<< HEAD
   const handleSimulateUpload = (e: React.ChangeEvent<HTMLInputElement>, isCsv = false) => {
+=======
+  const handleSimulateUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+>>>>>>> origin/feature/harshitha-finance
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -57,6 +76,7 @@ export const DocumentUploadView: React.FC = () => {
             id: `doc_${Date.now()}`,
             name: file.name,
             size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+<<<<<<< HEAD
             type: isCsv ? 'CASHBOOK_REGISTER' : 'ADDITIONAL_DOC',
             status: 'VERIFIED',
             provenance: isCsv ? 'SELF_REPORTED' : 'SOURCE_LABELLED',
@@ -68,6 +88,13 @@ export const DocumentUploadView: React.FC = () => {
               ? `${file.name} ingested as self-reported offline transactions (${newDoc.recordCount} rows).` 
               : `${file.name} uploaded and encrypted via AES-256.`
           );
+=======
+            type: 'ADDITIONAL_DOC',
+            status: 'VERIFIED',
+          };
+          setDocuments((d) => [newDoc, ...d]);
+          toast.success(`${file.name} uploaded and encrypted via AES-256.`);
+>>>>>>> origin/feature/harshitha-finance
           return 100;
         }
         return prev + 30;
@@ -84,6 +111,7 @@ export const DocumentUploadView: React.FC = () => {
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
       <div>
         <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
+<<<<<<< HEAD
           Encrypted Storage & Evidence Provenance
         </span>
         <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
@@ -120,16 +148,34 @@ export const DocumentUploadView: React.FC = () => {
         </button>
       </div>
 
+=======
+          Encrypted Storage
+        </span>
+        <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
+          Document Vault & KYC Artifacts
+        </h2>
+        <p className="text-xs text-brand-charcoal/60 mt-0.5">
+          All files are client-side verified and encrypted with AES-256 before mock ingestion.
+        </p>
+      </div>
+
+>>>>>>> origin/feature/harshitha-finance
       {/* Upload Dropzone */}
       <div className="p-8 rounded-3xl bg-white border-2 border-dashed border-brand-forest/25 hover:border-brand-forest transition-colors text-center relative overflow-hidden">
         <input 
           type="file"
+<<<<<<< HEAD
           accept={activeTab === 'CSV_CASHBOOK' ? '.csv,.xlsx,.txt' : '.pdf,.png,.jpg,.jpeg'}
           onChange={(e) => handleSimulateUpload(e, activeTab === 'CSV_CASHBOOK')}
+=======
+          accept=".pdf,.png,.jpg,.jpeg"
+          onChange={handleSimulateUpload}
+>>>>>>> origin/feature/harshitha-finance
           disabled={isUploading}
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
         <div className="w-12 h-12 rounded-2xl bg-brand-forest/10 text-brand-forest flex items-center justify-center mx-auto mb-3">
+<<<<<<< HEAD
           {activeTab === 'CSV_CASHBOOK' ? (
             <FileSpreadsheet className="w-6 h-6 text-brand-forest" />
           ) : (
@@ -145,12 +191,25 @@ export const DocumentUploadView: React.FC = () => {
           {activeTab === 'CSV_CASHBOOK'
             ? 'Format: Date, Amount, Description, Counterparty (Max 5MB)'
             : 'Supported: PDF, JPG, PNG (Max 5MB per file)'}
+=======
+          <UploadCloud className="w-6 h-6" />
+        </div>
+        <h4 className="font-display font-bold text-sm text-brand-charcoal">
+          Click or drag files to upload
+        </h4>
+        <p className="text-xs text-brand-charcoal/50 mt-1">
+          Supported: PDF, JPG, PNG (Max 5MB per file)
+>>>>>>> origin/feature/harshitha-finance
         </p>
 
         {isUploading && (
           <div className="mt-4 max-w-xs mx-auto space-y-1">
             <div className="flex justify-between text-[10px] text-brand-charcoal/60">
+<<<<<<< HEAD
               <span>Encrypting and validating schema...</span>
+=======
+              <span>Encrypting and uploading...</span>
+>>>>>>> origin/feature/harshitha-finance
               <span className="font-mono">{uploadProgress}%</span>
             </div>
             <div className="w-full bg-brand-forest/10 h-2 rounded-full overflow-hidden">
@@ -163,6 +222,7 @@ export const DocumentUploadView: React.FC = () => {
         )}
       </div>
 
+<<<<<<< HEAD
       {/* Data Provenance Transparency Notice */}
       <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
         <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
@@ -176,6 +236,13 @@ export const DocumentUploadView: React.FC = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">Ingested Evidence Artifacts ({documents.length})</CardTitle>
+=======
+      {/* Document Vault List */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">Verified Enterprise Documents ({documents.length})</CardTitle>
+>>>>>>> origin/feature/harshitha-finance
             <span className="text-xs text-brand-forest font-medium flex items-center gap-1">
               <Lock className="w-3.5 h-3.5 text-brand-mint" />
               AES-256 Storage
@@ -185,6 +252,7 @@ export const DocumentUploadView: React.FC = () => {
         <CardContent>
           <div className="space-y-3">
             {documents.map((doc) => (
+<<<<<<< HEAD
               <div key={doc.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-2xl bg-brand-ivory border border-brand-forest/10 text-xs gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-brand-forest/10 text-brand-forest flex items-center justify-center shrink-0">
@@ -216,11 +284,28 @@ export const DocumentUploadView: React.FC = () => {
                     {doc.provenance.replace('_', ' ')}
                   </Badge>
 
+=======
+              <div key={doc.id} className="flex items-center justify-between p-3.5 rounded-2xl bg-brand-ivory border border-brand-forest/10 text-xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-brand-forest/10 text-brand-forest flex items-center justify-center">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="text-brand-charcoal block">{doc.name}</strong>
+                    <span className="text-[10px] text-brand-charcoal/50">{doc.size} · {doc.type}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+>>>>>>> origin/feature/harshitha-finance
                   <span className="flex items-center gap-1 text-emerald-700 font-semibold text-[11px]">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     Verified
                   </span>
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/feature/harshitha-finance
                   <button 
                     onClick={() => handleDelete(doc.id)}
                     className="p-1.5 rounded-lg text-brand-charcoal/40 hover:text-red-600 hover:bg-red-50 transition-colors"

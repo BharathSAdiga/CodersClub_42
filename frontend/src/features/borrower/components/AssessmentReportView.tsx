@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PersonaProfile } from '@/types';
+<<<<<<< HEAD
 import { 
   Sparkles, 
   Check, 
@@ -15,11 +16,15 @@ import {
   TrendingUp,
   Scale
 } from 'lucide-react';
+=======
+import { Sparkles, Check, AlertCircle, Info, ShieldCheck } from 'lucide-react';
+>>>>>>> origin/feature/harshitha-finance
 
 export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> = ({ activePersona }) => {
   const report = activePersona.acieReport;
   const drivers = report?.topDrivers || [];
 
+<<<<<<< HEAD
   // Canonical 5-Dimension Business Financial DNA Breakdown
   const financialDnaDimensions = [
     {
@@ -74,14 +79,23 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
     }
   ];
 
+=======
+>>>>>>> origin/feature/harshitha-finance
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
       <div>
         <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
+<<<<<<< HEAD
           Explainable Credit Intelligence & Business DNA
         </span>
         <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
           ACIE Assessment & 5-Dimension Business DNA
+=======
+          Explainable Credit Intelligence
+        </span>
+        <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
+          ACIE Assessment & SHAP Feature Report
+>>>>>>> origin/feature/harshitha-finance
         </h2>
         <p className="text-xs text-brand-charcoal/60 mt-0.5">
           Full mathematical transparency on every factor influencing your pre-approved working capital limit.
@@ -96,7 +110,11 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
           </span>
           <div className="flex items-baseline gap-3 my-2">
             <span className="text-5xl font-display font-extrabold text-white font-mono">
+<<<<<<< HEAD
               {report?.creditVitalityScore || 768}
+=======
+              {report?.creditVitalityScore || 742}
+>>>>>>> origin/feature/harshitha-finance
             </span>
             <span className="text-sm text-white/50 font-mono">/ 900</span>
           </div>
@@ -110,11 +128,16 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
             {report?.scoreBand || 'PRIME'} BAND
           </Badge>
           <span className="text-[11px] text-white/60 block mt-2">
+<<<<<<< HEAD
             Eligible for immediate institutional sanction up to ₹1,50,000.
+=======
+            Eligible for immediate institutional sanction up to ₹2,50,000.
+>>>>>>> origin/feature/harshitha-finance
           </span>
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* 5-Dimension Business Financial DNA Scorecard (Feature 4 Requirement) */}
       <Card>
         <CardHeader>
@@ -182,6 +205,8 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
         </CardContent>
       </Card>
 
+=======
+>>>>>>> origin/feature/harshitha-finance
       {/* Bi-Directional SHAP Drivers Waterfall */}
       <Card>
         <CardHeader>

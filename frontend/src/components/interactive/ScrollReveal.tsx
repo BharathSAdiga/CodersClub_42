@@ -10,13 +10,17 @@ interface ScrollRevealProps {
   className?: string;
   staggerChildren?: number;
   once?: boolean;
+<<<<<<< HEAD
   scale?: number;
+=======
+>>>>>>> origin/feature/harshitha-finance
 }
 
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
   direction = 'up',
   delay = 0,
+<<<<<<< HEAD
   duration = 0.75,
   distance = 36,
   className = '',
@@ -40,6 +44,29 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       case 'none':
       default:
         return { opacity: 0, scale: baseScale };
+=======
+  duration = 0.7,
+  distance = 32,
+  className = '',
+  once = true,
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once, margin: '-60px 0px' });
+
+  const getInitialPosition = () => {
+    switch (direction) {
+      case 'up':
+        return { opacity: 0, y: distance };
+      case 'down':
+        return { opacity: 0, y: -distance };
+      case 'left':
+        return { opacity: 0, x: distance };
+      case 'right':
+        return { opacity: 0, x: -distance };
+      case 'none':
+      default:
+        return { opacity: 0, scale: 0.98 };
+>>>>>>> origin/feature/harshitha-finance
     }
   };
 
@@ -47,10 +74,17 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
     switch (direction) {
       case 'up':
       case 'down':
+<<<<<<< HEAD
         return { opacity: 1, y: 0, scale: 1 };
       case 'left':
       case 'right':
         return { opacity: 1, x: 0, scale: 1 };
+=======
+        return { opacity: 1, y: 0 };
+      case 'left':
+      case 'right':
+        return { opacity: 1, x: 0 };
+>>>>>>> origin/feature/harshitha-finance
       case 'none':
       default:
         return { opacity: 1, scale: 1 };
@@ -65,7 +99,11 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       transition={{
         duration,
         delay,
+<<<<<<< HEAD
         ease: [0.16, 1, 0.3, 1], // Apple-style fluid spring decel curve
+=======
+        ease: [0.21, 0.47, 0.32, 0.98], // Spring-like natural decel curve
+>>>>>>> origin/feature/harshitha-finance
       }}
       className={className}
     >
@@ -88,7 +126,11 @@ export const TextRevealByLine: React.FC<{
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
       opacity: 1,
+<<<<<<< HEAD
       transition: { staggerChildren: 0.045, delayChildren: delay * i },
+=======
+      transition: { staggerChildren: 0.04, delayChildren: delay * i },
+>>>>>>> origin/feature/harshitha-finance
     }),
   };
 
@@ -98,17 +140,30 @@ export const TextRevealByLine: React.FC<{
       y: 0,
       transition: {
         type: 'spring',
+<<<<<<< HEAD
         damping: 18,
         stiffness: 140,
+=======
+        damping: 15,
+        stiffness: 120,
+>>>>>>> origin/feature/harshitha-finance
       },
     },
     hidden: {
       opacity: 0,
+<<<<<<< HEAD
       y: 22,
       transition: {
         type: 'spring',
         damping: 18,
         stiffness: 140,
+=======
+      y: 20,
+      transition: {
+        type: 'spring',
+        damping: 15,
+        stiffness: 120,
+>>>>>>> origin/feature/harshitha-finance
       },
     },
   };

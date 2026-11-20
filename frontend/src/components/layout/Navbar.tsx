@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserRole } from '@/types';
 import { ShieldCheck, ChevronDown, User, Sparkles } from 'lucide-react';
+<<<<<<< HEAD
 import { motion, useScroll, useSpring } from 'framer-motion';
+=======
+import { motion, useScroll } from 'framer-motion';
+>>>>>>> origin/feature/harshitha-finance
 
 interface NavbarProps {
   activeSection?: string;
@@ -18,12 +22,16 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenPersonaModal,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+<<<<<<< HEAD
   const { scrollY, scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
+=======
+  const { scrollY } = useScroll();
+>>>>>>> origin/feature/harshitha-finance
 
   useEffect(() => {
     return scrollY.on('change', (latest) => {
@@ -40,22 +48,32 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
+<<<<<<< HEAD
     <header className="fixed top-4 inset-x-0 z-50 flex flex-col items-center px-4 pointer-events-none">
       
       {/* Top Floating Capsule Nav */}
       <nav 
         className={`pointer-events-auto relative overflow-hidden flex items-center justify-between w-full max-w-5xl h-14 px-5 rounded-full backdrop-blur-md border shadow-elevated text-brand-ivory transition-all duration-300 ${
+=======
+    <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+      <nav 
+        className={`pointer-events-auto flex items-center justify-between w-full max-w-5xl h-14 px-5 rounded-full backdrop-blur-md border shadow-elevated text-brand-ivory transition-all duration-300 ${
+>>>>>>> origin/feature/harshitha-finance
           isScrolled 
             ? 'bg-brand-charcoal/95 border-white/20 shadow-2xl scale-[0.99]' 
             : 'bg-brand-charcoal/80 border-white/10'
         }`}
       >
+<<<<<<< HEAD
         {/* Subtle Reading Progress Indicator Line inside Navbar Bottom */}
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-mint via-brand-terracotta to-brand-mint origin-left"
           style={{ scaleX }}
         />
 
+=======
+        
+>>>>>>> origin/feature/harshitha-finance
         {/* Brand Logo */}
         <div 
           onClick={() => onNavigate?.('home')}
@@ -76,17 +94,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               key={link.id}
               onClick={() => onNavigate?.(link.id)}
+<<<<<<< HEAD
               className={`hover:text-brand-mint transition-colors py-1 relative ${
+=======
+              className={`hover:text-brand-mint transition-colors py-1 ${
+>>>>>>> origin/feature/harshitha-finance
                 activeSection === link.id ? 'text-brand-mint font-semibold' : ''
               }`}
             >
               {link.label}
+<<<<<<< HEAD
               {activeSection === link.id && (
                 <motion.span
                   layoutId="activeNavIndicator"
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-mint rounded-full"
                 />
               )}
+=======
+>>>>>>> origin/feature/harshitha-finance
             </button>
           ))}
         </div>

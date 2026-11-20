@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
+=======
+import React from 'react';
+>>>>>>> origin/feature/harshitha-finance
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,12 +17,16 @@ import {
   CheckCircle2, 
   Clock, 
   TrendingUp,
+<<<<<<< HEAD
   FileText,
   Award,
   Download,
   Printer,
   Scale,
   X
+=======
+  FileText
+>>>>>>> origin/feature/harshitha-finance
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -31,7 +39,10 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
   activePersona,
   onNavigate,
 }) => {
+<<<<<<< HEAD
   const [isPassportModalOpen, setIsPassportModalOpen] = useState(false);
+=======
+>>>>>>> origin/feature/harshitha-finance
   const app = activePersona.application;
   const approvedLimit = app?.approvedAmount || 150000;
   const availableToWithdraw = approvedLimit * 0.85;
@@ -40,11 +51,14 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
     toast.success(`Disbursal initiated! ₹${(availableToWithdraw).toLocaleString('en-IN')} queued to ${activePersona.financials?.accounts[0]?.bankName || 'verified account'}.`);
   };
 
+<<<<<<< HEAD
   const handlePrintPassport = () => {
     toast.success('Business Financial Passport exported as verifiable PDF credential.');
     setIsPassportModalOpen(false);
   };
 
+=======
+>>>>>>> origin/feature/harshitha-finance
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       
@@ -64,6 +78,7 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
 
         <div className="flex items-center gap-3">
           <Button 
+<<<<<<< HEAD
             variant="outline" 
             size="sm" 
             onClick={() => setIsPassportModalOpen(true)}
@@ -74,6 +89,8 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
           </Button>
 
           <Button 
+=======
+>>>>>>> origin/feature/harshitha-finance
             variant="accent" 
             size="pill" 
             onClick={handleWithdrawFunds}
@@ -106,19 +123,30 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
         {/* Available to Draw */}
         <Card>
           <CardHeader className="pb-2">
+<<<<<<< HEAD
             <span className="text-xs font-mono uppercase text-brand-charcoal/50">Available Drawing Power</span>
             <CardTitle className="text-3xl font-mono text-brand-charcoal">
+=======
+            <span className="text-xs font-mono uppercase text-brand-charcoal/50">Available to Draw</span>
+            <CardTitle className="text-3xl font-mono text-emerald-800">
+>>>>>>> origin/feature/harshitha-finance
               {formatINR(availableToWithdraw)}
             </CardTitle>
           </CardHeader>
           <CardContent>
+<<<<<<< HEAD
             <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
               Instant IMPS / NEFT Credit
+=======
+            <span className="text-xs text-emerald-700 font-medium">
+              Instant disbursal via UPI
+>>>>>>> origin/feature/harshitha-finance
             </span>
           </CardContent>
         </Card>
 
+<<<<<<< HEAD
         {/* ACIE Vitality Score */}
         <Card>
           <CardHeader className="pb-2">
@@ -148,16 +176,54 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
           <CardContent>
             <span className="text-xs text-brand-charcoal/60">
               Auto-deducted via UPI evening closing
+=======
+        {/* Next Sachet Sweep */}
+        <Card>
+          <CardHeader className="pb-2">
+            <span className="text-xs font-mono uppercase text-brand-charcoal/50">Evening Sachet Sweep</span>
+            <CardTitle className="text-3xl font-mono text-brand-charcoal">
+              {formatINR(app?.repaymentAmountPerCycle || 1720)}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <span className="text-xs text-brand-charcoal/60 flex items-center gap-1">
+              <Clock className="w-3 h-3 text-brand-terracotta" />
+              Next sweep: Today at 21:00 IST
+            </span>
+          </CardContent>
+        </Card>
+
+        {/* ACIE Credit Vitality */}
+        <Card className="cursor-pointer hover:border-brand-forest/40 transition-colors" onClick={() => onNavigate('/borrower/assessment')}>
+          <CardHeader className="pb-2">
+            <span className="text-xs font-mono uppercase text-brand-charcoal/50">ACIE Vitality</span>
+            <CardTitle className="text-3xl font-mono text-brand-forest flex items-center justify-between">
+              <span>{activePersona.acieReport?.creditVitalityScore || 742}</span>
+              <Badge variant="mint">PRIME</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <span className="text-xs text-brand-forest font-semibold flex items-center gap-1">
+              <span>Explore SHAP Drivers</span>
+              <ArrowUpRight className="w-3 h-3" />
+>>>>>>> origin/feature/harshitha-finance
             </span>
           </CardContent>
         </Card>
 
       </div>
 
+<<<<<<< HEAD
       {/* Navigation Shortcuts to Key Views */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Financial Health Hub */}
+=======
+      {/* Quick Navigation Action Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        {/* Cash-Flow Health Mirror */}
+>>>>>>> origin/feature/harshitha-finance
         <div 
           onClick={() => onNavigate('/borrower/health')}
           className="p-6 rounded-3xl bg-white border border-brand-forest/15 hover:border-brand-forest shadow-soft cursor-pointer transition-all hover:-translate-y-0.5"
@@ -165,6 +231,7 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
           <div className="w-10 h-10 rounded-2xl bg-brand-forest/10 flex items-center justify-center text-brand-forest mb-4">
             <Activity className="w-5 h-5" />
           </div>
+<<<<<<< HEAD
           <h4 className="font-display font-bold text-base text-brand-charcoal">Real-Time Cash-Flow Pulse</h4>
           <p className="text-xs text-brand-charcoal/70 mt-1 leading-relaxed">
             Track daily UPI inflows, expense burn ratios, and seasonal sales rhythm from your bank stream.
@@ -175,6 +242,18 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
         </div>
 
         {/* What-If Simulator */}
+=======
+          <h4 className="font-display font-bold text-base text-brand-charcoal">Cash-Flow Health Mirror</h4>
+          <p className="text-xs text-brand-charcoal/70 mt-1 leading-relaxed">
+            View your 30-day stream of daily shop collections, average balance, and liquidity cushion.
+          </p>
+          <span className="text-xs font-bold text-brand-forest mt-4 inline-flex items-center gap-1">
+            Open Mirror <ArrowUpRight className="w-3 h-3" />
+          </span>
+        </div>
+
+        {/* "What-If" Credit Simulator */}
+>>>>>>> origin/feature/harshitha-finance
         <div 
           onClick={() => onNavigate('/borrower/insights')}
           className="p-6 rounded-3xl bg-white border border-brand-forest/15 hover:border-brand-forest shadow-soft cursor-pointer transition-all hover:-translate-y-0.5"
@@ -221,9 +300,15 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
         <CardContent>
           <div className="space-y-3">
             {[
+<<<<<<< HEAD
               { title: 'Evening Sachet Repayment Cleared', date: 'Yesterday, 21:02 IST', amount: '-₹1,890', status: 'SUCCESS' },
               { title: 'Daily UPI QR Volume Reconciled', date: 'Yesterday, 19:45 IST', amount: '+₹24,850', status: 'STREAMED' },
               { title: 'Evening Sachet Repayment Cleared', date: '18 Nov, 21:01 IST', amount: '-₹1,890', status: 'SUCCESS' },
+=======
+              { title: 'Evening Sachet Repayment Cleared', date: 'Yesterday, 21:02 IST', amount: '-₹1,720', status: 'SUCCESS' },
+              { title: 'Daily UPI QR Volume Reconciled', date: 'Yesterday, 19:45 IST', amount: '+₹24,850', status: 'STREAMED' },
+              { title: 'Evening Sachet Repayment Cleared', date: '18 Nov, 21:01 IST', amount: '-₹1,720', status: 'SUCCESS' },
+>>>>>>> origin/feature/harshitha-finance
               { title: 'Working Capital Facility Initialized', date: '15 Nov, 14:30 IST', amount: '+₹1,50,000', status: 'SANCTION' },
             ].map((tx, idx) => (
               <div key={idx} className="flex items-center justify-between p-3.5 rounded-2xl bg-brand-ivory border border-brand-forest/10 text-xs">
@@ -252,6 +337,7 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
         </CardContent>
       </Card>
 
+<<<<<<< HEAD
       {/* Feature 14: Business Financial Passport Modal */}
       {isPassportModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-charcoal/60 backdrop-blur-sm animate-in fade-in duration-200">
@@ -359,6 +445,8 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
         </div>
       )}
 
+=======
+>>>>>>> origin/feature/harshitha-finance
     </div>
   );
 };

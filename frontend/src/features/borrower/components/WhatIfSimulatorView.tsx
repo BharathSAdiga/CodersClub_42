@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatINR } from '@/lib/utils';
+<<<<<<< HEAD
 import { 
   Sparkles, 
   Sliders, 
@@ -31,6 +32,16 @@ export const WhatIfSimulatorView: React.FC = () => {
   const [selectedStressPreset, setSelectedStressPreset] = useState<StressPresetKey>('NORMAL');
 
   // Dynamic calculations for Counterfactual growth
+=======
+import { Sparkles, Sliders, TrendingUp, CheckCircle2, ArrowRight } from 'lucide-react';
+import { toast } from 'sonner';
+
+export const WhatIfSimulatorView: React.FC = () => {
+  const [admb, setAdmb] = useState<number>(18450);
+  const [monthlyUpi, setMonthlyUpi] = useState<number>(512000);
+
+  // Dynamic calculations
+>>>>>>> origin/feature/harshitha-finance
   const baseLimit = 150000;
   const admbDeltaBonus = Math.max(0, (admb - 15000) * 4);
   const upiDeltaBonus = Math.max(0, (monthlyUpi - 400000) * 0.22);
@@ -38,6 +49,7 @@ export const WhatIfSimulatorView: React.FC = () => {
   const unlockedIncrease = projectedLimit - baseLimit;
   const projectedApr = Math.max(11.8, Number((14.5 - (unlockedIncrease / 100000) * 0.45).toFixed(1)));
 
+<<<<<<< HEAD
   // Cash-Flow Twin 6-Scenario Stress Simulation Data (Feature 7 Requirement)
   const stressPresets: Record<StressPresetKey, {
     label: string;
@@ -106,6 +118,8 @@ export const WhatIfSimulatorView: React.FC = () => {
 
   const activeStress = stressPresets[selectedStressPreset];
 
+=======
+>>>>>>> origin/feature/harshitha-finance
   const handleApplySimulatedTarget = () => {
     toast.success(`Target roadmap saved! Maintain ₹${admb.toLocaleString('en-IN')} ADMB for 30 days to unlock ${formatINR(projectedLimit)}.`);
   };
@@ -114,6 +128,7 @@ export const WhatIfSimulatorView: React.FC = () => {
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
       <div>
         <span className="text-xs font-mono uppercase tracking-wider text-brand-terracotta font-bold">
+<<<<<<< HEAD
           Empowerment Coaching & Stress Testing
         </span>
         <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
@@ -205,6 +220,18 @@ export const WhatIfSimulatorView: React.FC = () => {
       </Card>
 
       {/* Part 2: Counterfactual Path-to-Yes Levers (Feature 12) */}
+=======
+          Empowerment Coaching
+        </span>
+        <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
+          Counterfactual "What-If" Credit Simulator
+        </h2>
+        <p className="text-xs text-brand-charcoal/60 mt-0.5">
+          See exactly how specific operational improvements will automatically boost your credit limit and slash your interest rates.
+        </p>
+      </div>
+
+>>>>>>> origin/feature/harshitha-finance
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Sliders (7 cols) */}
@@ -249,8 +276,13 @@ export const WhatIfSimulatorView: React.FC = () => {
                 </div>
                 <input
                   type="range"
+<<<<<<< HEAD
                   min="350000"
                   max="900000"
+=======
+                  min="400000"
+                  max="1200000"
+>>>>>>> origin/feature/harshitha-finance
                   step="25000"
                   value={monthlyUpi}
                   onChange={(e) => setMonthlyUpi(Number(e.target.value))}
@@ -258,6 +290,7 @@ export const WhatIfSimulatorView: React.FC = () => {
                 />
               </div>
 
+<<<<<<< HEAD
               <div className="p-3.5 rounded-2xl bg-brand-forest/5 border border-brand-forest/15 text-xs flex items-start gap-2.5">
                 <Sparkles className="w-4 h-4 text-brand-mint shrink-0 mt-0.5" />
                 <p className="text-brand-charcoal/80 leading-relaxed text-[11px]">
@@ -272,10 +305,21 @@ export const WhatIfSimulatorView: React.FC = () => {
               >
                 Save This Target to My Action Plan
               </Button>
+=======
+              {/* Actionable Recourse Note */}
+              <div className="p-4 rounded-2xl bg-brand-forest/5 border border-brand-forest/15 text-xs text-brand-charcoal/80 space-y-1">
+                <span className="font-bold text-brand-forest block">Actionable Recourse:</span>
+                <p>
+                  "Achieving an ADMB of {formatINR(admb)} across the next 30 days provides verified liquidity stability, unlocking an immediate facility upgrade."
+                </p>
+              </div>
+
+>>>>>>> origin/feature/harshitha-finance
             </CardContent>
           </Card>
         </div>
 
+<<<<<<< HEAD
         {/* Dynamic Simulated Outcome Card (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
           <div className="p-6 rounded-3xl bg-brand-charcoal text-brand-ivory border border-white/10 shadow-elevated space-y-6">
@@ -309,6 +353,57 @@ export const WhatIfSimulatorView: React.FC = () => {
             <p className="text-[10px] text-white/50 leading-relaxed pt-2 border-t border-white/10">
               *Projections are indicative and depend on continuous Account Aggregator synchronization and underwriter review.
             </p>
+=======
+        {/* Real-Time Projected Output Card (5 cols) */}
+        <div className="lg:col-span-5">
+          <div className="rounded-3xl p-6 bg-brand-forest text-brand-ivory border border-brand-forest/30 shadow-card space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-white/15">
+              <span className="text-xs font-mono uppercase tracking-wider text-brand-mint font-bold flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-brand-mint" />
+                Projected Capacity
+              </span>
+              <Badge variant="mint" className="text-[10px]">
+                +{formatINR(unlockedIncrease)}
+              </Badge>
+            </div>
+
+            <div>
+              <span className="text-xs text-white/70 block">Estimated Credit Line</span>
+              <div className="text-4xl font-display font-extrabold text-white tracking-tight font-mono my-1">
+                {formatINR(projectedLimit)}
+              </div>
+              <span className="text-[11px] text-white/60">
+                Unlocked within 30 days of consistent metrics
+              </span>
+            </div>
+
+            <div className="space-y-2 py-3 border-t border-white/15 text-xs text-white/80">
+              <div className="flex justify-between">
+                <span>Baseline Line:</span>
+                <span className="font-mono text-white">{formatINR(baseLimit)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Projected APR:</span>
+                <span className="font-mono text-brand-mint font-bold">{projectedApr}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Daily Sweep Capacity:</span>
+                <span className="font-mono text-white font-bold">
+                  {formatINR(Math.round((projectedLimit * 1.13) / 90))} / day
+                </span>
+              </div>
+            </div>
+
+            <Button
+              variant="accent"
+              size="lg"
+              onClick={handleApplySimulatedTarget}
+              className="w-full gap-2 mt-2"
+            >
+              <span>Commit to Target Growth</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+>>>>>>> origin/feature/harshitha-finance
           </div>
         </div>
 

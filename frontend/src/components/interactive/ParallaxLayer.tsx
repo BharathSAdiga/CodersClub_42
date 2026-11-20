@@ -20,18 +20,25 @@ export const ParallaxLayer: React.FC<ParallaxWrapperProps> = ({
     offset: ['start end', 'end start'],
   });
 
+<<<<<<< HEAD
   // Apply smooth physics transform without layout thrashing
+=======
+>>>>>>> origin/feature/harshitha-finance
   const y = useTransform(scrollYProgress, [0, 1], [-speed, speed]);
   const rotateVal = useTransform(scrollYProgress, [0, 1], [-rotate, rotate]);
 
   return (
     <motion.div
       ref={ref}
+<<<<<<< HEAD
       style={{ 
         y, 
         rotate: rotate !== 0 ? rotateVal : undefined,
         willChange: 'transform'
       }}
+=======
+      style={{ y, rotate: rotate !== 0 ? rotateVal : undefined }}
+>>>>>>> origin/feature/harshitha-finance
       className={className}
     >
       {children}

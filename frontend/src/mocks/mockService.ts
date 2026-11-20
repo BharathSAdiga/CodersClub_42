@@ -12,6 +12,7 @@ class CentralizedMockService {
   private latencyMs: number = 250;
 
   constructor() {
+<<<<<<< HEAD
     if (typeof window !== 'undefined') {
       try {
         const storedCustom: PersonaProfile[] = JSON.parse(sessionStorage.getItem('udyoga_custom_personas') || '[]');
@@ -23,6 +24,8 @@ class CentralizedMockService {
       }
     }
 
+=======
+>>>>>>> origin/feature/harshitha-finance
     const saved = typeof window !== 'undefined' ? sessionStorage.getItem('udyoga_active_persona') : null;
     if (saved && mockPersonas[saved]) {
       this.activePersonaKey = saved;
@@ -52,6 +55,7 @@ class CentralizedMockService {
     return Object.values(mockPersonas);
   }
 
+<<<<<<< HEAD
   public registerCustomPersona(newPersona: PersonaProfile): PersonaProfile {
     mockPersonas[newPersona.id] = newPersona;
     if (typeof window !== 'undefined') {
@@ -66,6 +70,8 @@ class CentralizedMockService {
     return newPersona;
   }
 
+=======
+>>>>>>> origin/feature/harshitha-finance
   // Applications
   public async getApplications(): Promise<CreditApplication[]> {
     await this.delay();

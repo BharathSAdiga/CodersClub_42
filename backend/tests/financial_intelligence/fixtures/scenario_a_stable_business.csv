@@ -1,0 +1,37 @@
+transaction_id,date,amount,direction,category,channel,counterparty_id,counterparty_name,description,is_recurring
+TXN-A-001,2024-05-02,12500.00,CREDIT,REVENUE,UPI,CUST-01,Sharma Traders,Daily customer sales collection,false
+TXN-A-002,2024-05-05,45000.00,CREDIT,REVENUE,NEFT,CUST-02,Apex Retails,Bulk inventory supply invoice 101,false
+TXN-A-003,2024-05-10,18000.00,DEBIT,SUPPLIER_PAYMENT,IMPS,SUPP-01,Kisan Agro Wholesale,Raw ingredient procurement,true
+TXN-A-004,2024-05-15,12000.00,DEBIT,RENT,NEFT,SUPP-02,Prime Realty Estates,Shop commercial lease payment,true
+TXN-A-005,2024-05-20,5000.00,DEBIT,LOAN_REPAYMENT,NACH,LEND-01,Canara Bank MSME Loan,Term loan EMI installment May,true
+TXN-A-006,2024-05-25,32000.00,CREDIT,REVENUE,UPI,CUST-03,Metro Supermarket,Weekly retail supply payout,false
+TXN-A-007,2024-06-02,14000.00,CREDIT,REVENUE,UPI,CUST-01,Sharma Traders,Daily customer sales collection,false
+TXN-A-008,2024-06-05,48000.00,CREDIT,REVENUE,NEFT,CUST-02,Apex Retails,Bulk inventory supply invoice 102,false
+TXN-A-009,2024-06-10,19500.00,DEBIT,SUPPLIER_PAYMENT,IMPS,SUPP-01,Kisan Agro Wholesale,Raw ingredient procurement,true
+TXN-A-010,2024-06-15,12000.00,DEBIT,RENT,NEFT,SUPP-02,Prime Realty Estates,Shop commercial lease payment,true
+TXN-A-011,2024-06-20,5000.00,DEBIT,LOAN_REPAYMENT,NACH,LEND-01,Canara Bank MSME Loan,Term loan EMI installment June,true
+TXN-A-012,2024-06-25,35000.00,CREDIT,REVENUE,UPI,CUST-03,Metro Supermarket,Weekly retail supply payout,false
+TXN-A-013,2024-07-02,13000.00,CREDIT,REVENUE,UPI,CUST-01,Sharma Traders,Daily customer sales collection,false
+TXN-A-014,2024-07-05,46000.00,CREDIT,REVENUE,NEFT,CUST-02,Apex Retails,Bulk inventory supply invoice 103,false
+TXN-A-015,2024-07-10,18500.00,DEBIT,SUPPLIER_PAYMENT,IMPS,SUPP-01,Kisan Agro Wholesale,Raw ingredient procurement,true
+TXN-A-016,2024-07-15,12000.00,DEBIT,RENT,NEFT,SUPP-02,Prime Realty Estates,Shop commercial lease payment,true
+TXN-A-017,2024-07-20,5000.00,DEBIT,LOAN_REPAYMENT,NACH,LEND-01,Canara Bank MSME Loan,Term loan EMI installment July,true
+TXN-A-018,2024-07-25,34000.00,CREDIT,REVENUE,UPI,CUST-03,Metro Supermarket,Weekly retail supply payout,false
+TXN-A-019,2024-08-02,15000.00,CREDIT,REVENUE,UPI,CUST-01,Sharma Traders,Daily customer sales collection,false
+TXN-A-020,2024-08-05,50000.00,CREDIT,REVENUE,NEFT,CUST-02,Apex Retails,Bulk inventory supply invoice 104,false
+TXN-A-021,2024-08-10,21000.00,DEBIT,SUPPLIER_PAYMENT,IMPS,SUPP-01,Kisan Agro Wholesale,Raw ingredient procurement,true
+TXN-A-022,2024-08-15,12000.00,DEBIT,RENT,NEFT,SUPP-02,Prime Realty Estates,Shop commercial lease payment,true
+TXN-A-023,2024-08-20,5000.00,DEBIT,LOAN_REPAYMENT,NACH,LEND-01,Canara Bank MSME Loan,Term loan EMI installment August,true
+TXN-A-024,2024-08-25,36000.00,CREDIT,REVENUE,UPI,CUST-03,Metro Supermarket,Weekly retail supply payout,false
+TXN-A-025,2024-09-02,13500.00,CREDIT,REVENUE,UPI,CUST-01,Sharma Traders,Daily customer sales collection,false
+TXN-A-026,2024-09-05,47000.00,CREDIT,REVENUE,NEFT,CUST-02,Apex Retails,Bulk inventory supply invoice 105,false
+TXN-A-027,2024-09-10,19000.00,DEBIT,SUPPLIER_PAYMENT,IMPS,SUPP-01,Kisan Agro Wholesale,Raw ingredient procurement,true
+TXN-A-028,2024-09-15,12000.00,DEBIT,RENT,NEFT,SUPP-02,Prime Realty Estates,Shop commercial lease payment,true
+TXN-A-029,2024-09-20,5000.00,DEBIT,LOAN_REPAYMENT,NACH,LEND-01,Canara Bank MSME Loan,Term loan EMI installment September,true
+TXN-A-030,2024-09-25,33000.00,CREDIT,REVENUE,UPI,CUST-03,Metro Supermarket,Weekly retail supply payout,false
+TXN-A-031,2024-10-02,16000.00,CREDIT,REVENUE,UPI,CUST-01,Sharma Traders,Daily customer sales collection,false
+TXN-A-032,2024-10-05,52000.00,CREDIT,REVENUE,NEFT,CUST-02,Apex Retails,Bulk inventory supply invoice 106,false
+TXN-A-033,2024-10-10,22000.00,DEBIT,SUPPLIER_PAYMENT,IMPS,SUPP-01,Kisan Agro Wholesale,Raw ingredient procurement,true
+TXN-A-034,2024-10-15,12000.00,DEBIT,RENT,NEFT,SUPP-02,Prime Realty Estates,Shop commercial lease payment,true
+TXN-A-035,2024-10-20,5000.00,DEBIT,LOAN_REPAYMENT,NACH,LEND-01,Canara Bank MSME Loan,Term loan EMI installment October,true
+TXN-A-036,2024-10-25,38000.00,CREDIT,REVENUE,UPI,CUST-03,Metro Supermarket,Weekly retail supply payout,false

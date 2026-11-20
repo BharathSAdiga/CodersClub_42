@@ -212,12 +212,20 @@ export function App() {
           />
         )}
         {borrowerView === '/borrower/apply' && (
+<<<<<<< HEAD
           <ApplicationCreationView
+=======
+          <ApplicationCreationView 
+>>>>>>> origin/feature/harshitha-finance
             onComplete={() => setBorrowerView('/borrower/tracking')}
           />
         )}
         {borrowerView === '/borrower/onboarding' && (
+<<<<<<< HEAD
           <OnboardingWizard
+=======
+          <OnboardingWizard 
+>>>>>>> origin/feature/harshitha-finance
             onComplete={() => setBorrowerView('/borrower/dashboard')}
           />
         )}
@@ -261,7 +269,11 @@ export function App() {
   // ==========================================
   return (
     <div className="min-h-screen bg-brand-ivory text-brand-charcoal flex flex-col justify-between selection:bg-brand-forest selection:text-white">
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> origin/feature/harshitha-finance
       {/* Floating Capsule Navbar (Faithful to reference video) */}
       <Navbar
         activePersonaName={`${activePersona.name} (${activePersona.badge.split(' ')[0]})`}
@@ -288,16 +300,35 @@ export function App() {
 
       {/* Hero Section with Parallax Background Atmosphere */}
       <section id="hero-sec" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
+<<<<<<< HEAD
 
         {/* Editorial Parallax Atmospheric Floating Gradient Blobs & Soft Vignettes */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
           <ParallaxLayer speed={-25} className="absolute -top-24 -left-20 w-[500px] h-[500px] bg-brand-forest/[0.08] rounded-full blur-[120px]" />
           <ParallaxLayer speed={35} className="absolute top-1/4 -right-24 w-[550px] h-[550px] bg-brand-terracotta/[0.08] rounded-full blur-[140px]" />
           <ParallaxLayer speed={-15} className="absolute bottom-10 left-1/3 w-[600px] h-[350px] bg-brand-mint/[0.05] rounded-full blur-[100px]" />
+=======
+        
+        {/* Parallax Atmospheric Floating Gradient Blobs */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <ParallaxLayer speed={-35} className="absolute -top-20 -left-20 w-96 h-96 bg-brand-forest/10 rounded-full blur-3xl" />
+          <ParallaxLayer speed={45} className="absolute top-1/3 -right-20 w-[450px] h-[450px] bg-brand-terracotta/10 rounded-full blur-[100px]" />
+>>>>>>> origin/feature/harshitha-finance
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto mb-16">
+<<<<<<< HEAD
+=======
+            
+            {/* Pill Tag with subtle reveal */}
+            <ScrollReveal direction="down" duration={0.6}>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-forest/10 border border-brand-forest/20 text-brand-forest text-xs font-mono font-medium tracking-wide mb-6">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>THE BIG HACK 2.0 • FINANCE TRACK F2</span>
+              </div>
+            </ScrollReveal>
+>>>>>>> origin/feature/harshitha-finance
 
             {/* Display Heading with Staggered Entrance */}
             <ScrollReveal direction="up" delay={0.1} duration={0.8}>
@@ -470,7 +501,11 @@ export function App() {
       {/* Full-width Brand Footer (Inspired by reference video) */}
       <footer className="w-full bg-brand-charcoal text-white pt-16 pb-12 overflow-hidden border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between min-h-[400px]">
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> origin/feature/harshitha-finance
           {/* Top navigation row */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-12 border-b border-white/10">
             <div>
