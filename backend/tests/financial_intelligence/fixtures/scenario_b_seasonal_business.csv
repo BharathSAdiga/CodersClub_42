@@ -1,0 +1,17 @@
+transaction_id,date,amount,direction,category,channel,counterparty_id,counterparty_name,description,is_recurring
+TXN-B-001,2024-04-10,25000.00,CREDIT,REVENUE,UPI,CUST-B01,Rao Textiles,Off-peak cloth sale,false
+TXN-B-002,2024-04-18,12000.00,DEBIT,SUPPLIER_PAYMENT,NEFT,SUPP-B01,Surat Yarns Ltd,Yarn bundle purchase,false
+TXN-B-003,2024-05-12,28000.00,CREDIT,REVENUE,UPI,CUST-B01,Rao Textiles,Pre-monsoon cloth order,false
+TXN-B-004,2024-05-22,14000.00,DEBIT,SUPPLIER_PAYMENT,NEFT,SUPP-B01,Surat Yarns Ltd,Yarn bundle purchase,false
+TXN-B-005,2024-06-08,18000.00,CREDIT,REVENUE,UPI,CUST-B02,Modern Boutique,Monsoon slow retail,false
+TXN-B-006,2024-06-25,10000.00,DEBIT,SUPPLIER_PAYMENT,NEFT,SUPP-B01,Surat Yarns Ltd,Yarn replenishment,false
+TXN-B-007,2024-07-10,15000.00,CREDIT,REVENUE,UPI,CUST-B02,Modern Boutique,Monsoon slow retail,false
+TXN-B-008,2024-07-28,9000.00,DEBIT,SUPPLIER_PAYMENT,NEFT,SUPP-B01,Surat Yarns Ltd,Yarn replenishment,false
+TXN-B-009,2024-08-15,35000.00,CREDIT,REVENUE,UPI,CUST-B01,Rao Textiles,Pre-festival stock building,false
+TXN-B-010,2024-08-28,18000.00,DEBIT,SUPPLIER_PAYMENT,NEFT,SUPP-B01,Surat Yarns Ltd,Bulk fabric stock,false
+TXN-B-011,2024-09-05,120000.00,CREDIT,REVENUE,NEFT,CUST-B03,Grand Festive Mart,Dussehra festival advance order,false
+TXN-B-012,2024-09-15,45000.00,DEBIT,SUPPLIER_PAYMENT,RTGS,SUPP-B02,Vardhman Mills,Festival inventory surge,false
+TXN-B-013,2024-09-22,60000.00,CREDIT,REVENUE,UPI,CUST-B02,Modern Boutique,Festival retail replenishment,false
+TXN-B-014,2024-10-08,180000.00,CREDIT,REVENUE,NEFT,CUST-B03,Grand Festive Mart,Diwali peak delivery payout,false
+TXN-B-015,2024-10-18,65000.00,DEBIT,SUPPLIER_PAYMENT,RTGS,SUPP-B02,Vardhman Mills,Festival inventory settlement,false
+TXN-B-016,2024-10-25,85000.00,CREDIT,REVENUE,UPI,CUST-B01,Rao Textiles,Diwali retail settlement,false

@@ -182,7 +182,7 @@ The backend test suite verifies all mathematical calculations, policy thresholds
 .\.venv\Scripts\pytest.exe backend/tests/ -v
 ```
 
-All **88 unit and integration tests** pass deterministically with 100% coverage across financial arithmetic, resilience simulations, multi-agent orchestration, SQLite persistence, and authentication RBAC.
+All **111 unit and integration tests** pass deterministically with 100% coverage across financial arithmetic, resilience simulations, multi-agent orchestration, SQLite persistence, and authentication RBAC.
 
 ---
 
