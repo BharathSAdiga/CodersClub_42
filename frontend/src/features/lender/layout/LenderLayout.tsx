@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { PersonaProfile } from '@/types';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  Activity, 
-  ShieldAlert, 
-  ArrowLeft, 
-  Landmark, 
-  User, 
-  Menu, 
+import {
+  LayoutDashboard,
+  FileText,
+  Activity,
+  ShieldAlert,
+  ArrowLeft,
+  Landmark,
+  User,
+  Menu,
   X,
   Search,
-  Bell
+  Bell,
+  LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,6 +23,7 @@ interface LenderLayoutProps {
   onNavigate: (view: string) => void;
   onReturnToPublic: () => void;
   onOpenPersonaModal: () => void;
+  onLogout?: () => void;
   children: React.ReactNode;
 }
 
@@ -31,6 +33,7 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
   onNavigate,
   onReturnToPublic,
   onOpenPersonaModal,
+  onLogout,
   children,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,7 +45,7 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
 
   return (
     <div className="min-h-screen bg-brand-ivory text-brand-charcoal flex flex-col">
-      
+
       {/* Institutional Top Navbar */}
       <header className="h-16 px-4 sm:px-8 bg-brand-charcoal text-white flex items-center justify-between sticky top-0 z-40 border-b border-white/10 shadow-elevated">
         <div className="flex items-center gap-4">
@@ -83,11 +86,10 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                    isActive
-                      ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
-                      : 'text-white/80 hover:text-white'
-                  }`}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${isActive
+                    ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
+                    : 'text-white/80 hover:text-white'
+                    }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{item.label}</span>
@@ -104,6 +106,17 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
             <User className="w-3.5 h-3.5 text-brand-mint" />
             <span className="max-w-[120px] truncate">{activePersona.name}</span>
           </button>
+
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-terracotta/20 hover:bg-brand-terracotta text-white border border-brand-terracotta/40 text-xs transition-colors"
+              title="Sign out of current institutional session"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </button>
+          )}
         </div>
       </header>
 

@@ -10,6 +10,7 @@ interface BorrowerLayoutProps {
   onNavigate: (viewId: string) => void;
   onReturnToPublic: () => void;
   onOpenPersonaModal: () => void;
+  onLogout?: () => void;
   children: React.ReactNode;
 }
 
@@ -19,6 +20,7 @@ export const BorrowerLayout: React.FC<BorrowerLayoutProps> = ({
   onNavigate,
   onReturnToPublic,
   onOpenPersonaModal,
+  onLogout,
   children,
 }) => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -33,6 +35,7 @@ export const BorrowerLayout: React.FC<BorrowerLayoutProps> = ({
           activePath={currentView}
           onNavigate={onNavigate}
           businessName={activePersona.business?.tradeName || activePersona.name}
+          onLogout={onLogout}
         />
       </div>
 
@@ -48,6 +51,7 @@ export const BorrowerLayout: React.FC<BorrowerLayoutProps> = ({
                 setMobileSidebarOpen(false);
               }}
               businessName={activePersona.business?.tradeName || activePersona.name}
+              onLogout={onLogout}
             />
           </div>
           <div 
