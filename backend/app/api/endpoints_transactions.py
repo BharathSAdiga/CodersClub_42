@@ -17,6 +17,8 @@ router = APIRouter(prefix="/transactions", tags=["Transactions & Ingestion"])
 # Temporary in-memory transaction store for Phase 0
 TRANSACTION_STORE: dict[str, List[Transaction]] = {}
 
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB limit
+
 @router.post("/batch", response_model=TransactionIngestSummary)
 async def ingest_batch_transactions(batch: TransactionBatchIngest):
     """Programmatic batch ingestion of structured transaction records."""
@@ -59,6 +61,12 @@ async def upload_transactions_csv(
         raise HTTPException(status_code=400, detail="Only CSV files are supported")
         
     content = await file.read()
+    if len(content) > MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File size exceeds maximum allowed limit of {MAX_UPLOAD_SIZE // (1024*1024)}MB"
+        )
+
     text = content.decode("utf-8", errors="replace")
     reader = csv.DictReader(io.StringIO(text))
     
@@ -109,23 +117,10 @@ async def upload_transactions_csv(
             continue
 
     if not parsed_transactions:
-        # Fallback demo transactions if CSV had different format or empty
-        now = datetime.utcnow()
-        for i in range(30):
-            is_credit = (i % 4 != 0)
-            parsed_transactions.append(
-                Transaction(
-                    transaction_id=f"tx_demo_{i}",
-                    business_id=business_id,
-                    timestamp=now - timedelta(days=30-i),
-                    amount=Decimal(str(8500.0 + (i * 250))),
-                    direction="CREDIT" if is_credit else "DEBIT",
-                    channel="UPI_QR",
-                    counterparty_id=f"cp_retail_{i % 5}",
-                    counterparty_name=f"Retail Customer {i % 5}",
-                    category="CUSTOMER_REVENUE" if is_credit else "SUPPLIER_PURCHASE"
-                )
-            )
+        raise HTTPException(
+            status_code=400,
+            detail="CSV contains no valid transaction rows. Expected headers: date, amount, direction, channel, counterparty_id, category"
+        )
 
     TRANSACTION_STORE[business_id] = parsed_transactions
     credits = [t for t in parsed_transactions if t.direction == "CREDIT"]
