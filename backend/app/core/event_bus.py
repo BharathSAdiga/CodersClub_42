@@ -35,6 +35,9 @@ class EventBus:
                 if event is None:  # Sentinel to close connection
                     break
                 yield f"data: {event.model_dump_json()}\n\n"
+        except asyncio.CancelledError:
+            # Client disconnected or cancelled SSE stream gracefully
+            pass
         finally:
             async with self._lock:
                 if assessment_id in self._subscribers and queue in self._subscribers[assessment_id]:

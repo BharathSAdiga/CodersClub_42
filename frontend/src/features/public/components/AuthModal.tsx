@@ -17,7 +17,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onLoginSuccess,
 }) => {
   const [authTab, setAuthTab] = useState<'LOGIN' | 'REGISTER' | 'DEMO'>('LOGIN');
-  
+
   // Login State
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -43,7 +43,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     try {
       const resp = await apiService.login(loginUsername, loginPassword);
       toast.success(`Welcome back, ${resp.full_name || resp.username}!`);
-      
+
       // Determine mapped persona or role
       let personaKey = 'PERSONA_RAMESH';
       if (resp.role.includes('LENDER')) {
@@ -82,11 +82,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         role: regRole,
       });
       toast.success(`Account registered successfully as ${resp.role}!`);
-      
+
       let personaKey = 'PERSONA_RAMESH';
       if (resp.role === 'LENDER') personaKey = 'PERSONA_VIKRAM';
       if (resp.role === 'ADMIN') personaKey = 'SUPER_ADMIN';
-      
+
       onLoginSuccess(personaKey);
       onClose();
     } catch (err: any) {
@@ -112,7 +112,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-charcoal/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div 
+      <div
         className="w-full max-w-md bg-brand-ivory rounded-3xl border border-brand-forest/20 shadow-elevated overflow-hidden text-brand-charcoal"
         onClick={(e) => e.stopPropagation()}
       >
@@ -126,8 +126,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               UDYOGA Access Gateway
             </h3>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="w-8 h-8 rounded-full bg-brand-forest/10 hover:bg-brand-forest/20 flex items-center justify-center text-brand-charcoal transition-colors"
           >
             <X className="w-4 h-4" />
@@ -138,33 +138,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="flex border-b border-brand-forest/10 bg-brand-forest/5 text-xs font-semibold">
           <button
             onClick={() => setAuthTab('LOGIN')}
-            className={`flex-1 py-3 text-center transition-colors flex items-center justify-center gap-1.5 ${
-              authTab === 'LOGIN'
-                ? 'bg-white text-brand-forest border-b-2 border-brand-forest font-bold'
-                : 'text-brand-charcoal/60 hover:text-brand-forest'
-            }`}
+            className={`flex-1 py-3 text-center transition-colors flex items-center justify-center gap-1.5 ${authTab === 'LOGIN'
+              ? 'bg-white text-brand-forest border-b-2 border-brand-forest font-bold'
+              : 'text-brand-charcoal/60 hover:text-brand-forest'
+              }`}
           >
             <LogIn className="w-3.5 h-3.5" />
             Sign In
           </button>
           <button
             onClick={() => setAuthTab('REGISTER')}
-            className={`flex-1 py-3 text-center transition-colors flex items-center justify-center gap-1.5 ${
-              authTab === 'REGISTER'
-                ? 'bg-white text-brand-forest border-b-2 border-brand-forest font-bold'
-                : 'text-brand-charcoal/60 hover:text-brand-forest'
-            }`}
+            className={`flex-1 py-3 text-center transition-colors flex items-center justify-center gap-1.5 ${authTab === 'REGISTER'
+              ? 'bg-white text-brand-forest border-b-2 border-brand-forest font-bold'
+              : 'text-brand-charcoal/60 hover:text-brand-forest'
+              }`}
           >
             <UserPlus className="w-3.5 h-3.5" />
             Register
           </button>
           <button
             onClick={() => setAuthTab('DEMO')}
-            className={`flex-1 py-3 text-center transition-colors flex items-center justify-center gap-1.5 ${
-              authTab === 'DEMO'
-                ? 'bg-white text-brand-forest border-b-2 border-brand-forest font-bold'
-                : 'text-brand-charcoal/60 hover:text-brand-forest'
-            }`}
+            className={`flex-1 py-3 text-center transition-colors flex items-center justify-center gap-1.5 ${authTab === 'DEMO'
+              ? 'bg-white text-brand-forest border-b-2 border-brand-forest font-bold'
+              : 'text-brand-charcoal/60 hover:text-brand-forest'
+              }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-brand-terracotta" />
             Demo Roles
@@ -183,7 +180,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </label>
                 <div className="relative">
                   <User className="w-4 h-4 text-brand-charcoal/40 absolute left-3.5 top-3.5" />
-                  <Input 
+                  <Input
                     type="text"
                     placeholder="e.g. ramesh or ramesh.kumar@kirana.udyoga.in"
                     value={loginUsername}
@@ -200,7 +197,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-brand-charcoal/40 absolute left-3.5 top-3.5" />
-                  <Input 
+                  <Input
                     type="password"
                     placeholder="Enter account password"
                     value={loginPassword}
@@ -211,10 +208,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                variant="primary" 
-                size="lg" 
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
                 className="w-full text-xs font-bold"
                 disabled={isLoggingIn}
               >
@@ -234,7 +231,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <label className="text-xs font-semibold text-brand-charcoal block mb-1">
                   Full Legal Name
                 </label>
-                <Input 
+                <Input
                   type="text"
                   placeholder="e.g. Anand Murthy"
                   value={regFullName}
@@ -249,7 +246,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <label className="text-xs font-semibold text-brand-charcoal block mb-1">
                     Username
                   </label>
-                  <Input 
+                  <Input
                     type="text"
                     placeholder="anand_msme"
                     value={regUsername}
@@ -280,7 +277,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-brand-charcoal/40 absolute left-3.5 top-3.5" />
-                  <Input 
+                  <Input
                     type="email"
                     placeholder="anand@murthytextiles.in"
                     value={regEmail}
@@ -297,7 +294,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-brand-charcoal/40 absolute left-3.5 top-3.5" />
-                  <Input 
+                  <Input
                     type="password"
                     placeholder="Min 8 characters"
                     value={regPassword}
@@ -308,10 +305,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                variant="accent" 
-                size="lg" 
+              <Button
+                type="submit"
+                variant="accent"
+                size="lg"
                 className="w-full text-xs font-bold mt-2"
                 disabled={isRegistering}
               >

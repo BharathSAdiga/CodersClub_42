@@ -330,6 +330,7 @@ class AssessmentRepository:
             if not row:
                 return None
             data = json.loads(row.payload_json)
+            data["assessment_status"] = row.assessment_status
             return CreditAppraisalMemo.model_validate(data)
         finally:
             if not self._session:
@@ -374,6 +375,121 @@ class AssessmentRepository:
                 db.add(new_row)
             db.commit()
             return memo
+        except Exception:
+            db.rollback()
+            raise
+        finally:
+            if not self._session:
+                db.close()
+
+    def record_started(self, assessment_id: str, business_id: str) -> AssessmentModel:
+        """Records initial RUNNING state for an assessment to ensure persistent recovery."""
+        db = self._get_session()
+        try:
+            # Ensure business exists to satisfy foreign key constraint
+            biz = db.query(BusinessModel).filter(BusinessModel.id == business_id).first()
+            if not biz:
+                db.add(BusinessModel(
+                    id=business_id,
+                    legal_name=f"MSME {business_id}",
+                    trade_name=f"MSME {business_id}",
+                    sector="GENERAL_COMMERCE",
+                    vintage_months=12,
+                    location_tier="TIER_3",
+                    entity_type="PROPRIETORSHIP",
+                    declared_monthly_turnover=Decimal("0.0"),
+                    declared_existing_monthly_emi=Decimal("0.0"),
+                    has_gstin=False,
+                    has_udyam_registration=False,
+                    is_synthetic=False,
+                    created_at=utc_now()
+                ))
+                db.flush()
+
+            now = utc_now()
+            placeholder_memo = CreditAppraisalMemo(
+                assessment_id=assessment_id,
+                business_id=business_id,
+                generated_at=now,
+                assessment_status="HUMAN_REVIEW_REQUIRED",
+                financial_risk_band="UNASSESSED",
+                evidence_confidence_score=0.0,
+                investigation_status="HUMAN_REVIEW_RECOMMENDED",
+                recommended_loan_amount_inr=Decimal("0.0"),
+                recommended_tenure_months=0,
+                recommended_facility_type="NONE_RECOMMENDED",
+                positive_credit_factors=[],
+                risk_factors_and_vulnerabilities=[],
+                recommended_covenants_and_mitigants=[],
+                assumptions=["Assessment actively executing in background pipeline."],
+                data_limitations=[],
+                evidence_references=[],
+                calculation_version="1.0.0",
+                cam_narrative_markdown="### Assessment in Progress\n\nMulti-agent analysis is running.",
+                is_fallback_rule_based=False
+            )
+            row = AssessmentModel(
+                id=assessment_id,
+                business_id=business_id,
+                generated_at=now,
+                completed_at=None,
+                assessment_status="RUNNING",
+                financial_risk_band="UNASSESSED",
+                evidence_confidence_score=0.0,
+                investigation_status="HUMAN_REVIEW_RECOMMENDED",
+                recommended_loan_amount_inr=Decimal("0.0"),
+                recommended_tenure_months=0,
+                indicative_apr_range="N/A",
+                recommended_facility_type="NONE_RECOMMENDED",
+                cam_narrative_markdown="Assessment actively running.",
+                is_fallback_rule_based=False,
+                payload_json=placeholder_memo.model_dump_json()
+            )
+            db.add(row)
+            db.commit()
+            return row
+        except Exception:
+            db.rollback()
+            raise
+        finally:
+            if not self._session:
+                db.close()
+
+    def recover_interrupted_assessments(self) -> int:
+        """
+        Scans for assessments left in RUNNING, QUEUED, or IN_PROGRESS states
+        without a completed_at timestamp (e.g. from server restart or crash)
+        and transitions them to FAILED_INTERRUPTED so they do not spin indefinitely.
+        """
+        db = self._get_session()
+        try:
+            stuck_rows = db.query(AssessmentModel).filter(
+                AssessmentModel.assessment_status.in_(["RUNNING", "QUEUED", "IN_PROGRESS"]),
+                AssessmentModel.completed_at.is_(None)
+            ).all()
+
+            count = len(stuck_rows)
+            for row in stuck_rows:
+                row.assessment_status = "FAILED_INTERRUPTED"
+                row.financial_risk_band = "UNASSESSED"
+                row.completed_at = utc_now()
+                row.cam_narrative_markdown = (
+                    "### Assessment Execution Interrupted\n\n"
+                    "This assessment was interrupted by a backend server restart or worker shutdown. "
+                    "Please re-trigger the evaluation to obtain fresh multi-agent findings."
+                )
+                try:
+                    memo_dict = json.loads(row.payload_json)
+                    memo_dict["assessment_status"] = "FAILED_INTERRUPTED"
+                    memo_dict["financial_risk_band"] = "UNASSESSED"
+                    memo_dict["cam_narrative_markdown"] = row.cam_narrative_markdown
+                    row.payload_json = json.dumps(memo_dict)
+                except Exception:
+                    pass
+
+            if count > 0:
+                db.commit()
+            return count
         except Exception:
             db.rollback()
             raise
@@ -1364,6 +1480,14 @@ def init_db():
         
         user_repo_instance = UserRepository(db)
         user_repo_instance.seed_demo_users()
+
+        # Recover any assessments interrupted by server restarts
+        asmt_repo_instance = AssessmentRepository(db)
+        recovered_count = asmt_repo_instance.recover_interrupted_assessments()
+        if recovered_count > 0:
+            import logging
+            logging.getLogger("udyoga.db").info(f"Recovered {recovered_count} interrupted assessments on startup.")
+
         db.commit()
     finally:
         db.close()

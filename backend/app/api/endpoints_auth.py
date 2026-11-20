@@ -550,6 +550,46 @@ async def submit_loan_application(
         updated_at=app.updated_at
     )
 
+
+
+@router.get("/applications", response_model=List[ApplicationOut])
+async def list_loan_applications(
+    status: Optional[str] = None,
+    limit: int = Query(50, le=100),
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
+    """
+    Lists loan applications accessible to caller.
+    - ADMIN: lists all applications.
+    - LENDER: lists applications assigned to lender or available for review.
+    - BORROWER: lists applications for their enterprise.
+    """
+    role = normalize_role(current_user.get("role", "BORROWER"))
+    if role == "ADMIN":
+        apps = application_repo.list_all(limit=limit)
+    elif role == "LENDER":
+        apps = application_repo.get_for_lender(current_user["id"])
+        if not apps:
+            apps = application_repo.list_all(limit=limit)
+    else:
+        biz_id = current_user.get("business_id")
+        apps = application_repo.get_for_business(biz_id) if biz_id else []
+
+    return [
+        ApplicationOut(
+            id=a.id,
+            business_id=a.business_id,
+            applicant_user_id=a.applicant_user_id,
+            assigned_lender_id=a.assigned_lender_id,
+            facility_type=a.facility_type,
+            requested_amount=a.requested_amount,
+            status=a.status,
+            created_at=a.created_at,
+            updated_at=a.updated_at
+        )
+        for a in apps
+    ]
+
 @router.get("/applications/{application_id}", response_model=ApplicationOut)
 async def get_application_detail(
     application_id: str,
@@ -575,3 +615,5 @@ async def get_application_detail(
         created_at=app.created_at,
         updated_at=app.updated_at
     )
+
+

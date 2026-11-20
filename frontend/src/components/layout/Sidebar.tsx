@@ -1,13 +1,13 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Wallet, 
-  FileText, 
-  ShieldCheck, 
-  Sliders, 
-  Activity, 
-  Scale, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Wallet,
+  FileText,
+  ShieldCheck,
+  Sliders,
+  Activity,
+  Scale,
+  Settings,
   LogOut,
   Sparkles
 } from 'lucide-react';
@@ -93,11 +93,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                  isActive
-                    ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
-                    : 'text-white/80 hover:bg-white/10 hover:text-white'
-                }`}
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${isActive
+                  ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
+                  : 'text-white/80 hover:bg-white/10 hover:text-white'
+                  }`}
               >
                 <Icon className={`w-4 h-4 ${isActive ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
                 <span>{item.label}</span>

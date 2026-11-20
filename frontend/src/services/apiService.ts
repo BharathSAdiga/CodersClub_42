@@ -387,6 +387,19 @@ class ApiService {
     return res.json();
   }
 
+  private async extractErrorMessage(res: Response, defaultMsg: string): Promise<string> {
+    try {
+      const err = await res.json();
+      if (typeof err.detail === 'string') return err.detail;
+      if (Array.isArray(err.detail) && err.detail.length > 0) {
+        return err.detail.map((d: any) => d.msg || JSON.stringify(d)).join('; ');
+      }
+      return err.detail || err.message || err.title || defaultMsg;
+    } catch {
+      return `${defaultMsg} (${res.status} ${res.statusText})`;
+    }
+  }
+
   public async triggerAssessment(
     businessId: string,
     requestedLoanAmount?: number
@@ -397,10 +410,12 @@ class ApiService {
     message: string;
     stream_url: string;
   }> {
+    const idempotencyKey = `idemp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     const res = await fetch(`${API_BASE}/assessment/run`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Idempotency-Key': idempotencyKey,
         ...this.getAuthHeaders(),
       },
       body: JSON.stringify({
@@ -408,7 +423,10 @@ class ApiService {
         requested_loan_amount: requestedLoanAmount || 250000,
       }),
     });
-    if (!res.ok) throw new Error(`Failed to trigger assessment: ${res.statusText}`);
+    if (!res.ok) {
+      const msg = await this.extractErrorMessage(res, 'Failed to trigger assessment');
+      throw new Error(msg);
+    }
     return res.json();
   }
 
@@ -416,7 +434,10 @@ class ApiService {
     const res = await fetch(`${API_BASE}/assessment/${encodeURIComponent(assessmentId)}/events`, {
       headers: this.getAuthHeaders(),
     });
-    if (!res.ok) throw new Error(`Failed to fetch events: ${res.statusText}`);
+    if (!res.ok) {
+      const msg = await this.extractErrorMessage(res, 'Failed to fetch events');
+      throw new Error(msg);
+    }
     return res.json();
   }
 
@@ -424,7 +445,10 @@ class ApiService {
     const res = await fetch(`${API_BASE}/assessment/${encodeURIComponent(assessmentId)}/result`, {
       headers: this.getAuthHeaders(),
     });
-    if (!res.ok) throw new Error(`Failed to load assessment result: ${res.statusText}`);
+    if (!res.ok) {
+      const msg = await this.extractErrorMessage(res, 'Failed to load assessment result');
+      throw new Error(msg);
+    }
     return res.json();
   }
 
@@ -451,9 +475,23 @@ class ApiService {
     };
 
     eventSource.onerror = (err) => {
-      console.warn('SSE stream error or complete:', err);
+      console.warn('SSE stream error or disconnection. Attempting event recovery catchup...');
       eventSource.close();
-      onError?.(err);
+      this.getAssessmentEvents(assessmentId)
+        .then((events) => {
+          events.forEach((ev) => onEvent(ev));
+          const completed = events.some(
+            (e) => (e.agent_name === 'Orchestrator' && e.status === 'COMPLETED') || e.status === 'FAILED'
+          );
+          if (completed) {
+            onComplete?.();
+          } else {
+            onError?.(err);
+          }
+        })
+        .catch(() => {
+          onError?.(err);
+        });
     };
 
     return () => {
