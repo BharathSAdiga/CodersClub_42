@@ -10,33 +10,36 @@ interface ScrollRevealProps {
   className?: string;
   staggerChildren?: number;
   once?: boolean;
+  scale?: number;
 }
 
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
   direction = 'up',
   delay = 0,
-  duration = 0.7,
-  distance = 32,
+  duration = 0.75,
+  distance = 36,
   className = '',
   once = true,
+  scale = 1,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once, margin: '-60px 0px' });
+  const isInView = useInView(ref, { once, margin: '-50px 0px' });
 
   const getInitialPosition = () => {
+    const baseScale = scale < 1 ? scale : 0.985;
     switch (direction) {
       case 'up':
-        return { opacity: 0, y: distance };
+        return { opacity: 0, y: distance, scale: baseScale };
       case 'down':
-        return { opacity: 0, y: -distance };
+        return { opacity: 0, y: -distance, scale: baseScale };
       case 'left':
-        return { opacity: 0, x: distance };
+        return { opacity: 0, x: distance, scale: baseScale };
       case 'right':
-        return { opacity: 0, x: -distance };
+        return { opacity: 0, x: -distance, scale: baseScale };
       case 'none':
       default:
-        return { opacity: 0, scale: 0.98 };
+        return { opacity: 0, scale: baseScale };
     }
   };
 
@@ -44,10 +47,10 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
     switch (direction) {
       case 'up':
       case 'down':
-        return { opacity: 1, y: 0 };
+        return { opacity: 1, y: 0, scale: 1 };
       case 'left':
       case 'right':
-        return { opacity: 1, x: 0 };
+        return { opacity: 1, x: 0, scale: 1 };
       case 'none':
       default:
         return { opacity: 1, scale: 1 };
@@ -62,7 +65,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       transition={{
         duration,
         delay,
-        ease: [0.21, 0.47, 0.32, 0.98], // Spring-like natural decel curve
+        ease: [0.16, 1, 0.3, 1], // Apple-style fluid spring decel curve
       }}
       className={className}
     >
@@ -85,7 +88,7 @@ export const TextRevealByLine: React.FC<{
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
       opacity: 1,
-      transition: { staggerChildren: 0.04, delayChildren: delay * i },
+      transition: { staggerChildren: 0.045, delayChildren: delay * i },
     }),
   };
 
@@ -95,17 +98,17 @@ export const TextRevealByLine: React.FC<{
       y: 0,
       transition: {
         type: 'spring',
-        damping: 15,
-        stiffness: 120,
+        damping: 18,
+        stiffness: 140,
       },
     },
     hidden: {
       opacity: 0,
-      y: 20,
+      y: 22,
       transition: {
         type: 'spring',
-        damping: 15,
-        stiffness: 120,
+        damping: 18,
+        stiffness: 140,
       },
     },
   };

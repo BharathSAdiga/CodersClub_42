@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserRole } from '@/types';
 import { ShieldCheck, ChevronDown, User, Sparkles } from 'lucide-react';
-import { motion, useScroll } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 
 interface NavbarProps {
   activeSection?: string;
@@ -18,7 +18,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenPersonaModal,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     return scrollY.on('change', (latest) => {
@@ -35,15 +40,22 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+    <header className="fixed top-4 inset-x-0 z-50 flex flex-col items-center px-4 pointer-events-none">
+      
+      {/* Top Floating Capsule Nav */}
       <nav 
-        className={`pointer-events-auto flex items-center justify-between w-full max-w-5xl h-14 px-5 rounded-full backdrop-blur-md border shadow-elevated text-brand-ivory transition-all duration-300 ${
+        className={`pointer-events-auto relative overflow-hidden flex items-center justify-between w-full max-w-5xl h-14 px-5 rounded-full backdrop-blur-md border shadow-elevated text-brand-ivory transition-all duration-300 ${
           isScrolled 
             ? 'bg-brand-charcoal/95 border-white/20 shadow-2xl scale-[0.99]' 
             : 'bg-brand-charcoal/80 border-white/10'
         }`}
       >
-        
+        {/* Subtle Reading Progress Indicator Line inside Navbar Bottom */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-mint via-brand-terracotta to-brand-mint origin-left"
+          style={{ scaleX }}
+        />
+
         {/* Brand Logo */}
         <div 
           onClick={() => onNavigate?.('home')}
@@ -64,11 +76,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               key={link.id}
               onClick={() => onNavigate?.(link.id)}
-              className={`hover:text-brand-mint transition-colors py-1 ${
+              className={`hover:text-brand-mint transition-colors py-1 relative ${
                 activeSection === link.id ? 'text-brand-mint font-semibold' : ''
               }`}
             >
               {link.label}
+              {activeSection === link.id && (
+                <motion.span
+                  layoutId="activeNavIndicator"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-mint rounded-full"
+                />
+              )}
             </button>
           ))}
         </div>

@@ -20,13 +20,18 @@ export const ParallaxLayer: React.FC<ParallaxWrapperProps> = ({
     offset: ['start end', 'end start'],
   });
 
+  // Apply smooth physics transform without layout thrashing
   const y = useTransform(scrollYProgress, [0, 1], [-speed, speed]);
   const rotateVal = useTransform(scrollYProgress, [0, 1], [-rotate, rotate]);
 
   return (
     <motion.div
       ref={ref}
-      style={{ y, rotate: rotate !== 0 ? rotateVal : undefined }}
+      style={{ 
+        y, 
+        rotate: rotate !== 0 ? rotateVal : undefined,
+        willChange: 'transform'
+      }}
       className={className}
     >
       {children}
