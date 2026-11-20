@@ -289,10 +289,11 @@ export function App() {
       {/* Hero Section with Parallax Background Atmosphere */}
       <section id="hero-sec" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
 
-        {/* Parallax Atmospheric Floating Gradient Blobs */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <ParallaxLayer speed={-35} className="absolute -top-20 -left-20 w-96 h-96 bg-brand-forest/10 rounded-full blur-3xl" />
-          <ParallaxLayer speed={45} className="absolute top-1/3 -right-20 w-[450px] h-[450px] bg-brand-terracotta/10 rounded-full blur-[100px]" />
+        {/* Editorial Parallax Atmospheric Floating Gradient Blobs & Soft Vignettes */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+          <ParallaxLayer speed={-25} className="absolute -top-24 -left-20 w-[500px] h-[500px] bg-brand-forest/[0.08] rounded-full blur-[120px]" />
+          <ParallaxLayer speed={35} className="absolute top-1/4 -right-24 w-[550px] h-[550px] bg-brand-terracotta/[0.08] rounded-full blur-[140px]" />
+          <ParallaxLayer speed={-15} className="absolute bottom-10 left-1/3 w-[600px] h-[350px] bg-brand-mint/[0.05] rounded-full blur-[100px]" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
