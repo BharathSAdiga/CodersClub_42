@@ -4,14 +4,15 @@ import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
 from ..schemas.business import BusinessProfile, BusinessProfileCreate
+from ..db import DatabaseBackedBusinessStore
 
 router = APIRouter(prefix="/business", tags=["Business & Profiles"])
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
-# In-memory store for Phase 0
-BUSINESS_STORE: Dict[str, BusinessProfile] = {}
+# Database-backed business store (replaces volatile in-memory dict)
+BUSINESS_STORE: Dict[str, BusinessProfile] = DatabaseBackedBusinessStore()
 
 # Pre-seeded Hackathon Demo Profiles
 DEMO_PROFILES: List[BusinessProfile] = [

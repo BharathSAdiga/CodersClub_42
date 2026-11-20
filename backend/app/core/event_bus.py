@@ -52,6 +52,13 @@ class EventBus:
             for queue in subscribers:
                 await queue.put(event)
 
+        # Persist event to SQLite for auditability and restart recovery
+        try:
+            from ..db import agent_event_repo
+            agent_event_repo.save(event)
+        except Exception:
+            pass
+
     async def close_stream(self, assessment_id: str):
         async with self._lock:
             subscribers = self._subscribers.get(assessment_id, [])
@@ -59,7 +66,33 @@ class EventBus:
                 await queue.put(None)
 
     def get_history(self, assessment_id: str) -> List[AgentEvent]:
-        return self._history.get(assessment_id, [])
+        events = self._history.get(assessment_id)
+        if events:
+            return events
+        try:
+            from ..db import agent_event_repo
+            db_events = agent_event_repo.get_for_assessment(assessment_id)
+            if db_events:
+                parsed = [
+                    AgentEvent(
+                        event_id=e.id,
+                        assessment_id=e.assessment_id,
+                        business_id=e.business_id,
+                        agent_name=e.agent_name,
+                        step_name=e.step_name,
+                        status=e.status,
+                        timestamp=e.timestamp,
+                        message=e.message,
+                        execution_duration_ms=e.execution_duration_ms,
+                        structured_payload=json.loads(e.structured_payload_json) if e.structured_payload_json else None
+                    )
+                    for e in db_events
+                ]
+                self._history[assessment_id] = parsed
+                return parsed
+        except Exception:
+            pass
+        return []
 
 # Singleton event bus instance
 event_bus = EventBus()

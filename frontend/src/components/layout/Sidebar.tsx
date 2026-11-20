@@ -18,6 +18,7 @@ interface SidebarProps {
   activePath: string;
   onNavigate: (path: string) => void;
   businessName?: string;
+  onLogout?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -25,6 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activePath,
   onNavigate,
   businessName = 'Sri Balaji Provisions',
+  onLogout,
 }) => {
   const isBorrower = currentRole.startsWith('BORROWER');
   const isLender = currentRole.startsWith('LENDER');
@@ -103,6 +105,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             );
           })}
         </nav>
+
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            className="w-full mt-4 flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            <LogOut className="w-4 h-4 text-brand-terracotta" />
+            <span>Sign Out Session</span>
+          </button>
+        )}
       </div>
 
       {/* Footer Info */}

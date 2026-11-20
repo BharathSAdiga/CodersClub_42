@@ -11,11 +11,12 @@ from ..schemas.transaction import (
     TransactionBatchIngest,
     TransactionIngestSummary
 )
+from ..db import DatabaseBackedTransactionStore
 
 router = APIRouter(prefix="/transactions", tags=["Transactions & Ingestion"])
 
-# Temporary in-memory transaction store for Phase 0
-TRANSACTION_STORE: dict[str, List[Transaction]] = {}
+# Database-backed transaction store (persisted to SQLite)
+TRANSACTION_STORE: dict[str, List[Transaction]] = DatabaseBackedTransactionStore()
 
 MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB limit
 
@@ -123,6 +124,23 @@ async def upload_transactions_csv(
         )
 
     TRANSACTION_STORE[business_id] = parsed_transactions
+
+    # Audit Trail: Record provenance and SHA-256 fingerprint into evidence repository
+    import hashlib
+    sha256_hash = hashlib.sha256(content).hexdigest()
+    try:
+        from ..db import evidence_repo
+        evidence_repo.record_evidence(
+            business_id=business_id,
+            document_name=file.filename,
+            document_type="BANK_STATEMENT_CSV",
+            provenance="SOURCE_LABELLED",
+            record_count=len(parsed_transactions),
+            file_hash=sha256_hash
+        )
+    except Exception:
+        pass
+
     credits = [t for t in parsed_transactions if t.direction == "CREDIT"]
     debits = [t for t in parsed_transactions if t.direction == "DEBIT"]
     timestamps = [t.timestamp for t in parsed_transactions]

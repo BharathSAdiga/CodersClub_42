@@ -20,6 +20,7 @@ from ..core.event_bus import event_bus
 from .endpoints_business import BUSINESS_STORE
 from .endpoints_transactions import TRANSACTION_STORE
 from ..modules.agents import orchestrator
+from ..db import DatabaseBackedAssessmentStore
 
 router = APIRouter(prefix="/assessment", tags=["Assessment & Agent Orchestration"])
 
@@ -30,8 +31,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# In-memory store for assessments
-ASSESSMENT_STORE: Dict[str, CreditAppraisalMemo] = {}
+# Database-backed assessment store (persisted to SQLite)
+ASSESSMENT_STORE: Dict[str, CreditAppraisalMemo] = DatabaseBackedAssessmentStore()
 
 def build_demo_memo(assessment_id: str, business_id: str) -> CreditAppraisalMemo:
     """Builds an indicative, explainable Credit Appraisal Memo without credit bureau claims."""
