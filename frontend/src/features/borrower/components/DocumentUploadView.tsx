@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { apiService } from '@/services/apiService';
 import { 
   UploadCloud, 
   FileText, 
@@ -36,7 +37,7 @@ export const DocumentUploadView: React.FC = () => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-  const handleSimulateUpload = (e: React.ChangeEvent<HTMLInputElement>, isCsv = false) => {
+  const handleSimulateUpload = async (e: React.ChangeEvent<HTMLInputElement>, isCsv = false) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -47,6 +48,31 @@ export const DocumentUploadView: React.FC = () => {
 
     setIsUploading(true);
     setUploadProgress(20);
+
+    if (isCsv) {
+      try {
+        setUploadProgress(50);
+        const result = await apiService.uploadCsv('msme_kirana_kanpur_001', file);
+        setUploadProgress(100);
+        setIsUploading(false);
+        const newDoc: MockDocument = {
+          id: `doc_${Date.now()}`,
+          name: file.name,
+          size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+          type: 'CASHBOOK_REGISTER',
+          status: 'VERIFIED',
+          provenance: 'SELF_REPORTED',
+          recordCount: result.total_parsed,
+        };
+        setDocuments((d) => [newDoc, ...d]);
+        toast.success(
+          `${file.name} ingested into UDYOGA Engine (${result.total_parsed} txs, ₹${Math.round(result.total_credit_volume).toLocaleString('en-IN')} inflow).`
+        );
+        return;
+      } catch (err) {
+        console.warn('Real CSV upload fallback to client parser:', err);
+      }
+    }
 
     const interval = setInterval(() => {
       setUploadProgress((prev) => {

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatINR } from '@/lib/utils';
+import { apiService, BackendCreditAppraisalMemo } from '@/services/apiService';
 import { 
   Building2, 
   Landmark, 
@@ -89,7 +90,7 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
   });
 
   // 8 Specialized Agents Execution Trace (Feature 10 Requirement)
-  const agentExecutionTraces = [
+  const defaultAgentExecutionTraces = [
     {
       name: '1. Underwriting Orchestrator',
       role: 'Master Orchestration',
@@ -163,6 +164,71 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
       durationMs: 240,
     },
   ];
+
+  const [liveTraces, setLiveTraces] = useState(defaultAgentExecutionTraces);
+  const [isAssessmentRunning, setIsAssessmentRunning] = useState(false);
+  const [liveMemo, setLiveMemo] = useState<BackendCreditAppraisalMemo | null>(null);
+
+  const handleTriggerLiveAgentAssessment = async () => {
+    setIsAssessmentRunning(true);
+    toast.info('Starting 8-Agent Asynchronous Credit Investigation...');
+    try {
+      const targetBiz = application.businessName.includes('Balaji') 
+        ? 'msme_kirana_kanpur_001' 
+        : (application.businessName.includes('Apex') || application.sector.includes('Textile'))
+        ? 'msme_trading_surat_002'
+        : 'msme_weaver_erode_003';
+      const runRes = await apiService.triggerAssessment(targetBiz, application.requestedAmount);
+      
+      setLiveTraces((prev) => prev.map((item, idx) => idx === 0 ? { ...item, status: 'IN_PROGRESS', findings: 'Pipeline initialized. Executing concurrent stages...' } : item));
+
+      apiService.subscribeAssessmentStream(
+        runRes.assessment_id,
+        (evt) => {
+          setLiveTraces((prev) => {
+            const next = [...prev];
+            const agentIndexMap: Record<string, number> = {
+              'Orchestrator': 0,
+              'FinancialIntelligenceAgent': 1,
+              'EvidenceVerificationAgent': 2,
+              'TransactionForensicsAgent': 3,
+              'BusinessVitalityAgent': 4,
+              'ResilienceSimulationAgent': 5,
+              'UnderwritingAgent': 6,
+              'ExplanationAndPassportAgent': 7,
+            };
+            const idx = agentIndexMap[evt.agent_name];
+            if (idx !== undefined && next[idx]) {
+              next[idx] = {
+                ...next[idx],
+                status: evt.status === 'COMPLETED' ? 'COMPLETED' : evt.status === 'FAILED' ? 'FAILED' : 'IN_PROGRESS',
+                findings: evt.message || next[idx].findings,
+                durationMs: evt.execution_duration_ms || next[idx].durationMs,
+              };
+            }
+            return next;
+          });
+        },
+        (err) => {
+          console.warn('Live SSE stream notice:', err);
+          setIsAssessmentRunning(false);
+        },
+        async () => {
+          setIsAssessmentRunning(false);
+          toast.success('Agentic Investigation complete! Credit Appraisal Memo compiled.');
+          try {
+            const memo = await apiService.getAssessmentResult(runRes.assessment_id);
+            setLiveMemo(memo);
+          } catch (e) {
+            console.error('Error fetching final memo:', e);
+          }
+        }
+      );
+    } catch (err: any) {
+      setIsAssessmentRunning(false);
+      toast.error(`Could not start live assessment: ${err.message || 'Server offline'}`);
+    }
+  };
 
   const handleDecision = (action: 'APPROVE' | 'DECLINE') => {
     if (action === 'APPROVE') {
@@ -575,7 +641,7 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
           {/* Feature 10: 8-Agent Execution Activity Log */}
           <Card>
             <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <CardTitle className="text-base flex items-center gap-2">
                     <Cpu className="w-4 h-4 text-brand-forest" />
@@ -585,15 +651,46 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
                     Live coordination trace across the 8 specialized analytical sub-agents
                   </p>
                 </div>
-                <Badge variant="outline" className="border-brand-forest/20 text-brand-forest text-[10px]">
-                  8 of 8 Completed
-                </Badge>
+                <div className="flex items-center gap-2 self-start sm:self-center">
+                  <Button
+                    size="sm"
+                    variant={isAssessmentRunning ? 'secondary' : 'primary'}
+                    onClick={handleTriggerLiveAgentAssessment}
+                    disabled={isAssessmentRunning}
+                    className="h-7 text-xs bg-brand-forest text-white hover:bg-brand-forest/90 gap-1.5"
+                  >
+                    <Sparkles className={`w-3 h-3 ${isAssessmentRunning ? 'animate-spin' : ''}`} />
+                    {isAssessmentRunning ? 'Assessing...' : 'Run Live Assessment'}
+                  </Button>
+                  <Badge variant="outline" className="border-brand-forest/20 text-brand-forest text-[10px]">
+                    {liveTraces.filter((a) => a.status === 'COMPLETED').length} of 8 Completed
+                  </Badge>
+                </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-3">
+              {liveMemo && (
+                <div className="p-3.5 rounded-2xl bg-brand-ivory border border-brand-forest/20 text-xs space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-brand-forest flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                      Live Credit Appraisal Memo (CAM) Compiled
+                    </span>
+                    <Badge variant="outline" className="bg-emerald-50 text-emerald-800 border-emerald-300 text-[10px]">
+                      {liveMemo.assessment_status.replace('_', ' ')}
+                    </Badge>
+                  </div>
+                  <p className="text-brand-charcoal/80 text-[11px] leading-relaxed">
+                    Indicative Limit: <strong className="font-mono text-brand-charcoal">{formatINR(liveMemo.recommended_loan_amount_inr)}</strong> at <strong className="font-mono text-brand-charcoal">{liveMemo.indicative_apr_range}</strong> ({liveMemo.recommended_tenure_months} mos) • Risk Band: <span className="font-semibold">{liveMemo.financial_risk_band}</span>
+                  </p>
+                </div>
+              )}
+
               <div className="divide-y divide-brand-forest/10 border border-brand-forest/15 rounded-2xl overflow-hidden text-xs">
-                {agentExecutionTraces.map((agent, idx) => {
+                {liveTraces.map((agent, idx) => {
                   const isExpanded = expandedAgentIndex === idx;
+                  const isCompleted = agent.status === 'COMPLETED';
+                  const isInProgress = agent.status === 'IN_PROGRESS';
                   return (
                     <div key={idx} className="p-3 bg-white hover:bg-brand-ivory/50 transition-colors">
                       <div 
@@ -601,7 +698,9 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
                         className="flex items-center justify-between cursor-pointer"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                          <span className={`w-2 h-2 rounded-full shrink-0 ${
+                            isCompleted ? 'bg-emerald-500' : isInProgress ? 'bg-amber-500 animate-pulse' : 'bg-brand-charcoal/30'
+                          }`} />
                           <div>
                             <strong className="text-brand-charcoal block">{agent.name}</strong>
                             <span className="text-[10px] text-brand-charcoal/50">{agent.task}</span>
@@ -610,7 +709,16 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
 
                         <div className="flex items-center gap-3">
                           <span className="font-mono text-[10px] text-brand-charcoal/50">{agent.durationMs}ms</span>
-                          <Badge variant="outline" className="text-[9px] border-emerald-300 bg-emerald-50 text-emerald-800">
+                          <Badge 
+                            variant="outline" 
+                            className={`text-[9px] ${
+                              isCompleted 
+                                ? 'border-emerald-300 bg-emerald-50 text-emerald-800' 
+                                : isInProgress 
+                                ? 'border-amber-300 bg-amber-50 text-amber-800' 
+                                : 'border-brand-charcoal/20 bg-brand-charcoal/5 text-brand-charcoal/60'
+                            }`}
+                          >
                             {agent.status}
                           </Badge>
                           {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-brand-charcoal/60" /> : <ChevronDown className="w-3.5 h-3.5 text-brand-charcoal/60" />}
