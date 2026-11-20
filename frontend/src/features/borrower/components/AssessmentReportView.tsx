@@ -106,7 +106,7 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
         </div>
 
         <div className="p-4 rounded-2xl bg-white/10 border border-white/10 text-center sm:text-right">
-          <Badge variant="mint" className="text-xs font-mono">
+          <Badge variant="mint-bright" className="text-xs font-mono tracking-wide">
             {report?.scoreBand || 'PRIME'} BAND
           </Badge>
           <span className="text-[11px] text-white/60 block mt-2">

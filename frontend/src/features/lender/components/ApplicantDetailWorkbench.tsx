@@ -320,7 +320,7 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
             </div>
 
             <div className="p-4 rounded-2xl bg-white/10 border border-white/10 text-center shrink-0">
-              <Badge variant="mint" className="text-xs font-mono">
+              <Badge variant="mint-bright" className="text-xs font-mono tracking-wide">
                 LOW VARIANCE RISK
               </Badge>
               <span className="text-[10px] text-white/60 block mt-1">
