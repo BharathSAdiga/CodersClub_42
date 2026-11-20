@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 44 38% 95%; /* #F7F4EC */
+    --foreground: 0 0% 10%;   /* #1A1A1A */
+
+    --card: 44 38% 95%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 44 38% 95%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 165 46% 17%;   /* #173F35 - Forest Green */
+    --primary-foreground: 44 38% 95%;
+
+    --secondary: 44 28% 89%;  /* #EBE5D8 */
+    --secondary-foreground: 165 46% 17%;
+
+    --muted: 44 20% 90%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 15 54% 54%;     /* #C96B4B - Terracotta */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 44 18% 85%;
+    --input: 44 18% 85%;
+    --ring: 165 46% 17%;
+
+    --radius: 1.25rem;
+  }
+
+  .dark {
+    --background: 165 15% 8%; /* #111815 */
+    --foreground: 44 38% 95%;
+
+    --card: 165 14% 11%;
+    --card-foreground: 44 38% 95%;
+
+    --popover: 165 14% 11%;
+    --popover-foreground: 44 38% 95%;
+
+    --primary: 158 64% 52%;   /* #34D399 */
+    --primary-foreground: 165 46% 17%;
+
+    --secondary: 165 12% 16%;
+    --secondary-foreground: 44 38% 95%;
+
+    --muted: 165 12% 18%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 15 54% 54%;     /* #C96B4B */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 165 10% 22%;
+    --input: 165 10% 22%;
+    --ring: 158 64% 52%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-brand-ivory text-brand-charcoal font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-brand-charcoal;
+  }
+}
+
+/* Custom Editorial Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(23, 63, 53, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(23, 63, 53, 0.4);
+}
+
+/* Waveform Visualizer Animation */
+@keyframes wavePulse {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1.0); }
+}
+
+.animate-wave-bar {
+  animation: wavePulse 1.2s ease-in-out infinite;
+  transform-origin: bottom;
+}

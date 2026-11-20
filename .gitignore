@@ -33,6 +33,7 @@ out/
 storybook-static/
 coverage/
 *.tsbuildinfo
+.vite/
 
 # Sensitive Customer & Financial Mock Data
 *.csv.private
