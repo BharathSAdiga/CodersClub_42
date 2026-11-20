@@ -8,6 +8,7 @@ import { StickyProductStoryteller } from '@/components/interactive/StickyProduct
 import { ScrollReveal } from '@/components/interactive/ScrollReveal';
 import { ParallaxLayer } from '@/components/interactive/ParallaxLayer';
 import { CountUpNumber } from '@/components/interactive/CountUpNumber';
+import { CinematicHeroBackground } from '@/components/interactive/CinematicHeroBackground';
 import { ProblemSolution } from '@/features/public/components/ProblemSolution';
 import { HowItWorks } from '@/features/public/components/HowItWorks';
 import { AcieExplanation } from '@/features/public/components/AcieExplanation';
@@ -289,6 +290,9 @@ export function App() {
       {/* Hero Section with Parallax Background Atmosphere */}
       <section id="hero-sec" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
         
+        {/* Cinematic Video Parallax Background Layer */}
+        <CinematicHeroBackground />
+
         {/* Parallax Atmospheric Floating Gradient Blobs */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <ParallaxLayer speed={-35} className="absolute -top-20 -left-20 w-96 h-96 bg-brand-forest/10 rounded-full blur-3xl" />
