@@ -60,7 +60,6 @@ export const CinematicHeroBackground: React.FC<CinematicHeroBackgroundProps> = (
   useEffect(() => {
     if (!videoRef.current || hasReducedMotion) return;
 
-    let animationFrameId: number;
     let targetTime = 0;
 
     const unsubscribe = smoothProgress.on('change', (progressVal) => {
@@ -69,7 +68,7 @@ export const CinematicHeroBackground: React.FC<CinematicHeroBackgroundProps> = (
         const clampedProgress = Math.max(0, Math.min(1, progressVal));
         targetTime = clampedProgress * videoDuration;
 
-        // Scrub video playback frame safely via requestAnimationFrame
+        // Scrub video playback frame safely
         if (Math.abs(videoRef.current.currentTime - targetTime) > 0.03) {
           videoRef.current.currentTime = targetTime;
         }
@@ -78,7 +77,6 @@ export const CinematicHeroBackground: React.FC<CinematicHeroBackgroundProps> = (
 
     return () => {
       unsubscribe();
-      cancelAnimationFrame(animationFrameId);
     };
   }, [smoothProgress, videoDuration, hasReducedMotion]);
 
