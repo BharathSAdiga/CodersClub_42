@@ -129,14 +129,34 @@ async def upload_transactions_csv(
     import hashlib
     sha256_hash = hashlib.sha256(content).hexdigest()
     try:
-        from ..db import evidence_repo
+        from ..db import evidence_repo, audit_repo
         evidence_repo.record_evidence(
             business_id=business_id,
             document_name=file.filename,
             document_type="BANK_STATEMENT_CSV",
             provenance="SOURCE_LABELLED",
+            provenance_category="USER_UPLOADED",
+            source_type="FILE_UPLOAD",
+            source_name=file.filename,
+            verification_status="PENDING",
             record_count=len(parsed_transactions),
-            file_hash=sha256_hash
+            file_hash=sha256_hash,
+            confidence_score=0.65
+        )
+        audit_repo.log_access(
+            user_id="user_uploader",
+            role="BORROWER",
+            business_id=business_id,
+            resource_type="FINANCIAL_DOCUMENT",
+            action="DOCUMENT_UPLOAD",
+            details=f"Uploaded bank statement CSV '{file.filename}' containing {len(parsed_transactions)} transactions.",
+            outcome="SUCCESS",
+            structured_metadata={
+                "filename": file.filename,
+                "file_hash": sha256_hash,
+                "record_count": len(parsed_transactions),
+                "provenance": "USER_UPLOADED"
+            }
         )
     except Exception:
         pass

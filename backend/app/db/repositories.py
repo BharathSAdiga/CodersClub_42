@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any, Tuple
 from decimal import Decimal
 import json
 import logging
@@ -448,9 +448,21 @@ class EvidenceRepository:
         business_id: str,
         document_name: str,
         document_type: str,
-        provenance: str,
+        provenance: str = "USER_UPLOADED",
         record_count: Optional[int] = None,
-        file_hash: Optional[str] = None
+        file_hash: Optional[str] = None,
+        uploaded_by: Optional[str] = None,
+        evidence_type: Optional[str] = None,
+        source_type: Optional[str] = None,
+        source_name: Optional[str] = None,
+        provenance_category: Optional[str] = None,
+        verification_status: str = "PENDING",
+        confidence_score: float = 0.75,
+        completeness: float = 1.0,
+        consistency: float = 1.0,
+        recency: float = 1.0,
+        file_reference: Optional[str] = None,
+        related_assessment_ids: Optional[List[str]] = None
     ) -> EvidenceRecordModel:
         db = self._get_session()
         try:
@@ -473,16 +485,34 @@ class EvidenceRepository:
                 ))
                 db.flush()
 
+            actual_prov = provenance_category or provenance or "USER_UPLOADED"
+            legacy_prov = provenance or provenance_category or "USER_UPLOADED"
+            now = utc_now()
             record = EvidenceRecordModel(
                 id=f"evd_{uuid.uuid4().hex[:12]}",
                 business_id=business_id,
+                uploaded_by=uploaded_by,
+                evidence_type=evidence_type or document_type or "BANK_STATEMENT",
+                source_type=source_type or "FILE_UPLOAD",
+                source_name=source_name or document_name,
+                provenance_category=actual_prov,
+                verification_status=verification_status,
+                confidence_score=confidence_score,
+                completeness=completeness,
+                consistency=consistency,
+                recency=recency,
+                uploaded_at=now,
+                last_reviewed_at=None,
+                file_reference=file_reference or document_name,
+                related_assessment_ids=json.dumps(related_assessment_ids or []),
                 document_name=document_name,
                 document_type=document_type,
-                provenance=provenance,
+                provenance=legacy_prov,
+                confidence=confidence_score,
                 record_count=record_count,
                 file_hash=file_hash,
-                upload_timestamp=utc_now(),
-                status="VERIFIED"
+                upload_timestamp=now,
+                status=verification_status
             )
             db.add(record)
             db.commit()
@@ -490,6 +520,57 @@ class EvidenceRepository:
         except Exception:
             db.rollback()
             raise
+        finally:
+            if not self._session:
+                db.close()
+
+    def get(self, evidence_id: str) -> Optional[EvidenceRecordModel]:
+        db = self._get_session()
+        try:
+            return db.query(EvidenceRecordModel).filter(EvidenceRecordModel.id == evidence_id).first()
+        finally:
+            if not self._session:
+                db.close()
+
+    def update_verification_status(
+        self,
+        evidence_id: str,
+        verification_status: str,
+        confidence_score: Optional[float] = None,
+        last_reviewed_at: Optional[datetime] = None
+    ) -> Optional[EvidenceRecordModel]:
+        db = self._get_session()
+        try:
+            rec = db.query(EvidenceRecordModel).filter(EvidenceRecordModel.id == evidence_id).first()
+            if rec:
+                rec.verification_status = verification_status
+                rec.status = verification_status
+                if confidence_score is not None:
+                    rec.confidence_score = confidence_score
+                    rec.confidence = confidence_score
+                rec.last_reviewed_at = last_reviewed_at or utc_now()
+                db.commit()
+                return rec
+            return None
+        except Exception:
+            db.rollback()
+            raise
+        finally:
+            if not self._session:
+                db.close()
+
+    def link_assessment(self, evidence_id: str, assessment_id: str) -> bool:
+        db = self._get_session()
+        try:
+            rec = db.query(EvidenceRecordModel).filter(EvidenceRecordModel.id == evidence_id).first()
+            if rec:
+                current_ids = json.loads(rec.related_assessment_ids or "[]")
+                if assessment_id not in current_ids:
+                    current_ids.append(assessment_id)
+                    rec.related_assessment_ids = json.dumps(current_ids)
+                    db.commit()
+                return True
+            return False
         finally:
             if not self._session:
                 db.close()
@@ -518,19 +599,23 @@ class ConsentRepository:
         data_provider: str,
         purpose: str,
         data_fields_granted: List[str],
-        expires_in_days: int = 30
+        expires_in_days: int = 30,
+        consent_version: str = "v1.0"
     ) -> ConsentRecordModel:
         db = self._get_session()
         try:
             now = utc_now()
+            scope_json = json.dumps(data_fields_granted)
             record = ConsentRecordModel(
                 id=f"cst_{uuid.uuid4().hex[:12]}",
                 user_id=user_id,
                 business_id=business_id,
                 data_provider=data_provider,
                 purpose=purpose,
-                data_fields_granted=json.dumps(data_fields_granted),
+                consent_scope=scope_json,
+                data_fields_granted=scope_json,
                 status="ACTIVE",
+                consent_version=consent_version,
                 granted_at=now,
                 expires_at=now + timedelta(days=expires_in_days),
                 revoked_at=None
@@ -552,7 +637,7 @@ class ConsentRepository:
             if user_id:
                 q = q.filter(ConsentRecordModel.user_id == user_id)
             record = q.first()
-            if not record:
+            if not record or record.status == "REVOKED":
                 return False
             record.status = "REVOKED"
             record.revoked_at = utc_now()
@@ -568,10 +653,83 @@ class ConsentRepository:
     def get_active_for_business(self, business_id: str) -> List[ConsentRecordModel]:
         db = self._get_session()
         try:
-            return db.query(ConsentRecordModel).filter(
+            now = utc_now()
+            all_active = db.query(ConsentRecordModel).filter(
                 ConsentRecordModel.business_id == business_id,
                 ConsentRecordModel.status == "ACTIVE"
             ).all()
+            # Automatically filter out and mark expired consents
+            valid_active = []
+            for c in all_active:
+                if c.expires_at:
+                    exp = c.expires_at.replace(tzinfo=timezone.utc) if c.expires_at.tzinfo is None else c.expires_at
+                    if exp < now:
+                        c.status = "EXPIRED"
+                        db.commit()
+                        continue
+                valid_active.append(c)
+            return valid_active
+        finally:
+            if not self._session:
+                db.close()
+
+    def get_history_for_business(self, business_id: str) -> List[ConsentRecordModel]:
+        db = self._get_session()
+        try:
+            now = utc_now()
+            records = db.query(ConsentRecordModel).filter(
+                ConsentRecordModel.business_id == business_id
+            ).order_by(ConsentRecordModel.granted_at.desc()).all()
+            # Update expired in place if needed
+            for c in records:
+                if c.status == "ACTIVE" and c.expires_at:
+                    exp = c.expires_at.replace(tzinfo=timezone.utc) if c.expires_at.tzinfo is None else c.expires_at
+                    if exp < now:
+                        c.status = "EXPIRED"
+            db.commit()
+            return records
+        finally:
+            if not self._session:
+                db.close()
+
+    def validate_lender_access(
+        self,
+        business_id: str,
+        lender_user_id: str,
+        required_scope: Optional[str] = None
+    ) -> tuple[bool, str]:
+        """
+        Validates whether a lender has legitimate authority to access borrower records.
+        Authority is granted if:
+        1. An active loan application assigns this lender to this business, OR
+        2. The borrower has granted active, unexpired consent covering the scope.
+        """
+        db = self._get_session()
+        try:
+            # 1. Check assigned application
+            assigned_app = db.query(LoanApplicationModel).filter(
+                LoanApplicationModel.business_id == business_id,
+                LoanApplicationModel.assigned_lender_id == lender_user_id
+            ).first()
+            if assigned_app:
+                return True, f"Authorized via assigned loan application '{assigned_app.id}'"
+
+            # 2. Check active consent
+            active_consents = self.get_active_for_business(business_id)
+            if not active_consents:
+                return False, "Access denied: No active borrower consent or loan application assignment found."
+
+            if required_scope:
+                has_scope = False
+                for c in active_consents:
+                    scopes = json.loads(c.consent_scope or c.data_fields_granted or "[]")
+                    if required_scope in scopes or "*" in scopes or "ALL" in scopes:
+                        has_scope = True
+                        break
+                if not has_scope:
+                    return False, f"Access denied: Active consent exists but does not grant required scope '{required_scope}'."
+
+            return True, f"Authorized via active borrower consent '{active_consents[0].id}'"
         finally:
             if not self._session:
                 db.close()
@@ -1011,20 +1169,33 @@ class AuditAccessLogRepository:
         action: str,
         username: Optional[str] = None,
         correlation_id: Optional[str] = None,
-        details: Optional[str] = None
+        details: Optional[str] = None,
+        outcome: str = "SUCCESS",
+        structured_metadata: Optional[Dict[str, Any]] = None
     ) -> AuditAccessLogModel:
+        """
+        Append-only audit log entry.
+        Guarantees that sensitive credentials, passwords, and tokens are never logged.
+        """
         db = self._get_session()
         try:
+            safe_meta_str = json.dumps(structured_metadata) if structured_metadata else None
             log_entry = AuditAccessLogModel(
                 id=f"audit_{uuid.uuid4().hex[:12]}",
                 user_id=user_id,
+                actor_user_id=user_id,
                 username=username,
                 role=role,
+                actor_role=role,
                 business_id=business_id,
+                resource_id=business_id,
                 resource_type=resource_type,
                 action=action,
                 correlation_id=correlation_id,
+                request_id=correlation_id,
+                outcome=outcome,
                 details=details,
+                structured_metadata=safe_meta_str,
                 timestamp=utc_now()
             )
             db.add(log_entry)
@@ -1041,19 +1212,28 @@ class AuditAccessLogRepository:
         db = self._get_session()
         try:
             return db.query(AuditAccessLogModel).filter(
-                AuditAccessLogModel.business_id == business_id
+                (AuditAccessLogModel.business_id == business_id) |
+                (AuditAccessLogModel.resource_id == business_id)
             ).order_by(AuditAccessLogModel.timestamp.desc()).limit(limit).all()
         finally:
             if not self._session:
                 db.close()
 
-    def list_system_logs(self, limit: int = 100) -> List[AuditAccessLogModel]:
+    def list_system_logs(self, limit: int = 100, role: Optional[str] = None, action: Optional[str] = None) -> List[AuditAccessLogModel]:
         db = self._get_session()
         try:
-            return db.query(AuditAccessLogModel).order_by(AuditAccessLogModel.timestamp.desc()).limit(limit).all()
+            q = db.query(AuditAccessLogModel)
+            if role:
+                q = q.filter(AuditAccessLogModel.role == role)
+            if action:
+                q = q.filter(AuditAccessLogModel.action == action)
+            return q.order_by(AuditAccessLogModel.timestamp.desc()).limit(limit).all()
         finally:
             if not self._session:
                 db.close()
+
+    def delete(self, *args, **kwargs):
+        raise PermissionError("Audit trail is strictly immutable and append-only. Historical audit logs cannot be modified or deleted.")
 
 def migrate_schema(target_engine=None):
     """Safely applies missing columns to existing SQLite tables without data loss."""
@@ -1103,6 +1283,60 @@ def migrate_schema(target_engine=None):
         if cols:
             if "confidence" not in cols:
                 conn.execute(text("ALTER TABLE evidence_records ADD COLUMN confidence FLOAT DEFAULT 1.0;"))
+            if "uploaded_by" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN uploaded_by VARCHAR(64);"))
+            if "evidence_type" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN evidence_type VARCHAR(64) DEFAULT 'BANK_STATEMENT';"))
+            if "source_type" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN source_type VARCHAR(64) DEFAULT 'FILE_UPLOAD';"))
+            if "source_name" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN source_name VARCHAR(128);"))
+            if "provenance_category" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN provenance_category VARCHAR(64) DEFAULT 'USER_UPLOADED';"))
+            if "verification_status" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN verification_status VARCHAR(32) DEFAULT 'PENDING';"))
+            if "confidence_score" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN confidence_score FLOAT DEFAULT 0.75;"))
+            if "completeness" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN completeness FLOAT DEFAULT 1.0;"))
+            if "consistency" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN consistency FLOAT DEFAULT 1.0;"))
+            if "recency" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN recency FLOAT DEFAULT 1.0;"))
+            if "uploaded_at" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN uploaded_at DATETIME;"))
+            if "last_reviewed_at" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN last_reviewed_at DATETIME;"))
+            if "file_reference" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN file_reference VARCHAR(256);"))
+            if "related_assessment_ids" not in cols:
+                conn.execute(text("ALTER TABLE evidence_records ADD COLUMN related_assessment_ids TEXT;"))
+
+        # Check consent_records columns
+        res = conn.execute(text("PRAGMA table_info(consent_records);")).fetchall()
+        cols = {r[1] for r in res}
+        if cols:
+            if "consent_scope" not in cols:
+                conn.execute(text("ALTER TABLE consent_records ADD COLUMN consent_scope TEXT;"))
+            if "consent_version" not in cols:
+                conn.execute(text("ALTER TABLE consent_records ADD COLUMN consent_version VARCHAR(32) DEFAULT 'v1.0';"))
+
+        # Check audit_access_logs columns
+        res = conn.execute(text("PRAGMA table_info(audit_access_logs);")).fetchall()
+        cols = {r[1] for r in res}
+        if cols:
+            if "actor_user_id" not in cols:
+                conn.execute(text("ALTER TABLE audit_access_logs ADD COLUMN actor_user_id VARCHAR(64);"))
+            if "actor_role" not in cols:
+                conn.execute(text("ALTER TABLE audit_access_logs ADD COLUMN actor_role VARCHAR(32);"))
+            if "resource_id" not in cols:
+                conn.execute(text("ALTER TABLE audit_access_logs ADD COLUMN resource_id VARCHAR(64);"))
+            if "request_id" not in cols:
+                conn.execute(text("ALTER TABLE audit_access_logs ADD COLUMN request_id VARCHAR(64);"))
+            if "outcome" not in cols:
+                conn.execute(text("ALTER TABLE audit_access_logs ADD COLUMN outcome VARCHAR(32) DEFAULT 'SUCCESS';"))
+            if "structured_metadata" not in cols:
+                conn.execute(text("ALTER TABLE audit_access_logs ADD COLUMN structured_metadata TEXT;"))
 
         # Check debt_obligations columns
         res = conn.execute(text("PRAGMA table_info(debt_obligations);")).fetchall()

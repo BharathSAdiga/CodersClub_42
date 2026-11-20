@@ -140,6 +140,16 @@ def verify_tenant_access(
     if norm == "BORROWER":
         assigned_business_id = current_user.get("business_id")
         if assigned_business_id != business_id:
+            audit_repo.log_access(
+                user_id=current_user.get("id", "sys"),
+                username=current_user.get("username"),
+                role=role,
+                business_id=business_id,
+                resource_type=resource_type,
+                action="UNAUTHORIZED_ACCESS_ATTEMPT",
+                details=f"Cross-tenant attempt: borrower restricted to '{assigned_business_id}', attempted access to '{business_id}'",
+                outcome="DENIED"
+            )
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Cross-tenant access forbidden: borrower is restricted to '{assigned_business_id}', attempted to access '{business_id}'"
@@ -149,16 +159,21 @@ def verify_tenant_access(
     # 3. Lenders
     if norm == "LENDER":
         if enforce_consent:
-            # Check for active consent from the borrower
-            active_consents = consent_repo.get_active_for_business(business_id)
-            # Check for assigned loan application
-            apps = application_repo.get_for_business(business_id)
-            has_assignment = any(a.assigned_lender_id == current_user.get("id") for a in apps)
-
-            if not active_consents and not has_assignment:
+            is_auth, reason = consent_repo.validate_lender_access(business_id, current_user.get("id"))
+            if not is_auth:
+                audit_repo.log_access(
+                    user_id=current_user.get("id", "sys"),
+                    username=current_user.get("username"),
+                    role=role,
+                    business_id=business_id,
+                    resource_type=resource_type,
+                    action="UNAUTHORIZED_ACCESS_ATTEMPT",
+                    details=f"Lender '{current_user.get('username')}' access denied: {reason}",
+                    outcome="DENIED"
+                )
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
-                    detail=f"Access forbidden: lender '{current_user.get('username')}' has neither valid borrower consent nor an assigned application for business '{business_id}'"
+                    detail=f"Access forbidden: {reason}"
                 )
 
         audit_repo.log_access(
@@ -167,10 +182,21 @@ def verify_tenant_access(
             role=role,
             business_id=business_id,
             resource_type=resource_type,
-            action=action
+            action=action,
+            outcome="SUCCESS"
         )
         return
 
+    audit_repo.log_access(
+        user_id=current_user.get("id", "sys"),
+        username=current_user.get("username"),
+        role=role,
+        business_id=business_id,
+        resource_type=resource_type,
+        action="UNAUTHORIZED_ACCESS_ATTEMPT",
+        details=f"Role '{role}' is not authorized for business '{business_id}'",
+        outcome="DENIED"
+    )
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail=f"Access forbidden: role '{role}' is not authorized for business '{business_id}'"

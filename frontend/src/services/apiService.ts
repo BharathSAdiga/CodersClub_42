@@ -460,6 +460,181 @@ class ApiService {
       eventSource.close();
     };
   }
+
+  // -------------------------------------------------------------
+  // Phase 2C: Consent Management, Evidence Intelligence & Audit Trail
+  // -------------------------------------------------------------
+
+  public async getActiveConsents(businessId: string): Promise<BackendConsentRecord[]> {
+    const res = await fetch(`${API_BASE}/consent/active/${encodeURIComponent(businessId)}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to load active consents: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async getConsentHistory(businessId: string): Promise<BackendConsentRecord[]> {
+    const res = await fetch(`${API_BASE}/consent/history/${encodeURIComponent(businessId)}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to load consent history: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async grantConsent(payload: {
+    business_id: string;
+    data_provider: string;
+    purpose?: string;
+    consent_scope?: string[];
+    expires_in_days?: number;
+  }): Promise<BackendConsentRecord> {
+    const res = await fetch(`${API_BASE}/consent/grant`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`Failed to grant consent: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async revokeConsent(consentId: string): Promise<{ status: string; consent_id: string; message: string }> {
+    const res = await fetch(`${API_BASE}/consent/${encodeURIComponent(consentId)}/revoke`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to revoke consent: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async getEvidenceAuditTrail(businessId: string): Promise<BackendEvidenceRecord[]> {
+    const res = await fetch(`${API_BASE}/evidence/audit-trail/${encodeURIComponent(businessId)}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to load evidence audit trail: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async getEvidenceConfidenceReport(businessId: string): Promise<BackendEvidenceConfidenceReport> {
+    const res = await fetch(`${API_BASE}/evidence/confidence/${encodeURIComponent(businessId)}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to load evidence confidence report: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async getBusinessAuditLogs(businessId: string, limit = 50): Promise<BackendAuditLogEvent[]> {
+    const res = await fetch(`${API_BASE}/audit/business/${encodeURIComponent(businessId)}?limit=${limit}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to load business audit logs: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async getSystemAuditLogs(limit = 100): Promise<BackendAuditLogEvent[]> {
+    const res = await fetch(`${API_BASE}/audit/logs?limit=${limit}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to load system audit logs: ${res.statusText}`);
+    return res.json();
+  }
+}
+
+export interface BackendConsentRecord {
+  id: string;
+  user_id: string;
+  business_id: string;
+  data_provider: string;
+  purpose: string;
+  consent_scope: string[];
+  data_fields_granted: string[];
+  status: 'ACTIVE' | 'REVOKED' | 'EXPIRED';
+  consent_version: string;
+  granted_at: string;
+  expires_at?: string;
+  revoked_at?: string;
+  is_expired?: boolean;
+}
+
+export interface BackendEvidenceRecord {
+  evidence_id: string;
+  business_id: string;
+  uploaded_by?: string;
+  evidence_type: string;
+  source_type: string;
+  source_name?: string;
+  provenance_category: string;
+  verification_status: string;
+  confidence_score: number;
+  completeness: number;
+  consistency: number;
+  recency: number;
+  uploaded_at: string;
+  last_reviewed_at?: string;
+  file_reference?: string;
+  related_assessment_ids: string[];
+  file_hash?: string;
+  record_count?: number;
+  document_name?: string;
+  document_type?: string;
+  status?: string;
+}
+
+export interface BackendReconciliationDiscrepancy {
+  discrepancy_id: string;
+  discrepancy_type: string;
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  source_a: string;
+  source_b: string;
+  difference_amount?: number;
+  description: string;
+  suggested_action: string;
+  flagged_for_human_review: boolean;
+}
+
+export interface BackendEvidenceConfidenceReport {
+  business_id: string;
+  confidence: {
+    evidence_confidence_score: number;
+    confidence_band: string;
+    data_completeness_pct: number;
+    consistency_pct: number;
+    recency_pct: number;
+    source_reliability_pct: number;
+    temporal_coverage_days: number;
+    total_records_analyzed: number;
+    available_data_sources: string[];
+    missing_evidence_fields: string[];
+    inconsistent_fields: string[];
+    confidence_rationale: string;
+    recommendations_to_improve: string[];
+  };
+  reconciliation: {
+    is_concordant: boolean;
+    concordance_score: number;
+    discrepancies: BackendReconciliationDiscrepancy[];
+    total_discrepancies: number;
+    unmatched_liabilities_count: number;
+    summary: string;
+  };
+  evidence_records: BackendEvidenceRecord[];
+  generated_at: string;
+}
+
+export interface BackendAuditLogEvent {
+  id: string;
+  actor_user_id: string;
+  actor_role: string;
+  action: string;
+  resource_type: string;
+  resource_id: string;
+  request_id?: string;
+  outcome: string;
+  details?: string;
+  structured_metadata?: Record<string, any>;
+  timestamp: string;
 }
 
 export const apiService = new ApiService();

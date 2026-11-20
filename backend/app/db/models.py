@@ -127,14 +127,30 @@ class EvidenceRecordModel(Base):
 
     id = Column(String(64), primary_key=True)
     business_id = Column(String(64), ForeignKey("businesses.id", ondelete="CASCADE"), nullable=False, index=True)
-    document_name = Column(String(128), nullable=False)
-    document_type = Column(String(64), nullable=False)
-    provenance = Column(String(64), nullable=False)  # INDEPENDENTLY_VERIFIED, SOURCE_LABELLED, SELF_REPORTED
-    confidence = Column(Float, nullable=True, default=1.0)
+    uploaded_by = Column(String(64), nullable=True)
+    evidence_type = Column(String(64), nullable=False, default="BANK_STATEMENT")  # BANK_STATEMENT, UPI_QR_LOG, GST_RETURN, FINANCIAL_DECLARATION, etc.
+    source_type = Column(String(64), nullable=False, default="FILE_UPLOAD")        # FILE_UPLOAD, ACCOUNT_AGGREGATOR, PORTAL_FETCH, SELF_DECLARATION
+    source_name = Column(String(128), nullable=True)
+    provenance_category = Column(String(64), nullable=False, default="USER_UPLOADED") # SELF_REPORTED, USER_UPLOADED, SOURCE_LABELLED, INDEPENDENTLY_VERIFIED, SYSTEM_DERIVED, MISSING
+    verification_status = Column(String(32), nullable=False, default="PENDING")   # PENDING, VERIFIED, FLAGGED, REJECTED, UNVERIFIED
+    confidence_score = Column(Float, nullable=True, default=0.75)
+    completeness = Column(Float, nullable=True, default=1.0)
+    consistency = Column(Float, nullable=True, default=1.0)
+    recency = Column(Float, nullable=True, default=1.0)
+    uploaded_at = Column(DateTime, default=utc_now)
+    last_reviewed_at = Column(DateTime, nullable=True)
+    file_reference = Column(String(256), nullable=True)
+    related_assessment_ids = Column(Text, nullable=True)  # JSON array string
+
+    # Legacy compatibility fields
+    document_name = Column(String(128), nullable=True)
+    document_type = Column(String(64), nullable=True)
+    provenance = Column(String(64), nullable=True)  # Mirror of provenance_category
+    confidence = Column(Float, nullable=True, default=0.75) # Mirror of confidence_score
     record_count = Column(Integer, nullable=True)
     file_hash = Column(String(64), nullable=True)
     upload_timestamp = Column(DateTime, default=utc_now)
-    status = Column(String(32), default="VERIFIED")
+    status = Column(String(32), default="PENDING") # Mirror of verification_status
 
     business = relationship("BusinessModel", back_populates="evidence_records")
 
@@ -146,8 +162,10 @@ class ConsentRecordModel(Base):
     business_id = Column(String(64), nullable=False, index=True)
     data_provider = Column(String(64), nullable=False)  # ACCOUNT_AGGREGATOR, GSTN, NPCI_UPI, DIGILOCKER
     purpose = Column(String(256), nullable=False)
-    data_fields_granted = Column(Text, nullable=False)  # JSON array string
+    consent_scope = Column(Text, nullable=True)         # JSON array string e.g. ["TRANSACTIONS", "TURNOVER_SUMMARY"]
+    data_fields_granted = Column(Text, nullable=True)   # Legacy alias for consent_scope
     status = Column(String(32), nullable=False, default="ACTIVE")  # ACTIVE, REVOKED, EXPIRED
+    consent_version = Column(String(32), nullable=False, default="v1.0")
     granted_at = Column(DateTime, default=utc_now)
     expires_at = Column(DateTime, nullable=True)
     revoked_at = Column(DateTime, nullable=True)
@@ -200,13 +218,19 @@ class AuditAccessLogModel(Base):
     __tablename__ = "audit_access_logs"
 
     id = Column(String(64), primary_key=True)
-    user_id = Column(String(64), nullable=False, index=True)
+    user_id = Column(String(64), nullable=False, index=True)      # actor_user_id
+    actor_user_id = Column(String(64), nullable=True, index=True) # explicit actor_user_id
     username = Column(String(64), nullable=True)
-    role = Column(String(32), nullable=False)
-    business_id = Column(String(64), nullable=False, index=True)
-    resource_type = Column(String(64), nullable=False)  # FINANCIAL_DATA, ASSESSMENT, EVIDENCE, TRANSACTIONS, APPLICATION
-    action = Column(String(64), nullable=False)         # READ, WRITE, RUN_UNDERWRITING, REVOKE
-    correlation_id = Column(String(64), nullable=True)
+    role = Column(String(32), nullable=False)                     # actor_role
+    actor_role = Column(String(32), nullable=True)                # explicit actor_role
+    business_id = Column(String(64), nullable=False, index=True)  # resource_id / business_id
+    resource_id = Column(String(64), nullable=True, index=True)  # explicit resource_id
+    resource_type = Column(String(64), nullable=False)            # FINANCIAL_DATA, ASSESSMENT, EVIDENCE, CONSENT, APPLICATION, USER, SYSTEM
+    action = Column(String(64), nullable=False)                   # LOGIN, LOGOUT, BUSINESS_UPDATE, DOCUMENT_UPLOAD, EVIDENCE_VERIFY, CONSENT_GRANT, CONSENT_REVOKE, ASSESSMENT_EXECUTE, ASSESSMENT_RESULT_ACCESS, LENDER_DATA_ACCESS, ADMIN_ACTION, UNAUTHORIZED_ACCESS_ATTEMPT
+    correlation_id = Column(String(64), nullable=True)            # request_id / correlation_id
+    request_id = Column(String(64), nullable=True)                # explicit request_id
+    outcome = Column(String(32), nullable=False, default="SUCCESS") # SUCCESS, FAILURE, DENIED
     details = Column(Text, nullable=True)
+    structured_metadata = Column(Text, nullable=True)             # JSON string for extra audit properties
     timestamp = Column(DateTime, default=utc_now, index=True)
 

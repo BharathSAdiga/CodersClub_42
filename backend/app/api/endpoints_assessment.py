@@ -238,6 +238,21 @@ async def trigger_assessment(
         message=f"Initiating UDYOGA agentic evaluation for {BUSINESS_STORE[business_id].trade_name}"
     )
     await event_bus.publish(init_event)
+
+    try:
+        from ..db import audit_repo
+        audit_repo.log_access(
+            user_id="system_orchestrator",
+            role="SYSTEM",
+            business_id=business_id,
+            resource_type="ASSESSMENT",
+            action="ASSESSMENT_EXECUTE",
+            details=f"Triggered 8-agent assessment '{assessment_id}' for business '{business_id}'.",
+            outcome="SUCCESS",
+            structured_metadata={"assessment_id": assessment_id, "business_id": business_id}
+        )
+    except Exception:
+        pass
     
     # Queue execution
     background_tasks.add_task(execute_agent_assessment, assessment_id, business_id)

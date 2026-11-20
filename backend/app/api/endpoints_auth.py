@@ -144,6 +144,15 @@ async def login(credentials: LoginRequest):
     """
     user = user_repo.get_by_username_or_email(credentials.username)
     if not user:
+        audit_repo.log_access(
+            user_id="anonymous",
+            role="UNKNOWN",
+            business_id="GLOBAL",
+            resource_type="USER",
+            action="LOGIN",
+            details=f"Failed login attempt for identifier '{credentials.username}' - user not found",
+            outcome="DENIED"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password"
@@ -151,6 +160,16 @@ async def login(credentials: LoginRequest):
 
     # Check active status
     if not user.is_active:
+        audit_repo.log_access(
+            user_id=user.id,
+            username=user.username,
+            role=user.role,
+            business_id=user.business_id or "GLOBAL",
+            resource_type="USER",
+            action="LOGIN",
+            details=f"Deactivated account login attempt by '{user.username}'",
+            outcome="DENIED"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User account is deactivated or suspended."
@@ -158,6 +177,16 @@ async def login(credentials: LoginRequest):
 
     # Verify bcrypt password hash
     if not verify_password(credentials.password, user.password_hash):
+        audit_repo.log_access(
+            user_id=user.id,
+            username=user.username,
+            role=user.role,
+            business_id=user.business_id or "GLOBAL",
+            resource_type="USER",
+            action="LOGIN",
+            details=f"Failed password verification for user '{user.username}'",
+            outcome="DENIED"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password"
@@ -165,6 +194,16 @@ async def login(credentials: LoginRequest):
 
     # Update last login timestamp
     user_repo.update_last_login(user.id)
+    audit_repo.log_access(
+        user_id=user.id,
+        username=user.username,
+        role=user.role,
+        business_id=user.business_id or "GLOBAL",
+        resource_type="USER",
+        action="LOGIN",
+        details=f"User '{user.username}' ({user.role}) successfully authenticated.",
+        outcome="SUCCESS"
+    )
 
     # Issue Access Token
     token_data = {
@@ -282,6 +321,18 @@ async def logout(
     if req and req.refresh_token:
         refresh_token_repo.revoke(req.refresh_token)
     refresh_token_repo.revoke_all_for_user(current_user["id"])
+
+    audit_repo.log_access(
+        user_id=current_user["id"],
+        username=current_user.get("username"),
+        role=current_user.get("role", "BORROWER"),
+        business_id=current_user.get("business_id", "GLOBAL"),
+        resource_type="USER",
+        action="LOGOUT",
+        details=f"User '{current_user.get('username')}' logged out; session tokens revoked.",
+        outcome="SUCCESS"
+    )
+
     return {
         "status": "LOGGED_OUT",
         "message": "User session and refresh tokens successfully revoked."
@@ -300,6 +351,17 @@ async def demo_login(req: DemoLoginRequest):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Unknown persona '{req.persona_key}'. Available personas: {valid_keys}"
         )
+
+    audit_repo.log_access(
+        user_id=persona["id"],
+        username=persona["username"],
+        role=persona["role"],
+        business_id=persona["business_id"] or "GLOBAL",
+        resource_type="USER",
+        action="LOGIN",
+        details=f"Demo persona login for '{req.persona_key}' ({persona['role']}).",
+        outcome="SUCCESS"
+    )
 
     token_data = {
         "sub": persona["id"],
