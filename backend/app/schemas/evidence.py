@@ -1,14 +1,39 @@
 from pydantic import BaseModel, Field
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Literal
 from datetime import datetime, timezone
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
+EvidenceProvenance = Literal[
+    "USER_PROVIDED",
+    "SOURCE_LABELLED",
+    "INDEPENDENTLY_VERIFIED",
+    "MISSING"
+]
+
+FairnessAuditStatus = Literal[
+    "NOT_RUN",
+    "PASSED",
+    "FLAGGED",
+    "INCONCLUSIVE"
+]
+
+class EvidenceItem(BaseModel):
+    """Granular evidence provenance and verification metadata."""
+    attribute_name: str = Field(..., description="Name of the financial or operational attribute (e.g. 'monthly_turnover', 'gst_3b_filings')")
+    provenance: EvidenceProvenance = Field(
+        ...,
+        description="Source provenance: USER_PROVIDED, SOURCE_LABELLED, INDEPENDENTLY_VERIFIED, MISSING"
+    )
+    source_reference: Optional[str] = Field(default=None, description="Identifier of source document or bank account")
+    is_verified: bool = False
+    confidence_weight: float = Field(default=1.0, ge=0.0, le=1.0)
+
 class EvidenceConfidence(BaseModel):
     """
     Evidence Confidence and Data Integrity Scorer.
-    IMPORTANT: Missing evidence must NOT automatically reduce financial health.
+    CRITICAL POLICY: Missing evidence must NOT automatically reduce financial health.
     Missing evidence is measured as epistemic uncertainty, not financial delinquency.
     """
     business_id: str
@@ -23,10 +48,10 @@ class EvidenceConfidence(BaseModel):
         description="Confidence in data completeness and cross-verifiability"
     )
     data_completeness_pct: float = Field(..., ge=0.0, le=100.0)
-    temporal_coverage_days: int
-    total_records_analyzed: int
+    temporal_coverage_days: int = Field(default=0, ge=0)
+    total_records_analyzed: int = Field(default=0, ge=0)
     
-    # Tracked Data Sources
+    # Tracked Data Sources & Granular Provenance
     available_data_sources: List[str] = Field(
         default_factory=list,
         description="e.g., ['BANK_STATEMENTS', 'UPI_QR_LOGS', 'GST_RETURNS', 'UTILITY_RECEIPTS']"
@@ -34,6 +59,14 @@ class EvidenceConfidence(BaseModel):
     missing_evidence_fields: List[str] = Field(
         default_factory=list,
         description="Fields not provided (e.g. ['GSTIN_RETURN_3B', 'FORM_26AS'])"
+    )
+    evidence_items: List[EvidenceItem] = Field(
+        default_factory=list,
+        description="Detailed provenance for every analyzed evidence attribute"
+    )
+    sources_provenance: Dict[str, EvidenceProvenance] = Field(
+        default_factory=dict,
+        description="Mapping of data sources to their provenance level"
     )
     
     # Policy: Absence of Evidence != Negative Evidence
@@ -44,12 +77,25 @@ class EvidenceConfidence(BaseModel):
     
     cross_source_concordance_pct: Optional[float] = Field(
         default=None,
+        ge=0.0,
+        le=100.0,
         description="Percentage agreement between declared turnover and verified transaction credits"
     )
-    fairness_audit_passed: bool = Field(
-        default=True,
-        description="Audit verification ensuring no discriminatory proxy variables influenced scoring"
+    
+    # Structured Fairness Audit Status (Replaces default boolean)
+    fairness_audit_status: FairnessAuditStatus = Field(
+        default="NOT_RUN",
+        description="Structured fairness and non-discrimination audit status: NOT_RUN, PASSED, FLAGGED, INCONCLUSIVE"
     )
+    
+    @property
+    def fairness_audit_passed(self) -> Optional[bool]:
+        """Backward-compatible boolean indicator."""
+        if self.fairness_audit_status == "PASSED":
+            return True
+        elif self.fairness_audit_status == "FLAGGED":
+            return False
+        return None
     
     calculation_assumptions: List[str] = Field(
         default_factory=lambda: [

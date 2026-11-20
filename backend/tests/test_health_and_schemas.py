@@ -76,7 +76,7 @@ def test_assessment_preseeded_and_trigger():
     memo = response.json()
     assert memo["assessment_status"] == "INDICATIVE_RECOMMENDATION"
     assert "300" not in str(memo)  # Bureau score claim removed
-    assert memo["recommended_loan_amount_inr"] > 0
+    assert float(memo["recommended_loan_amount_inr"]) > 0
     assert "disclaimer" in memo
 
     # 2. Check trigger endpoint
@@ -121,5 +121,5 @@ def test_transactions_batch_ingest():
     assert summary["total_parsed"] == 2
     assert summary["credits_count"] == 1
     assert summary["debits_count"] == 1
-    assert summary["total_credit_volume"] == 1500.0
-    assert summary["total_debit_volume"] == 800.0
+    assert float(summary["total_credit_volume"]) == 1500.0
+    assert float(summary["total_debit_volume"]) == 800.0

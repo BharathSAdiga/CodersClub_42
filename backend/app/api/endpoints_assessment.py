@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from fastapi.responses import StreamingResponse
 from typing import Dict, Optional
+from decimal import Decimal
 import uuid
 import asyncio
 from datetime import datetime, timezone
@@ -17,11 +18,17 @@ from ..schemas.evidence import EvidenceConfidence
 from ..schemas.resilience import ShockSimulationResult, ShockScenarioInput, AffordabilityAnalysis
 from ..core.event_bus import event_bus
 from .endpoints_business import BUSINESS_STORE
+from .endpoints_transactions import TRANSACTION_STORE
+from ..modules.agents import orchestrator
 
 router = APIRouter(prefix="/assessment", tags=["Assessment & Agent Orchestration"])
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 # In-memory store for assessments
 ASSESSMENT_STORE: Dict[str, CreditAppraisalMemo] = {}
@@ -37,9 +44,11 @@ def build_demo_memo(assessment_id: str, business_id: str) -> CreditAppraisalMemo
         status = "HUMAN_REVIEW_REQUIRED"
         risk_band = "HIGH_RISK"
         inv_status = "HUMAN_REVIEW_RECOMMENDED"
-        recommended_loan = 0.0
+        recommended_loan = Decimal("0.0")
         tenure = 0
         apr = "N/A"
+        apr_min = None
+        apr_max = None
         facility = "NONE_RECOMMENDED"
         confidence = 88.0
         strengths = [
@@ -66,9 +75,11 @@ def build_demo_memo(assessment_id: str, business_id: str) -> CreditAppraisalMemo
         status = "CONDITIONAL_RECOMMENDATION"
         risk_band = "MODERATE_RISK"
         inv_status = "NORMAL_PATTERNS"
-        recommended_loan = 150000.0
+        recommended_loan = Decimal("150000.0")
         tenure = 9
         apr = "14.0% - 15.5% p.a."
+        apr_min = Decimal("14.0")
+        apr_max = Decimal("15.5")
         facility = "REVENUE_BASED_DAILY_SWEEP"
         confidence = 72.0
         strengths = [
@@ -94,9 +105,11 @@ def build_demo_memo(assessment_id: str, business_id: str) -> CreditAppraisalMemo
         status = "INDICATIVE_RECOMMENDATION"
         risk_band = "LOW_RISK"
         inv_status = "NORMAL_PATTERNS"
-        recommended_loan = 250000.0
+        recommended_loan = Decimal("250000.0")
         tenure = 12
         apr = "13.2% - 14.5% p.a."
+        apr_min = Decimal("13.2")
+        apr_max = Decimal("14.5")
         facility = "UNSECURED_WORKING_CAPITAL_LINE"
         confidence = 82.0
         strengths = [
@@ -130,11 +143,24 @@ def build_demo_memo(assessment_id: str, business_id: str) -> CreditAppraisalMemo
         investigation_status=inv_status,
         recommended_loan_amount_inr=recommended_loan,
         recommended_tenure_months=tenure,
+        indicative_apr_min_pct=apr_min,
+        indicative_apr_max_pct=apr_max,
         indicative_apr_range=apr,
         recommended_facility_type=facility,
         positive_credit_factors=strengths,
         risk_factors_and_vulnerabilities=vulnerabilities,
         recommended_covenants_and_mitigants=mitigants,
+        assumptions=[
+            "Assesses behavioral operational cash flows rather than balance sheet asset collateral",
+            "Debt capacity calculated on verified unencumbered monthly operating surplus",
+            "Repayments structured to avoid exceeding 50% fixed obligation to income ratio"
+        ],
+        data_limitations=[
+            "Unbanked physical cash turnover not reflected in digital statements",
+            "Evaluates digital evidence records provided as of assessment date"
+        ],
+        evidence_references=[f"ref_statement_{business_id}", f"ref_upi_{business_id}"],
+        calculation_version="1.0.0",
         cam_narrative_markdown=narrative,
         is_fallback_rule_based=False,
         is_synthetic_evaluation=True
@@ -145,97 +171,48 @@ for demo_b_id in ["msme_kirana_kanpur_001", "msme_trading_surat_002", "msme_weav
     demo_a_id = f"eval_{demo_b_id}"
     ASSESSMENT_STORE[demo_a_id] = build_demo_memo(demo_a_id, demo_b_id)
 
-async def simulate_agent_pipeline_execution(assessment_id: str, business_id: str):
+async def execute_agent_assessment(assessment_id: str, business_id: str):
     """
-    Simulates asynchronous multi-agent execution pipeline emitting real-time SSE events.
+    Executes the real asynchronous multi-agent assessment pipeline emitting real-time SSE events.
     Excludes private chain-of-thought, exposing tasks, tool calls, structured findings, and status.
     """
-    steps = [
-        (
-            "FinancialDNAAgent",
-            "compute_behavioral_velocity",
-            "TOOL_CALLED",
-            "parse_cash_velocity",
-            "Analyzing 180-day transactional velocity and rolling volatility index...",
-            {"cash_velocity_days": 2.8, "volatility_cv": 0.18, "rolling_dscr": 1.84}
-        ),
-        (
-            "FinancialDNAAgent",
-            "evaluate_seasonality_patterns",
-            "STRUCTURED_RESULT",
-            None,
-            "Financial DNA profile synthesized: Low revenue volatility with high customer turnover.",
-            {"seasonality_index": 1.12, "weekend_to_weekday_ratio": 1.45}
-        ),
-        (
-            "ForensicInvestigatorAgent",
-            "audit_counterparty_topology",
-            "TOOL_CALLED",
-            "networkx_cycle_detector",
-            "Running topological graph analysis on 54 distinct counterparty nodes...",
-            {"cycles_detected": 0 if "trading" not in business_id else 1}
-        ),
-        (
-            "ForensicInvestigatorAgent",
-            "evaluate_suspicious_patterns",
-            "STRUCTURED_RESULT",
-            None,
-            "Graph audit complete. " + (
-                "Anomaly flagged: Circular transfer detected between 2 related entities."
-                if "trading" in business_id else "No circular trading or abnormal round-tripping identified."
-            ),
-            {"status": "INVESTIGATION_TRIGGERED" if "trading" in business_id else "NORMAL_PATTERNS"}
-        ),
-        (
-            "ResilienceAuditorAgent",
-            "simulate_economic_stress",
-            "TOOL_CALLED",
-            "deterministic_shock_engine",
-            "Applying -25% revenue contraction and +15% COGS shock scenario...",
-            {"baseline_runway_days": 90, "stressed_runway_days": 54}
-        ),
-        (
-            "SeniorUnderwriterAgent",
-            "synthesize_appraisal_memo",
-            "STRUCTURED_RESULT",
-            None,
-            "Synthesizing Credit Appraisal Memo with risk bands, limits, and covenant terms.",
-            {"decision": "INDICATIVE_RECOMMENDATION" if "trading" not in business_id else "HUMAN_REVIEW_REQUIRED"}
-        ),
-    ]
-
-    for agent_name, step_name, status, tool, msg, findings in steps:
-        await asyncio.sleep(0.8)
-        event = AgentEvent(
-            event_id=f"evt_{uuid.uuid4().hex[:10]}",
+    profile = BUSINESS_STORE.get(business_id)
+    if not profile:
+        return
+    txs = TRANSACTION_STORE.get(business_id, [])
+    
+    try:
+        memo = await orchestrator.run_assessment_pipeline(
+            business_profile=profile,
+            assessment_id=assessment_id,
+            transactions=txs
+        )
+        ASSESSMENT_STORE[assessment_id] = memo
+    except Exception as e:
+        logger.error(f"Error during async assessment {assessment_id}: {e}")
+        fallback_memo = CreditAppraisalMemo(
             assessment_id=assessment_id,
             business_id=business_id,
-            agent_name=agent_name,
-            step_name=step_name,
-            status=status,
-            tool_called=tool,
-            tool_input_summary=f"Input parameters for {tool}" if tool else None,
-            structured_findings=findings,
-            message=msg
+            generated_at=utc_now(),
+            assessment_status="HUMAN_REVIEW_REQUIRED",
+            financial_risk_band="UNASSESSED",
+            evidence_confidence_score=0.0,
+            investigation_status="FAILED",
+            recommended_loan_amount_inr=Decimal("0.0"),
+            recommended_tenure_months=0,
+            recommended_facility_type="NONE_RECOMMENDED",
+            positive_credit_factors=[],
+            risk_factors_and_vulnerabilities=[f"Assessment execution halted: {str(e)}"],
+            recommended_covenants_and_mitigants=["Manual credit underwriter review required."],
+            assumptions=["Automated multi-agent execution encountered an error."],
+            data_limitations=[str(e)],
+            evidence_references=[],
+            calculation_version="1.0.0",
+            cam_narrative_markdown=f"### Pipeline Execution Error\n\nThe assessment pipeline encountered an exception: `{str(e)}`.\nA human underwriter must review this application.",
+            is_fallback_rule_based=True,
+            fallback_reason=f"Pipeline error: {str(e)}"
         )
-        await event_bus.publish(event)
-
-    # Final completion event
-    await asyncio.sleep(0.5)
-    completion_event = AgentEvent(
-        event_id=f"evt_{uuid.uuid4().hex[:10]}",
-        assessment_id=assessment_id,
-        business_id=business_id,
-        agent_name="SeniorUnderwriterAgent",
-        step_name="complete_assessment",
-        status="COMPLETED",
-        message="Assessment complete. Credit Appraisal Memo generated and published."
-    )
-    await event_bus.publish(completion_event)
-    await event_bus.close_stream(assessment_id)
-
-    # Persist the final memo
-    ASSESSMENT_STORE[assessment_id] = build_demo_memo(assessment_id, business_id)
+        ASSESSMENT_STORE[assessment_id] = fallback_memo
 
 @router.post("/run", response_model=AssessmentTriggerResponse)
 async def trigger_assessment(
@@ -262,7 +239,7 @@ async def trigger_assessment(
     await event_bus.publish(init_event)
     
     # Queue execution
-    background_tasks.add_task(simulate_agent_pipeline_execution, assessment_id, business_id)
+    background_tasks.add_task(execute_agent_assessment, assessment_id, business_id)
     
     return AssessmentTriggerResponse(
         assessment_id=assessment_id,
@@ -284,6 +261,11 @@ async def stream_assessment_events(assessment_id: str):
             "X-Accel-Buffering": "no"
         }
     )
+
+@router.get("/{assessment_id}/events", response_model=list[AgentEvent])
+async def get_assessment_events(assessment_id: str):
+    """Retrieve history of structured agent execution events for an assessment."""
+    return event_bus.get_history(assessment_id)
 
 @router.get("/{assessment_id}/result", response_model=CreditAppraisalMemo)
 async def get_assessment_result(assessment_id: str):

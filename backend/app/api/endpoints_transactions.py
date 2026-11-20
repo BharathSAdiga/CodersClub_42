@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from typing import Optional, List
 from datetime import datetime, timedelta
+from decimal import Decimal
 import uuid
 import io
 import csv
@@ -38,8 +39,8 @@ async def ingest_batch_transactions(batch: TransactionBatchIngest):
         total_parsed=len(batch.transactions),
         credits_count=len(credits),
         debits_count=len(debits),
-        total_credit_volume=sum(t.amount for t in credits),
-        total_debit_volume=sum(t.amount for t in debits),
+        total_credit_volume=sum((t.amount for t in credits), Decimal("0.0")),
+        total_debit_volume=sum((t.amount for t in debits), Decimal("0.0")),
         start_date=start_date,
         end_date=end_date,
         coverage_days=max(coverage_days, 1)
@@ -71,8 +72,8 @@ async def upload_transactions_csv(
             except Exception:
                 ts = datetime.utcnow()
                 
-            amount = float(row.get("amount", 0.0))
-            if amount <= 0:
+            amount_val = Decimal(str(row.get("amount", "0.0")))
+            if amount_val <= Decimal("0.0"):
                 continue
                 
             direction = row.get("direction", "CREDIT").upper()
@@ -83,7 +84,7 @@ async def upload_transactions_csv(
             if channel not in ["UPI_QR", "NEFT_RTGS", "IMPS", "CASH_DEPOSIT", "CHEQUE", "POS_SWIPE"]:
                 channel = "UPI_QR"
                 
-            category = row.get("category", "CUSTOMER_REVENUE").upper()
+            category = row.get("category", "CUSTOMER_REVENUE" if direction == "CREDIT" else "SUPPLIER_PURCHASE").upper()
             if category not in [
                 "CUSTOMER_REVENUE", "SUPPLIER_PURCHASE", "RENT_UTILITIES", 
                 "SALARY_WAGES", "EXISTING_LOAN_EMI", "TAX_STATUTORY", 
@@ -95,10 +96,10 @@ async def upload_transactions_csv(
                 transaction_id=f"tx_{uuid.uuid4().hex[:10]}",
                 business_id=business_id,
                 timestamp=ts,
-                amount=amount,
+                amount=amount_val,
                 direction=direction,
                 channel=channel,
-                counterparty_id=row.get("counterparty_id", f"cp_{uuid.uuid4().hex[:6]}"),
+                counterparty_id=row.get("counterparty_id"),
                 counterparty_name=row.get("counterparty_name", "Undisclosed"),
                 category=category,
                 narration=row.get("narration")
@@ -111,17 +112,18 @@ async def upload_transactions_csv(
         # Fallback demo transactions if CSV had different format or empty
         now = datetime.utcnow()
         for i in range(30):
+            is_credit = (i % 4 != 0)
             parsed_transactions.append(
                 Transaction(
                     transaction_id=f"tx_demo_{i}",
                     business_id=business_id,
                     timestamp=now - timedelta(days=30-i),
-                    amount=8500.0 + (i * 250),
-                    direction="CREDIT" if i % 4 != 0 else "DEBIT",
+                    amount=Decimal(str(8500.0 + (i * 250))),
+                    direction="CREDIT" if is_credit else "DEBIT",
                     channel="UPI_QR",
                     counterparty_id=f"cp_retail_{i % 5}",
                     counterparty_name=f"Retail Customer {i % 5}",
-                    category="CUSTOMER_REVENUE" if i % 4 != 0 else "SUPPLIER_PURCHASE"
+                    category="CUSTOMER_REVENUE" if is_credit else "SUPPLIER_PURCHASE"
                 )
             )
 
@@ -135,8 +137,8 @@ async def upload_transactions_csv(
         total_parsed=len(parsed_transactions),
         credits_count=len(credits),
         debits_count=len(debits),
-        total_credit_volume=sum(t.amount for t in credits),
-        total_debit_volume=sum(t.amount for t in debits),
+        total_credit_volume=sum((t.amount for t in credits), Decimal("0.0")),
+        total_debit_volume=sum((t.amount for t in debits), Decimal("0.0")),
         start_date=min(timestamps),
         end_date=max(timestamps),
         coverage_days=max((max(timestamps) - min(timestamps)).days, 1)
@@ -157,8 +159,8 @@ async def get_transactions_summary(business_id: str):
         total_parsed=len(txs),
         credits_count=len(credits),
         debits_count=len(debits),
-        total_credit_volume=sum(t.amount for t in credits),
-        total_debit_volume=sum(t.amount for t in debits),
+        total_credit_volume=sum((t.amount for t in credits), Decimal("0.0")),
+        total_debit_volume=sum((t.amount for t in debits), Decimal("0.0")),
         start_date=min(timestamps),
         end_date=max(timestamps),
         coverage_days=max((max(timestamps) - min(timestamps)).days, 1)

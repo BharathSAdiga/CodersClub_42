@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List, Dict
 import uuid
 from datetime import datetime, timezone
+from decimal import Decimal
 from ..schemas.business import BusinessProfile, BusinessProfileCreate
 
 router = APIRouter(prefix="/business", tags=["Business & Profiles"])
@@ -22,8 +23,8 @@ DEMO_PROFILES: List[BusinessProfile] = [
         vintage_months=42,
         location_tier="TIER_2",
         entity_type="PROPRIETORSHIP",
-        declared_monthly_turnover=285000.0,
-        declared_existing_monthly_emi=4500.0,
+        declared_monthly_turnover=Decimal("285000.0"),
+        declared_existing_monthly_emi=Decimal("4500.0"),
         has_gstin=False,
         gstin=None,
         has_udyam_registration=True,
@@ -39,8 +40,8 @@ DEMO_PROFILES: List[BusinessProfile] = [
         vintage_months=28,
         location_tier="TIER_2",
         entity_type="LLP",
-        declared_monthly_turnover=1450000.0,
-        declared_existing_monthly_emi=28000.0,
+        declared_monthly_turnover=Decimal("1450000.0"),
+        declared_existing_monthly_emi=Decimal("28000.0"),
         has_gstin=True,
         gstin="24AAACA0000A1Z5",
         has_udyam_registration=True,
@@ -56,8 +57,8 @@ DEMO_PROFILES: List[BusinessProfile] = [
         vintage_months=64,
         location_tier="TIER_3",
         entity_type="PARTNERSHIP",
-        declared_monthly_turnover=420000.0,
-        declared_existing_monthly_emi=8000.0,
+        declared_monthly_turnover=Decimal("420000.0"),
+        declared_existing_monthly_emi=Decimal("8000.0"),
         has_gstin=False,
         gstin=None,
         has_udyam_registration=True,

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
 from datetime import datetime, timezone
+from decimal import Decimal
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
@@ -22,8 +23,8 @@ class BusinessProfile(BaseModel):
     vintage_months: int = Field(..., ge=0, description="Months in continuous operation")
     location_tier: Literal["TIER_1", "TIER_2", "TIER_3", "RURAL"]
     entity_type: Literal["PROPRIETORSHIP", "PARTNERSHIP", "LLP", "PRIVATE_LIMITED", "INFORMAL_ENTERPRISE"]
-    declared_monthly_turnover: float = Field(..., ge=0.0)
-    declared_existing_monthly_emi: float = Field(default=0.0, ge=0.0, description="Self-reported current debt repayment")
+    declared_monthly_turnover: Decimal = Field(..., ge=Decimal("0.0"), description="Declared monthly turnover in INR (must be non-negative)")
+    declared_existing_monthly_emi: Decimal = Field(default=Decimal("0.0"), ge=Decimal("0.0"), description="Self-reported current debt repayment (must be non-negative)")
     has_gstin: bool = False
     gstin: Optional[str] = None
     has_udyam_registration: bool = False
@@ -46,8 +47,8 @@ class BusinessProfileCreate(BaseModel):
     vintage_months: int = Field(..., ge=0)
     location_tier: Literal["TIER_1", "TIER_2", "TIER_3", "RURAL"]
     entity_type: Literal["PROPRIETORSHIP", "PARTNERSHIP", "LLP", "PRIVATE_LIMITED", "INFORMAL_ENTERPRISE"]
-    declared_monthly_turnover: float
-    declared_existing_monthly_emi: float = 0.0
+    declared_monthly_turnover: Decimal = Field(..., ge=Decimal("0.0"), description="Declared monthly turnover in INR (must be non-negative)")
+    declared_existing_monthly_emi: Decimal = Field(default=Decimal("0.0"), ge=Decimal("0.0"), description="Self-reported current debt repayment (must be non-negative)")
     has_gstin: bool = False
     gstin: Optional[str] = None
     has_udyam_registration: bool = False
