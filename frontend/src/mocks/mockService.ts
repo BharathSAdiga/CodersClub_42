@@ -12,6 +12,17 @@ class CentralizedMockService {
   private latencyMs: number = 250;
 
   constructor() {
+    if (typeof window !== 'undefined') {
+      try {
+        const storedCustom: PersonaProfile[] = JSON.parse(sessionStorage.getItem('udyoga_custom_personas') || '[]');
+        storedCustom.forEach((p) => {
+          mockPersonas[p.id] = p;
+        });
+      } catch (e) {
+        console.error('Failed to load custom personas from session storage', e);
+      }
+    }
+
     const saved = typeof window !== 'undefined' ? sessionStorage.getItem('udyoga_active_persona') : null;
     if (saved && mockPersonas[saved]) {
       this.activePersonaKey = saved;
@@ -39,6 +50,20 @@ class CentralizedMockService {
 
   public getAllPersonas(): PersonaProfile[] {
     return Object.values(mockPersonas);
+  }
+
+  public registerCustomPersona(newPersona: PersonaProfile): PersonaProfile {
+    mockPersonas[newPersona.id] = newPersona;
+    if (typeof window !== 'undefined') {
+      try {
+        const storedCustom = JSON.parse(sessionStorage.getItem('udyoga_custom_personas') || '[]');
+        storedCustom.push(newPersona);
+        sessionStorage.setItem('udyoga_custom_personas', JSON.stringify(storedCustom));
+      } catch (e) {
+        console.error('Failed to persist custom persona to session storage', e);
+      }
+    }
+    return newPersona;
   }
 
   // Applications
