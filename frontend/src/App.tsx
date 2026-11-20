@@ -8,6 +8,7 @@ import { StickyProductStoryteller } from '@/components/interactive/StickyProduct
 import { ScrollReveal } from '@/components/interactive/ScrollReveal';
 import { ParallaxLayer } from '@/components/interactive/ParallaxLayer';
 import { CountUpNumber } from '@/components/interactive/CountUpNumber';
+import { MovingStatsTicker } from '@/components/interactive/MovingStatsTicker';
 import { ProblemSolution } from '@/features/public/components/ProblemSolution';
 import { HowItWorks } from '@/features/public/components/HowItWorks';
 import { AcieExplanation } from '@/features/public/components/AcieExplanation';
@@ -363,34 +364,9 @@ export function App() {
             <SplitWaveformHero />
           </ParallaxLayer>
 
-          {/* Key Value Statistics Bar with Dynamic Count-Up Numbers */}
+          {/* Key Value Statistics Bar with Live Moving Text Animation */}
           <ScrollReveal direction="up" delay={0.1} duration={0.8}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 sm:p-8 rounded-3xl bg-brand-forest text-brand-ivory shadow-elevated hover:shadow-2xl transition-shadow duration-300">
-              <div>
-                <div className="text-3xl sm:text-4xl font-display font-bold text-brand-mint font-mono">
-                  ₹<CountUpNumber end={25} />L Cr
-                </div>
-                <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">MSME Credit Gap in India</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-display font-bold text-white font-mono">
-                  <CountUpNumber end={85} suffix="%" />
-                </div>
-                <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">Lack Formal Collateral Assets</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-display font-bold text-brand-mint font-mono">
-                  &lt; <CountUpNumber end={15} /> Mins
-                </div>
-                <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">Average Flow Assessment Turnaround</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-display font-bold text-brand-terracotta font-mono">
-                  0 Bias
-                </div>
-                <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">Audit-Ready Explainable Decisions</div>
-              </div>
-            </div>
+            <MovingStatsTicker />
           </ScrollReveal>
         </div>
       </section>
