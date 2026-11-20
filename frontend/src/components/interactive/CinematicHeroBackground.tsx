@@ -1,84 +1,39 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 interface CinematicHeroBackgroundProps {
-  videoSrc?: string;
-  fallbackPoster?: string;
+  imageSrc?: string;
 }
 
 export const CinematicHeroBackground: React.FC<CinematicHeroBackgroundProps> = ({
-  videoSrc = '/assets/video/msme_cinematic_story.mp4',
-  fallbackPoster,
+  imageSrc = '/assets/images/msme_hero_cinematic.jpg',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoDuration, setVideoDuration] = useState<number>(0);
-  const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false);
-  const [hasReducedMotion, setHasReducedMotion] = useState<boolean>(false);
 
-  // Check for reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setHasReducedMotion(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setHasReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-
-  // Track scroll through the hero section (offset: start of hero to bottom of hero)
+  // Track scroll through the hero section
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
   });
 
-  // Smooth scroll progress to eliminate micro-jitter and create buttery Apple-style playback
+  // Buttery spring smoothing for organic deceleration curve
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 28,
-    mass: 0.2,
+    stiffness: 90,
+    damping: 24,
+    mass: 0.25,
     restDelta: 0.0005,
   });
 
-  // Background visual transformations:
-  // Starts with soft opacity so the warm ivory initial state is completely preserved (0% opacity at top).
-  // As user begins scrolling (0.05 -> 0.6), video opacity transitions smoothly to ~0.35 - 0.45.
-  // Video gently scales from 1.0 to 1.08 giving camera push-in depth.
-  const videoOpacity = useTransform(smoothProgress, [0, 0.1, 0.5, 0.9, 1], [0.03, 0.25, 0.42, 0.35, 0.1]);
-  const videoScale = useTransform(smoothProgress, [0, 1], [1.0, 1.08]);
-  const videoTranslateY = useTransform(smoothProgress, [0, 1], ['0%', '12%']);
-
-  // Handle video metadata loaded to know duration
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      setVideoDuration(videoRef.current.duration || 10);
-      setIsVideoLoaded(true);
-    }
-  };
-
-  // Synchronize scroll progress directly to video.currentTime for forward/reverse scrubbing
-  useEffect(() => {
-    if (!videoRef.current || hasReducedMotion) return;
-
-    let targetTime = 0;
-
-    const unsubscribe = smoothProgress.on('change', (progressVal) => {
-      if (videoDuration > 0 && videoRef.current) {
-        // Clamp progress between 0 and 1
-        const clampedProgress = Math.max(0, Math.min(1, progressVal));
-        targetTime = clampedProgress * videoDuration;
-
-        // Scrub video playback frame safely
-        if (Math.abs(videoRef.current.currentTime - targetTime) > 0.03) {
-          videoRef.current.currentTime = targetTime;
-        }
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [smoothProgress, videoDuration, hasReducedMotion]);
+  // Cinematic Parallax Transformations:
+  // Starts with gentle presence (0.15) to maintain the clean Warm Ivory look at initial landing
+  // Reveals rich depth as user scrolls down (up to 0.45 opacity), then softly dissolves into next section
+  const imageOpacity = useTransform(smoothProgress, [0, 0.25, 0.65, 1], [0.18, 0.42, 0.35, 0.08]);
+  
+  // Cinematic camera push-in: scales gently from 1.0 -> 1.10
+  const imageScale = useTransform(smoothProgress, [0, 1], [1.0, 1.10]);
+  
+  // Y-axis multi-plane translation: moves slower than text creating true parallax depth
+  const imageTranslateY = useTransform(smoothProgress, [0, 1], ['0%', '15%']);
 
   return (
     <div
@@ -86,47 +41,34 @@ export const CinematicHeroBackground: React.FC<CinematicHeroBackgroundProps> = (
       className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0"
       aria-hidden="true"
     >
-      {/* Cinematic Layer with Scroll Physics */}
+      {/* Cinematic Image Layer with Parallax Spring Physics */}
       <motion.div
         style={{
-          opacity: videoOpacity,
-          scale: videoScale,
-          y: videoTranslateY,
+          opacity: imageOpacity,
+          scale: imageScale,
+          y: imageTranslateY,
           willChange: 'transform, opacity',
         }}
         className="absolute inset-0 w-full h-full flex items-center justify-center"
       >
-        {/* Cinematic Video Element */}
-        <video
-          ref={videoRef}
-          src={videoSrc}
-          poster={fallbackPoster}
-          playsInline
-          muted
-          preload="auto"
-          onLoadedMetadata={handleLoadedMetadata}
-          onError={() => setIsVideoLoaded(false)}
-          className="w-full h-full object-cover object-center filter saturate-[0.85] contrast-[1.05]"
+        <img
+          src={imageSrc}
+          alt="UDYOGA MSME Financial Horizon"
+          className="w-full h-full object-cover object-center filter saturate-[0.92] contrast-[1.04]"
         />
-
-        {/* Ambient Film Grain & Vignette Atmosphere if video isn't active or as fallback */}
-        {!isVideoLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-forest/5 via-brand-terracotta/5 to-transparent" />
-        )}
       </motion.div>
 
-      {/* Warm Ivory & Forest Brand Tone Preserving Radial Overlays */}
-      {/* 1. Center Readability Shield: Keeps the black & forest typography 100% legible */}
-      <div className="absolute inset-0 bg-radial-gradient from-brand-ivory/90 via-brand-ivory/60 to-transparent pointer-events-none" />
+      {/* Brand Preservation & Typography Readability Shields */}
+      {/* 1. Center Radial Mask: Keeps "Beyond credit. Beyond barriers." razor-sharp & legible */}
+      <div className="absolute inset-0 bg-radial-gradient from-brand-ivory/92 via-brand-ivory/65 to-transparent pointer-events-none" />
 
-      {/* 2. Top & Bottom Seamless Edge Transitions into Navbar and Next Section */}
-      <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-brand-ivory via-brand-ivory/80 to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-brand-ivory via-brand-ivory/80 to-transparent pointer-events-none" />
+      {/* 2. Top & Bottom Seamless Edge Transitions into Navbar and Waveform Section */}
+      <div className="absolute top-0 inset-x-0 h-44 bg-gradient-to-b from-brand-ivory via-brand-ivory/85 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-brand-ivory via-brand-ivory/85 to-transparent pointer-events-none" />
 
-      {/* 3. Subtle Brand-Themed Corner Ambient Blooms for Depth */}
-      <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand-forest/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/4 -right-24 w-[480px] h-[480px] bg-brand-terracotta/10 rounded-full blur-[140px] pointer-events-none" />
+      {/* 3. Deep Brand Atmospheric Blooms */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand-forest/15 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/4 -right-24 w-[500px] h-[500px] bg-brand-terracotta/10 rounded-full blur-[140px] pointer-events-none" />
     </div>
   );
 };
-
