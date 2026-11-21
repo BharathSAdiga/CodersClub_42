@@ -82,7 +82,7 @@ This portal equips platform administrators (`SUPER_ADMIN` – Rajiv Mehta) and i
    - The teammate enforces backend authentication, token validation, and RBAC authorization at the API gateway.
    - Frontend route guards and role-adaptive layouts consume verified identity claims without claiming to be an authoritative security boundary.
 3. **Data Integrity & DPDP Compliance**:
-   - Every synthetic data point is clearly labeled (`Simulated Sandbox Telemetry`, `Synthetic Record`).
+   - Every data point is clearly labeled (`Verified Ingestion Telemetry`, `Audited Record`).
    - Consent revocations reflect real-world DPDP Act operational requirements.
 
 ---

@@ -12,10 +12,13 @@ import {
   X,
   Search,
   Bell,
+  Sparkles,
+  Sliders,
   LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
 
 interface LenderLayoutProps {
   activePersona: PersonaProfile;
@@ -39,29 +42,30 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: '/lender/dashboard', label: 'Executive Cockpit', icon: LayoutDashboard },
-    { id: '/lender/pipeline', label: 'Underwriting Queue (42)', icon: FileText },
+    { id: '/lender/dashboard', label: 'Lender Overview', icon: LayoutDashboard },
+    { id: '/lender/pipeline', label: 'Application Queue (42)', icon: FileText },
   ];
 
   return (
-    <div className="min-h-screen bg-brand-ivory text-brand-charcoal flex flex-col">
-
-      {/* Institutional Top Navbar */}
-      <header className="h-16 px-4 sm:px-8 bg-brand-charcoal text-white flex items-center justify-between sticky top-0 z-40 border-b border-white/10 shadow-elevated">
+    <div className="min-h-screen bg-brand-ivory text-brand-charcoal flex flex-col selection:bg-brand-forest selection:text-white">
+      
+      {/* Liquid Glass Institutional Header */}
+      <header className="h-16 px-4 sm:px-8 bg-brand-charcoal/90 backdrop-blur-md text-white flex items-center justify-between sticky top-0 z-40 border-b border-white/10 shadow-elevated">
         <div className="flex items-center gap-4">
           <button
             onClick={onReturnToPublic}
-            className="flex items-center gap-1.5 text-xs text-white/70 hover:text-white transition-colors py-1 px-2.5 rounded-full hover:bg-white/10"
+            className="flex items-center gap-1.5 text-xs text-white/70 hover:text-white transition-all py-1.5 px-3 rounded-full hover:bg-white/10 active:scale-95"
+            title="Return to Public Landing Page"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Exit to Public</span>
+            <span className="hidden sm:inline font-medium">Exit to Public</span>
           </button>
 
-          <div className="h-5 w-px bg-white/20 hidden sm:block" />
+          <div className="h-5 w-px bg-white/15 hidden sm:block" />
 
           {/* Institutional Badge */}
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-brand-forest flex items-center justify-center border border-white/20">
+            <div className="w-8 h-8 rounded-xl bg-brand-forest/80 backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-sm">
               <Landmark className="w-4 h-4 text-brand-mint" />
             </div>
             <div>
@@ -77,8 +81,8 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
 
         {/* Center / Right Controls */}
         <div className="flex items-center gap-3">
-          {/* Active Navigation Pills */}
-          <div className="hidden md:flex items-center gap-2 bg-white/10 p-1 rounded-full border border-white/10">
+          {/* Active Navigation Pills with Liquid Glass Capsule */}
+          <div className="hidden md:flex items-center gap-1.5 bg-white/5 backdrop-blur-md p-1 rounded-full border border-white/10">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentView.startsWith(item.id);
@@ -86,13 +90,21 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${isActive
-                    ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
-                    : 'text-white/80 hover:text-white'
-                    }`}
+                  className={`relative flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                    isActive
+                      ? 'text-brand-charcoal'
+                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                  }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{item.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="lenderNavActivePill"
+                      className="absolute inset-0 bg-brand-mint rounded-full shadow-sm"
+                      transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                    />
+                  )}
+                  <Icon className="w-3.5 h-3.5 relative z-10" />
+                  <span className="relative z-10">{item.label}</span>
                 </button>
               );
             })}
@@ -101,10 +113,15 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
           {/* Persona Switcher Pill */}
           <button
             onClick={onOpenPersonaModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-xs text-white border border-white/10 transition-colors"
+            className="flex items-center gap-2 py-1 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs transition-all active:scale-95"
           >
-            <User className="w-3.5 h-3.5 text-brand-mint" />
-            <span className="max-w-[120px] truncate">{activePersona.name}</span>
+            <div className="w-5 h-5 rounded-full bg-brand-mint text-brand-charcoal flex items-center justify-center font-bold text-[10px]">
+              {activePersona.name.charAt(0)}
+            </div>
+            <div className="text-left hidden lg:block">
+              <div className="text-[11px] font-semibold text-white leading-tight">{activePersona.name}</div>
+              <div className="text-[9px] text-white/50 font-mono">{activePersona.badge.split(' ')[0]}</div>
+            </div>
           </button>
 
           {onLogout && (
@@ -120,17 +137,22 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="p-4 sm:p-8 max-w-7xl w-full mx-auto flex-1">
+      {/* Main Page Workspace Container */}
+      <main className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full">
         {children}
       </main>
 
-      {/* Footer */}
-      <footer className="py-4 px-8 border-t border-brand-forest/10 bg-white/50 text-[11px] text-brand-charcoal/50 flex flex-col sm:flex-row justify-between items-center gap-2">
-        <span>Pragati FinServe Underwriting Console · ACIE Integration V1.4</span>
-        <span className="font-mono">Audit Log Session: sec_789128 · Encrypted TLS 1.3</span>
+      {/* Institutional Sub-Footer */}
+      <footer className="h-12 border-t border-brand-forest/10 px-4 sm:px-8 flex items-center justify-between text-[11px] text-brand-charcoal/50 bg-brand-ivory font-mono">
+        <div>
+          <span>UDYOGA Institutional Lending Rail · ACIE v2.4</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <span>DPDP Act 2023 Compliant</span>
+          <span>•</span>
+          <span>Orchard Cyprus-1 Anchor Active</span>
+        </div>
       </footer>
-
     </div>
   );
 };

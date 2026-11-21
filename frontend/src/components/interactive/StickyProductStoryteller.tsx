@@ -1,20 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, AnimatePresence } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
 import { 
-  Building2, 
-  Database, 
-  Cpu, 
-  ShieldCheck, 
   CheckCircle2, 
   ArrowRight, 
-  Check, 
-  Layers, 
-  Activity, 
+  ShieldCheck, 
+  Cpu, 
+  Landmark, 
+  Wallet, 
+  Scale, 
+  Layers,
   Sparkles,
-  FileCheck2,
-  Banknote
+  Lock,
+  QrCode,
+  FileSpreadsheet
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 
 interface WorkflowStep {
   id: number;
@@ -40,8 +40,8 @@ const stepsData: WorkflowStep[] = [
   {
     id: 1,
     stageBadge: 'STEP 01 • CONSENTED INTAKE',
-    title: 'Borrower initiates consent via India Stack DPI',
-    shortDesc: 'A kirana or artisan owner logs in with mobile OTP. With zero physical paperwork, they grant DPDP-compliant Account Aggregator (AA) and merchant UPI QR stream permissions in 60 seconds.',
+    title: 'Borrower connects verified data with one-time OTP',
+    shortDesc: 'A small business owner links their bank account and merchant UPI records in minutes via the RBI Account Aggregator framework. No paper photocopies or branch visits required.',
     detailPoints: [
       'No physical branch visit or land registration ledger needed',
       'Encrypted ReBIT-certified consent token issued via Sahamati',
@@ -49,8 +49,8 @@ const stepsData: WorkflowStep[] = [
     ],
     actor: 'Ramesh Kumar (Kirana Merchant)',
     visualCard: {
-      heading: 'Sahamati AA Ingestion Rail',
-      subheading: 'Account Aggregator FIP Handshake (SBI Current A/c)',
+      heading: 'Secure Data Connection',
+      subheading: 'Account Aggregator Verification (SBI Current A/c)',
       metric1Label: 'Consent Validity',
       metric1Val: '90 Days Active',
       metric2Label: 'Encrypted Rail',
@@ -62,21 +62,21 @@ const stepsData: WorkflowStep[] = [
   },
   {
     id: 2,
-    stageBadge: 'STEP 02 • MULTI-MODAL RECONCILIATION',
-    title: 'Financial signals triangulated in real time',
-    shortDesc: 'Daily merchant cash flow is mapped across three distinct digital rails: verified bank deposits, GSTN outward supply invoices, and UPI merchant QR logs to eliminate synthetic invoice fraud.',
+    stageBadge: 'STEP 02 • MULTI-STREAM VERIFICATION',
+    title: 'Financial records cross-verified across official rails',
+    shortDesc: 'Daily business cash flow is cross-checked across verified bank deposits, GST tax filings, and merchant UPI payment records to ensure records are genuine and reliable.',
     detailPoints: [
-      'Automatic cross-examination of Bank ₹5.84L vs GST ₹6.10L vs UPI ₹5.12L',
+      'Cross-examination of Bank ₹5.84L vs GST ₹6.10L vs UPI ₹5.12L',
       '95.8% multi-stream congruence confirmed',
       'Zero circular transaction loops detected across counterparty VPAs'
     ],
     actor: 'UDYOGA Verification Rail',
     visualCard: {
-      heading: '3-Way Triangulation Radar',
-      subheading: 'Cross-rail verification across GSTN, Bank AA, and UPI',
-      metric1Label: 'Triangulation Ratio',
-      metric1Val: '95.8% Congruence',
-      metric2Label: 'Anomaly Loops',
+      heading: 'Cross-Stream Verification',
+      subheading: 'Reconciled across GST, Bank AA, and UPI',
+      metric1Label: 'Congruence Score',
+      metric1Val: '95.8% Match',
+      metric2Label: 'Discrepancies',
       metric2Val: '0 Detected',
       statusBadge: 'VERIFIED GENUINE',
       statusColor: 'emerald',
@@ -85,55 +85,55 @@ const stepsData: WorkflowStep[] = [
   },
   {
     id: 3,
-    stageBadge: 'STEP 03 • EXPLAINABLE UNDERWRITING',
-    title: 'ACIE generates explainable Credit Vitality',
-    shortDesc: 'The Alternative Credit Intelligence Engine (ACIE) evaluates cash-flow velocity, debt service ability, and operational stability. It produces an institutional 0–900 Vitality Score with visual SHAP drivers.',
+    stageBadge: 'STEP 03 • EXPLAINABLE ASSESSMENT',
+    title: 'Comprehensive Cash-Flow & Vitality Assessment',
+    shortDesc: 'The assessment engine evaluates cash-flow stability, repayment cushion, and operating continuity. It provides a clear 0–900 Credit Vitality estimate with plain-English explanation of drivers.',
     detailPoints: [
-      'Mathematical Shapley additive explanations (SHAP) reveal positive and drag drivers',
-      'Deterministic counterfactual coaching (e.g. "+₹1.5L limit with 15 days higher balance")',
-      'Eliminates black-box bias against thin-file and new-to-credit micro-enterprises'
+      'Visual factor impact breakdown explains positive and risk drivers',
+      'Actionable guidance (e.g. "+₹1.5L limit with 15 days higher balance cushion")',
+      'Fair evaluation for businesses with thin traditional bureau histories'
     ],
     actor: 'Alternative Credit Intelligence Engine (ACIE)',
     visualCard: {
-      heading: 'ACIE Scorecard & Drivers',
-      subheading: 'Institutional Credit Vitality Model Output',
+      heading: 'Assessment Overview & Drivers',
+      subheading: 'Your Business Financial Overview',
       metric1Label: 'Credit Vitality',
       metric1Val: '768 / 900 (Tier A)',
       metric2Label: 'Model Confidence',
       metric2Val: '97.4% High',
       statusBadge: 'PRIME CASHFLOW',
       statusColor: 'emerald',
-      highlightItem: 'Top Positive Driver: Daily UPI merchant inflow regularity (+56 pts). Utility punctuality (+38 pts).'
+      highlightItem: 'Top Supporting Factor: Consistent daily UPI inflows (+56 pts). On-time utility bill payments (+38 pts).'
     }
   },
   {
     id: 4,
     stageBadge: 'STEP 04 • LENDER DECISION DESK',
-    title: 'Institutional credit officer reviews & sanctions',
-    shortDesc: 'Partner bank or NBFC underwriters review the structured credit report on their dedicated workbench. The human credit officer retains sovereign authority to calibrate haircuts and issue sanction terms.',
+    title: 'Credit officer reviews and customizes loan terms',
+    shortDesc: 'Partner bank or NBFC credit officers review the verified report. Human underwriters retain decision authority to calibrate credit limits and propose suitable repayment schedules.',
     detailPoints: [
       'Human-in-the-loop underwriting with transparent risk indicators',
       'Automated Key Fact Statement (KFS) generated upfront per RBI norms',
-      'Instant sanction letter generation with customized interest spread'
+      'Formal digital sanction letter with customized terms'
     ],
-    actor: 'Vikram Deshmukh (Pragati FinServe NBFC)',
+    actor: 'Vikram Deshmukh (Credit Officer)',
     visualCard: {
-      heading: 'Underwriting Sanction Desk',
-      subheading: 'Facility: Unsecured Working Capital Line',
+      heading: 'Underwriting Review Desk',
+      subheading: 'Facility: Working Capital Line',
       metric1Label: 'Sanction Limit',
       metric1Val: '₹1,50,000 INR',
       metric2Label: 'APR / Repayment',
       metric2Val: '14.2% • 90 Days',
       statusBadge: 'SANCTION ISSUED',
       statusColor: 'forest',
-      highlightItem: 'Daily sachet sweep covenant (₹1,890/day) synchronized with evening merchant closing UPI auto-sweep.'
+      highlightItem: 'Daily sweep schedule (₹1,890/day) aligned with evening merchant closing UPI auto-sweep.'
     }
   },
   {
     id: 5,
     stageBadge: 'STEP 05 • DISBURSAL & SACHET REPAYMENT',
-    title: 'Instant current a/c disbursal with daily micro-sweeps',
-    shortDesc: 'Funds are credited directly to the merchant’s current account in under 3 minutes. Repayments execute as frictionless daily UPI AutoPay micro-sweeps without monthly lump-sum panic.',
+    title: 'Direct account disbursal with manageable daily sweeps',
+    shortDesc: 'Approved funds are credited directly to the merchant’s bank current account. Repayments execute as automated daily UPI AutoPay micro-sweeps without stressful month-end lump sums.',
     detailPoints: [
       'Direct account credit via NPCI IMPS / NEFT rails with 0 escrow delays',
       'Flexible daily sachet deduction aligned with daily sales cadence',
@@ -141,15 +141,15 @@ const stepsData: WorkflowStep[] = [
     ],
     actor: 'Borrower & NPCI AutoPay Rail',
     visualCard: {
-      heading: 'Disbursal & Sachet Sweep Rail',
-      subheading: 'UPI AutoPay & Direct Current Account Settlement',
+      heading: 'Disbursal & Manageable Repayment',
+      subheading: 'UPI AutoPay & Direct Bank Settlement',
       metric1Label: 'Disbursed Amount',
       metric1Val: '₹1,50,000 Credited',
       metric2Label: 'Disbursal TAT',
       metric2Val: '3 Mins 42 Secs',
       statusBadge: 'ACTIVE CAPITAL LINE',
       statusColor: 'emerald',
-      highlightItem: 'Borrower successfully graduated from informal 60% moneylender debt to formal institutional credit.'
+      highlightItem: 'Borrower establishes formal credit history with affordable institutional financing.'
     }
   }
 ];
@@ -180,80 +180,122 @@ export const StickyProductStoryteller: React.FC = () => {
   const activeStep = stepsData[activeStepIndex];
 
   return (
-    <section ref={containerRef} className="relative bg-brand-charcoal text-white pt-20 pb-28">
-      {/* Background radial atmosphere */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-brand-forest/20 rounded-full blur-[140px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section 
+      ref={containerRef} 
+      className="relative bg-brand-charcoal text-brand-ivory min-h-[350vh] border-y border-white/10"
+    >
+      {/* Sticky Viewport Container */}
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden px-4 sm:px-6 lg:px-8 py-12">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <Badge variant="outline" className="border-brand-mint/40 text-brand-mint bg-brand-mint/10 mb-4">
-            STICKY INTERACTIVE WALKTHROUGH
-          </Badge>
-          <h2 className="text-3xl sm:text-5xl font-display font-extrabold tracking-tight text-white mb-4">
-            From thin-file to funded in five transparent stages.
-          </h2>
-          <p className="text-white/70 text-sm sm:text-base leading-relaxed">
-            Follow an application journey as it progresses from consented India Stack ingestion to explainable algorithmic assessment and final human underwriting approval.
-          </p>
+        {/* Background Atmosphere */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-forest/20 rounded-full blur-[140px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-terracotta/15 rounded-full blur-[140px]" />
         </div>
 
-        {/* 2-Column Sticky Layout on Desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start relative">
+        <div className="max-w-7xl mx-auto w-full relative z-10">
           
-          {/* Left Sticky Stage Visual Showcase (5 cols on lg) */}
-          <div className="lg:col-span-6 lg:sticky lg:top-28 z-20">
-            <div className="rounded-3xl bg-brand-forest/40 border border-brand-mint/20 p-6 sm:p-8 backdrop-blur-xl shadow-elevated relative overflow-hidden">
-              
-              {/* Subtle top indicator bar */}
-              <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-brand-mint animate-pulse" />
-                  <span className="text-xs font-mono font-semibold tracking-wider text-brand-mint uppercase">
-                    Live Workflow Simulator
-                  </span>
-                </div>
-                <span className="text-xs font-mono text-white/50">
-                  Step {activeStep.id} of {stepsData.length}
-                </span>
-              </div>
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16">
+            <Badge variant="mint-pill" className="text-xs mb-3">
+              END-TO-END WALKTHROUGH
+            </Badge>
+            <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+              From business transactions to working capital.
+            </h2>
+            <p className="text-sm text-white/70 mt-2">
+              Follow how a local merchant turns verified daily cash flow into an approved credit facility.
+            </p>
+          </div>
 
-              {/* Dynamic Animated Content Panel */}
+          {/* 2-Column Split: Narrative on Left, Dynamic Card on Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            
+            {/* Left Narrative Column (6 cols) */}
+            <div className="lg:col-span-6 space-y-6">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeStep.id}
-                  initial={{ opacity: 0, y: 16, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -16, scale: 0.98 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  className="space-y-6"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="space-y-4"
                 >
-                  {/* Card Header & Title */}
-                  <div>
-                    <span className="text-xs font-mono text-brand-mint font-semibold">
-                      {activeStep.visualCard.heading}
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-brand-mint">
+                      {activeStep.stageBadge}
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-display font-bold text-white mt-1">
-                      {activeStep.visualCard.subheading}
-                    </h3>
+                    <span className="text-white/40 font-mono text-xs">• Step {activeStep.id} of 5</span>
                   </div>
 
-                  {/* 2 Key Metrics Box */}
-                  <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-white/5 border border-white/10">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight leading-tight">
+                    {activeStep.title}
+                  </h3>
+
+                  <p className="text-sm sm:text-base text-white/80 leading-relaxed font-sans">
+                    {activeStep.shortDesc}
+                  </p>
+
+                  {/* Bullet points */}
+                  <ul className="space-y-2 pt-2">
+                    {activeStep.detailPoints.map((pt, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-white/70">
+                        <span className="w-4 h-4 rounded-full bg-brand-mint/20 text-brand-mint flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+                          ✓
+                        </span>
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Right Dynamic Card Column (6 cols) */}
+            <div className="lg:col-span-6 flex justify-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStep.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, type: 'spring', stiffness: 300, damping: 25 }}
+                  className="w-full max-w-md rounded-3xl p-6 sm:p-8 bg-brand-forest/90 border border-white/20 shadow-elevated backdrop-blur-md space-y-6"
+                >
+                  {/* Card Header */}
+                  <div className="flex items-start justify-between border-b border-white/10 pb-4">
                     <div>
-                      <div className="text-[11px] text-white/60 font-mono">
+                      <span className="text-xs font-mono text-white/70">
+                        Live System Signal
+                      </span>
+                      <h4 className="text-lg font-display font-bold text-white mt-0.5">
+                        {activeStep.visualCard.heading}
+                      </h4>
+                      <span className="text-[11px] text-white/60 block">
+                        {activeStep.visualCard.subheading}
+                      </span>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-brand-mint">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                  </div>
+
+                  {/* Metrics Row */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                      <div className="text-[11px] text-white/70 font-mono">
                         {activeStep.visualCard.metric1Label}
                       </div>
-                      <div className="text-lg font-bold font-mono text-brand-mint mt-0.5">
+                      <div className="text-base sm:text-lg font-mono font-bold text-brand-mint mt-1">
                         {activeStep.visualCard.metric1Val}
                       </div>
                     </div>
-                    <div>
-                      <div className="text-[11px] text-white/60 font-mono">
+                    <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                      <div className="text-[11px] text-white/70 font-mono">
                         {activeStep.visualCard.metric2Label}
                       </div>
-                      <div className="text-lg font-bold font-mono text-white mt-0.5">
+                      <div className="text-base sm:text-lg font-mono font-bold text-white mt-1">
                         {activeStep.visualCard.metric2Val}
                       </div>
                     </div>
@@ -269,79 +311,36 @@ export const StickyProductStoryteller: React.FC = () => {
 
                   {/* Status Footer */}
                   <div className="flex items-center justify-between pt-2 text-xs">
-                    <span className="text-white/60">
+                    <span className="text-white/70">
                       Acting Principal: <strong className="text-white font-medium">{activeStep.actor}</strong>
                     </span>
-                    <Badge variant="outline" className="border-brand-mint/40 text-brand-mint bg-brand-mint/10 text-[10px]">
+                    <Badge variant="mint-pill" className="text-[10px]">
                       {activeStep.visualCard.statusBadge}
                     </Badge>
                   </div>
                 </motion.div>
               </AnimatePresence>
-
-              {/* Progress step dots */}
-              <div className="flex items-center gap-2 pt-6 mt-6 border-t border-white/10">
-                {stepsData.map((step, idx) => (
-                  <button
-                    key={step.id}
-                    onClick={() => setActiveStepIndex(idx)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      activeStepIndex === idx
-                        ? 'w-8 bg-brand-mint'
-                        : 'w-2 bg-white/20 hover:bg-white/40'
-                    }`}
-                    aria-label={`Jump to step ${step.id}`}
-                  />
-                ))}
-              </div>
             </div>
+
           </div>
 
-          {/* Right Scrollable Story Timeline (6 cols on lg) */}
-          <div className="lg:col-span-6 space-y-16 lg:space-y-24 py-4">
-            {stepsData.map((step, idx) => {
-              const isActive = activeStepIndex === idx;
-
-              return (
-                <div
-                  key={step.id}
-                  onClick={() => setActiveStepIndex(idx)}
-                  className={`p-6 sm:p-8 rounded-3xl transition-all duration-500 cursor-pointer border ${
-                    isActive
-                      ? 'bg-white/10 border-brand-mint shadow-elevated scale-[1.01]'
-                      : 'bg-white/[0.02] border-white/10 hover:bg-white/5 opacity-60'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono font-bold tracking-wider text-brand-mint">
-                      {step.stageBadge}
-                    </span>
-                    <span className="text-xs font-mono text-white/40">0{step.id}</span>
-                  </div>
-
-                  <h3 className="text-2xl font-display font-bold text-white mb-3">
-                    {step.title}
-                  </h3>
-
-                  <p className="text-sm text-white/80 leading-relaxed mb-6 font-normal">
-                    {step.shortDesc}
-                  </p>
-
-                  <div className="space-y-2.5 pt-4 border-t border-white/10">
-                    {step.detailPoints.map((point, pIdx) => (
-                      <div key={pIdx} className="flex items-start gap-2.5 text-xs text-white/70">
-                        <Check className="w-3.5 h-3.5 text-brand-mint shrink-0 mt-0.5" />
-                        <span>{point}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+          {/* Progress step dots & direct step buttons */}
+          <div className="flex items-center justify-center gap-3 pt-8 mt-6 border-t border-white/10">
+            {stepsData.map((step, idx) => (
+              <button
+                key={step.id}
+                onClick={() => setActiveStepIndex(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  activeStepIndex === idx
+                    ? 'w-10 bg-brand-mint'
+                    : 'w-2.5 bg-white/20 hover:bg-white/40'
+                }`}
+                aria-label={`Jump to step ${step.id}`}
+              />
+            ))}
           </div>
 
         </div>
-
       </div>
     </section>
   );

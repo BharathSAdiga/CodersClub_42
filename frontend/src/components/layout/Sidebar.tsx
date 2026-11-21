@@ -78,8 +78,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Business / User Badge */}
-        <div className="p-3.5 rounded-2xl bg-white/10 border border-white/10 mb-6">
-          <span className="text-[10px] uppercase font-mono tracking-wider text-brand-mint block">
+        <div className="p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-sm border border-white/15 mb-6">
+          <span className="text-[10px] uppercase font-mono tracking-wider text-emerald-300 font-bold block">
             Active Entity
           </span>
           <h4 className="font-display font-semibold text-xs text-white truncate mt-0.5">

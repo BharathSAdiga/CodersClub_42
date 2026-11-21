@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ScrollReveal } from '@/components/interactive/ScrollReveal';
-import { ShieldCheck, Lock, FileText, CheckCircle2, RefreshCw } from 'lucide-react';
+import { ShieldCheck, Lock, RefreshCw } from 'lucide-react';
 
 export const TrustSafetySection: React.FC = () => {
   return (
@@ -10,12 +10,12 @@ export const TrustSafetySection: React.FC = () => {
         <div className="rounded-3xl bg-brand-forest text-brand-ivory p-8 sm:p-12 border border-brand-forest/30 shadow-card">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10">
-              <Badge variant="mint">Regulatory Integrity</Badge>
+              <Badge variant="mint-pill" className="text-xs">Security & Regulatory Compliance</Badge>
               <h2 className="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight mt-2">
-                Built strictly compliant with RBI & DPDP standards.
+                Designed in line with RBI Guidelines and DPDP Privacy Standards.
               </h2>
               <p className="text-xs sm:text-sm text-white/80 mt-2 max-w-xl mx-auto leading-relaxed">
-                We never access personal smartphone contacts, media gallery, or storage. Data is accessed solely upon explicit user consent and purged upon request.
+                We never access personal smartphone contacts, media gallery, or storage. Data is accessed solely upon explicit user consent and can be revoked at any time.
               </p>
             </div>
 
@@ -33,9 +33,9 @@ export const TrustSafetySection: React.FC = () => {
               <ScrollReveal direction="up" delay={0.2} duration={0.5}>
                 <div className="p-5 rounded-2xl bg-white/10 border border-white/10 h-full hover:bg-white/15 transition-colors">
                   <Lock className="w-6 h-6 text-brand-mint mb-3" />
-                  <h4 className="font-display font-bold text-sm text-white">DPDP Act 2023 Compliance</h4>
+                  <h4 className="font-display font-bold text-sm text-white">DPDP Privacy Standards</h4>
                   <p className="text-xs text-white/70 mt-1 leading-relaxed">
-                    Purpose-limited processing with an instant one-click consent revocation center and verifiable cryptographic deletion.
+                    Purpose-limited data access with an instant one-click consent revocation dashboard in compliance with the DPDP Act 2023.
                   </p>
                 </div>
               </ScrollReveal>
@@ -43,9 +43,9 @@ export const TrustSafetySection: React.FC = () => {
               <ScrollReveal direction="up" delay={0.3} duration={0.5}>
                 <div className="p-5 rounded-2xl bg-white/10 border border-white/10 h-full hover:bg-white/15 transition-colors">
                   <RefreshCw className="w-6 h-6 text-brand-mint mb-3" />
-                  <h4 className="font-display font-bold text-sm text-white">Cooling-Off Grace Period</h4>
+                  <h4 className="font-display font-bold text-sm text-white">Cooling-Off Window</h4>
                   <p className="text-xs text-white/70 mt-1 leading-relaxed">
-                    Borrowers have an statutory 3-day window to exit any digital loan agreement without prepayment penalty.
+                    Borrowers have a defined cooling-off period to exit any digital loan agreement without exit penalty.
                   </p>
                 </div>
               </ScrollReveal>

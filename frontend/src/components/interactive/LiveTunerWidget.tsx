@@ -3,7 +3,11 @@ import { motion } from 'framer-motion';
 import { Sliders, CheckCircle2, Shield, ArrowUpRight } from 'lucide-react';
 import { formatINR } from '@/lib/utils';
 
-export const LiveTunerWidget: React.FC = () => {
+interface LiveTunerWidgetProps {
+  onApply?: (amount: number, tenor: number) => void;
+}
+
+export const LiveTunerWidget: React.FC<LiveTunerWidgetProps> = ({ onApply }) => {
   const [tenorDays, setTenorDays] = useState<number>(90);
   const [amount, setAmount] = useState<number>(150000);
   const [frequency, setFrequency] = useState<'DAILY' | 'WEEKLY'>('DAILY');
@@ -24,13 +28,13 @@ export const LiveTunerWidget: React.FC = () => {
         <div className="lg:col-span-7 space-y-6">
           <div>
             <span className="text-xs font-mono uppercase tracking-widest text-brand-terracotta font-semibold">
-              Transparent Calibration
+              Transparent Calculation
             </span>
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-brand-charcoal tracking-tight mt-1">
-              Credit, calibrated your way.
+              Repayments matched to your cash flow.
             </h2>
             <p className="text-sm text-brand-charcoal/70 mt-2 leading-relaxed">
-              Every business breathes differently. Tune your loan size, repayment cadence, and tenor to match your real seasonal cash velocity.
+              Every business operates on its own cycle. Choose your loan size, repayment cadence, and tenor to align with your shop's seasonal turnover.
             </p>
           </div>
 
@@ -40,7 +44,7 @@ export const LiveTunerWidget: React.FC = () => {
               <div className="flex justify-between items-center text-sm">
                 <div>
                   <span className="font-semibold text-brand-charcoal">Working Capital Amount</span>
-                  <p className="text-xs text-brand-charcoal/50">From micro-sachets to bulk supplier orders.</p>
+                  <p className="text-xs text-brand-charcoal/60">From micro-working capital to bulk inventory stocking.</p>
                 </div>
                 <span className="font-mono font-bold text-brand-forest text-base">
                   {formatINR(amount)}
@@ -62,7 +66,7 @@ export const LiveTunerWidget: React.FC = () => {
               <div className="flex justify-between items-center text-sm">
                 <div>
                   <span className="font-semibold text-brand-charcoal">Repayment Tenor</span>
-                  <p className="text-xs text-brand-charcoal/50">30-day festival sprints up to 180-day inventory turns.</p>
+                  <p className="text-xs text-brand-charcoal/60">From 30-day quick turnarounds to 180-day inventory cycles.</p>
                 </div>
                 <span className="font-mono font-bold text-brand-forest text-base">
                   {tenorDays} Days
@@ -82,8 +86,8 @@ export const LiveTunerWidget: React.FC = () => {
             {/* Toggle: Frequency */}
             <div className="flex items-center justify-between pt-2">
               <div>
-                <span className="text-sm font-semibold text-brand-charcoal">Sweep Frequency</span>
-                <p className="text-xs text-brand-charcoal/50">Automated UPI AutoPay deductions.</p>
+                <span className="text-sm font-semibold text-brand-charcoal">Repayment Cadence</span>
+                <p className="text-xs text-brand-charcoal/60">Scheduled automated UPI AutoPay deductions.</p>
               </div>
               <div className="flex p-1 rounded-full bg-brand-forest/10 border border-brand-forest/20">
                 <button
@@ -104,30 +108,30 @@ export const LiveTunerWidget: React.FC = () => {
                       : 'text-brand-charcoal/70 hover:text-brand-charcoal'
                   }`}
                 >
-                  Weekly Sachet
+                  Weekly Installment
                 </button>
               </div>
             </div>
 
-            {/* Contrast / Preview Tone Selector (Faithful to video's contrast toggle) */}
+            {/* Contrast / Preview Tone Selector */}
             <div className="flex items-center justify-between pt-1">
               <div>
-                <span className="text-sm font-semibold text-brand-charcoal">Display Mode</span>
-                <p className="text-xs text-brand-charcoal/50">High contrast for shopfloor or desk.</p>
+                <span className="text-sm font-semibold text-brand-charcoal">Preview Card Theme</span>
+                <p className="text-xs text-brand-charcoal/60">Switch preview card styling.</p>
               </div>
               <div className="flex p-1 rounded-full bg-brand-forest/10 border border-brand-forest/20">
                 <button
                   onClick={() => setIsDarkTheme(false)}
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                    !isDarkTheme ? 'bg-white text-brand-charcoal shadow-sm' : 'text-brand-charcoal/60'
+                    !isDarkTheme ? 'bg-white text-brand-charcoal shadow-sm font-semibold' : 'text-brand-charcoal/60'
                   }`}
                 >
-                  Ivory
+                  Forest
                 </button>
                 <button
                   onClick={() => setIsDarkTheme(true)}
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                    isDarkTheme ? 'bg-brand-charcoal text-white shadow-sm' : 'text-brand-charcoal/60'
+                    isDarkTheme ? 'bg-brand-charcoal text-white shadow-sm font-semibold' : 'text-brand-charcoal/60'
                   }`}
                 >
                   Charcoal
@@ -149,28 +153,28 @@ export const LiveTunerWidget: React.FC = () => {
             layout
           >
             <div className="flex items-center justify-between text-xs pb-4 border-b border-white/15">
-              <span className="uppercase tracking-widest text-white/70 font-mono">Real-Time Terms</span>
-              <span className="flex items-center gap-1 text-brand-mint font-medium">
+              <span className="uppercase tracking-widest text-white/80 font-mono text-[10px]">Illustrative Estimate</span>
+              <span className="flex items-center gap-1 text-brand-mint font-medium text-xs">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                RBI DLG Compliant
+                RBI DLG Compliant Rail
               </span>
             </div>
 
             <div className="my-6">
-              <span className="text-xs text-white/70 block mb-1">
-                {frequency === 'DAILY' ? 'Daily Evening Sweep' : 'Weekly Installment'}
+              <span className="text-xs text-white/80 block mb-1">
+                {frequency === 'DAILY' ? 'Estimated Daily Evening Sweep' : 'Estimated Weekly Installment'}
               </span>
               <div className="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight font-mono">
                 {formatINR(installment)}
               </div>
-              <span className="text-xs text-white/60 mt-1 block">
+              <span className="text-xs text-white/70 mt-1 block">
                 Across {cycleCount} scheduled sweeps ({tenorDays} days)
               </span>
             </div>
 
             <div className="space-y-3 py-4 border-t border-white/15 text-xs text-white/80">
               <div className="flex justify-between">
-                <span>Sanction Principal:</span>
+                <span>Requested Amount:</span>
                 <span className="font-mono font-semibold text-white">{formatINR(amount)}</span>
               </div>
               <div className="flex justify-between">
@@ -178,7 +182,7 @@ export const LiveTunerWidget: React.FC = () => {
                 <span className="font-mono font-semibold text-white">{formatINR(totalInterest)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Effective APR:</span>
+                <span>Illustrative APR:</span>
                 <span className="font-mono font-semibold text-brand-mint">{apr}%</span>
               </div>
               <div className="flex justify-between">
@@ -187,10 +191,16 @@ export const LiveTunerWidget: React.FC = () => {
               </div>
             </div>
 
-            <button className="w-full mt-4 py-3 rounded-full bg-brand-terracotta text-white font-display font-semibold text-sm hover:bg-brand-terracotta-hover transition-colors shadow-soft flex items-center justify-center gap-2">
-              <span>Lock Calibration & Apply</span>
+            <button
+              onClick={() => onApply?.(amount, tenorDays)}
+              className="w-full mt-4 py-3 rounded-full bg-brand-terracotta text-white font-display font-semibold text-sm hover:bg-brand-terracotta-hover transition-colors shadow-soft flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+            >
+              <span>Proceed to Application</span>
               <ArrowUpRight className="w-4 h-4" />
             </button>
+            <span className="text-[10px] text-white/60 block text-center mt-2.5 leading-snug">
+              * Calculations are illustrative estimates based on standard partner NBFC ranges. Final terms depend on lender credit review.
+            </span>
           </motion.div>
         </div>
 

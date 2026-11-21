@@ -427,7 +427,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <div className="p-3.5 rounded-2xl bg-brand-forest/5 border border-brand-forest/10 space-y-2">
                 <span className="text-[10px] uppercase font-mono tracking-wider text-brand-forest font-bold flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-brand-forest" />
-                  One-Click Pre-Seeded Hackathon Personas:
+                  One-Click Pre-Seeded Ecosystem Personas:
                 </span>
                 <p className="text-[11px] text-brand-charcoal/70 leading-relaxed">
                   Instantly authenticate as verified MSME owners, senior underwriters, or ethical fair-lending auditors with deterministic test data.
