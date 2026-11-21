@@ -336,7 +336,7 @@ export const WhatIfSimulatorView: React.FC = () => {
           <div className="p-6 rounded-3xl bg-brand-charcoal text-brand-ivory border border-white/10 shadow-elevated space-y-6">
             <div>
               <span className="text-xs uppercase font-mono tracking-widest text-brand-mint font-bold block">
-                Projected Credit Unlocked
+                Simulated Credit Unlocked
               </span>
               <h3 className="text-3xl font-display font-extrabold text-white font-mono mt-1">
                 {formatINR(projectedLimit)}
@@ -348,16 +348,16 @@ export const WhatIfSimulatorView: React.FC = () => {
 
             <div className="space-y-3 pt-4 border-t border-white/10 text-xs">
               <div className="flex justify-between items-center">
-                <span className="text-white/80">Estimated APR:</span>
-                <span className="font-mono font-bold text-emerald-300">{projectedApr}% p.a.</span>
+                <span className="text-white/60">Estimated APR:</span>
+                <span className="font-mono font-bold text-brand-mint">{projectedApr}% p.a.</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/80">Target Timeline:</span>
+                <span className="text-white/60">Target Timeline:</span>
                 <span className="font-mono text-white">30 Days</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/80">Simulation Mode:</span>
-                <Badge variant="mint-pill" className="text-[10px]">Deterministic Recourse</Badge>
+                <span className="text-white/60">Simulation Mode:</span>
+                <Badge variant="mint" className="text-[10px]">Deterministic Recourse</Badge>
               </div>
             </div>
 

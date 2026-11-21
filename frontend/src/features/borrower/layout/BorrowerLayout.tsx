@@ -83,6 +83,12 @@ export const BorrowerLayout: React.FC<BorrowerLayoutProps> = ({
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Simulated Banner Pill */}
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 text-[11px] font-mono font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+              <span>Simulated Sandbox Environment</span>
+            </div>
+
             {/* Persona Switcher Pill */}
             <button
               onClick={onOpenPersonaModal}

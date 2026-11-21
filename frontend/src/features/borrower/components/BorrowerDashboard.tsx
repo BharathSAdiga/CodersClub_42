@@ -32,80 +32,17 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
   onNavigate,
 }) => {
   const [isPassportModalOpen, setIsPassportModalOpen] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  const [withdrawInputAmount, setWithdrawInputAmount] = useState<number>(25000);
-  
   const app = activePersona.application;
   const approvedLimit = app?.approvedAmount || 150000;
-  
-  // Persistent tracking of drawn capital
-  const storageWithdrawKey = `udyoga_borrower_drawn_${activePersona.id}`;
-  const [withdrawnTotal, setWithdrawnTotal] = useState<number>(() => {
-    try {
-      const saved = localStorage.getItem(storageWithdrawKey);
-      return saved ? Number(saved) : 0;
-    } catch {
-      return 0;
-    }
-  });
+  const availableToWithdraw = approvedLimit * 0.85;
 
-  const availableToWithdraw = Math.max(0, approvedLimit * 0.85 - withdrawnTotal);
-
-  // Persistent activity log
-  const storageActivityKey = `udyoga_borrower_activity_${activePersona.id}`;
-  const [activityList, setActivityList] = useState(() => {
-    try {
-      const saved = localStorage.getItem(storageActivityKey);
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return [
-      { title: 'Evening Sachet Repayment Cleared', date: 'Yesterday, 21:02 IST', amount: '-₹1,890', status: 'SUCCESS' },
-      { title: 'Daily UPI QR Volume Reconciled', date: 'Yesterday, 19:45 IST', amount: '+₹24,850', status: 'STREAMED' },
-      { title: 'Evening Sachet Repayment Cleared', date: '18 Nov, 21:01 IST', amount: '-₹1,890', status: 'SUCCESS' },
-      { title: 'Working Capital Facility Initialized', date: '15 Nov, 14:30 IST', amount: '+₹1,50,000', status: 'SANCTION' },
-    ];
-  });
-
-  const handleOpenWithdrawModal = () => {
-    setWithdrawInputAmount(Math.min(25000, availableToWithdraw));
-    setIsWithdrawModalOpen(true);
-  };
-
-  const handleConfirmWithdrawal = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (withdrawInputAmount <= 0 || withdrawInputAmount > availableToWithdraw) {
-      toast.error(`Please enter an amount between ₹1,000 and ₹${availableToWithdraw.toLocaleString('en-IN')}.`);
-      return;
-    }
-
-    const newWithdrawn = withdrawnTotal + withdrawInputAmount;
-    setWithdrawnTotal(newWithdrawn);
-    try {
-      localStorage.setItem(storageWithdrawKey, newWithdrawn.toString());
-    } catch {}
-
-    const newActivity = {
-      title: 'Instant Working Capital Disbursal',
-      date: 'Just now',
-      amount: `+${formatINR(withdrawInputAmount)}`,
-      status: 'DISBURSED',
-    };
-
-    const updatedActivities = [newActivity, ...activityList];
-    setActivityList(updatedActivities);
-    try {
-      localStorage.setItem(storageActivityKey, JSON.stringify(updatedActivities));
-    } catch {}
-
-    setIsWithdrawModalOpen(false);
-    toast.success(`Disbursal initiated! ₹${withdrawInputAmount.toLocaleString('en-IN')} queued via IMPS to ${activePersona.financials?.accounts[0]?.bankName || 'verified account'}.`);
+  const handleWithdrawFunds = () => {
+    toast.success(`Disbursal initiated! ₹${(availableToWithdraw).toLocaleString('en-IN')} queued to ${activePersona.financials?.accounts[0]?.bankName || 'verified account'}.`);
   };
 
   const handlePrintPassport = () => {
-    toast.success('Opening printable Business Financial Passport view...');
-    setTimeout(() => {
-      window.print();
-    }, 300);
+    toast.success('Business Financial Passport exported as verifiable PDF credential.');
+    setIsPassportModalOpen(false);
   };
 
   return (
@@ -139,7 +76,7 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
           <Button 
             variant="accent" 
             size="pill" 
-            onClick={handleOpenWithdrawModal}
+            onClick={handleWithdrawFunds}
             className="gap-2"
           >
             <Wallet className="w-4 h-4" />
@@ -283,13 +220,18 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {activityList.map((tx: any, idx: number) => (
+            {[
+              { title: 'Evening Sachet Repayment Cleared', date: 'Yesterday, 21:02 IST', amount: '-₹1,890', status: 'SUCCESS' },
+              { title: 'Daily UPI QR Volume Reconciled', date: 'Yesterday, 19:45 IST', amount: '+₹24,850', status: 'STREAMED' },
+              { title: 'Evening Sachet Repayment Cleared', date: '18 Nov, 21:01 IST', amount: '-₹1,890', status: 'SUCCESS' },
+              { title: 'Working Capital Facility Initialized', date: '15 Nov, 14:30 IST', amount: '+₹1,50,000', status: 'SANCTION' },
+            ].map((tx, idx) => (
               <div key={idx} className="flex items-center justify-between p-3.5 rounded-2xl bg-brand-ivory border border-brand-forest/10 text-xs">
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                    tx.status === 'SUCCESS' ? 'bg-brand-forest/10 text-brand-forest' : tx.status === 'DISBURSED' ? 'bg-emerald-600 text-white' : 'bg-emerald-100 text-emerald-800'
+                    tx.status === 'SUCCESS' ? 'bg-brand-forest/10 text-brand-forest' : 'bg-emerald-100 text-emerald-800'
                   }`}>
-                    {tx.status === 'SUCCESS' ? '✓' : tx.status === 'DISBURSED' ? '₹' : '↓'}
+                    {tx.status === 'SUCCESS' ? '✓' : '↓'}
                   </div>
                   <div>
                     <strong className="text-brand-charcoal block">{tx.title}</strong>
@@ -309,95 +251,6 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
           </div>
         </CardContent>
       </Card>
-
-      {/* Capital Withdrawal Modal */}
-      {isWithdrawModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-charcoal/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-white rounded-3xl border border-brand-forest/20 shadow-elevated p-6 space-y-4">
-            
-            <div className="flex items-center justify-between pb-3 border-b border-brand-forest/10">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-2xl bg-brand-forest text-white flex items-center justify-center">
-                  <Wallet className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-display font-bold text-base text-brand-charcoal">
-                    Draw Down Working Capital
-                  </h3>
-                  <span className="text-xs text-brand-charcoal/60">
-                    Instant bank transfer via RBI IMPS rail
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsWithdrawModalOpen(false)}
-                className="w-7 h-7 rounded-full bg-brand-charcoal/10 hover:bg-brand-charcoal/20 flex items-center justify-center text-brand-charcoal"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleConfirmWithdrawal} className="space-y-4 text-xs">
-              
-              <div className="p-3.5 rounded-2xl bg-brand-ivory border border-brand-forest/10 space-y-1">
-                <span className="text-[10px] uppercase font-mono text-brand-charcoal/50 block">Available Drawing Power</span>
-                <strong className="text-2xl font-mono font-bold text-brand-forest block">
-                  {formatINR(availableToWithdraw)}
-                </strong>
-                <span className="text-[11px] text-brand-charcoal/60 block">
-                  Pre-approved limit @ 14.2% APR (Zero prepayment penalties)
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-semibold text-brand-charcoal block">Withdrawal Amount (₹)</label>
-                <input
-                  type="number"
-                  min="1000"
-                  max={availableToWithdraw}
-                  step="500"
-                  value={withdrawInputAmount}
-                  onChange={(e) => setWithdrawInputAmount(Number(e.target.value))}
-                  className="w-full h-10 px-3 rounded-xl border border-brand-forest/20 bg-brand-ivory text-sm font-mono font-bold text-brand-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-forest"
-                />
-              </div>
-
-              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-[11px] space-y-1 text-emerald-900">
-                <strong className="block">Destination Bank Account:</strong>
-                <p>
-                  {activePersona.financials?.accounts[0]?.bankName || 'State Bank of India'} (A/c ending {activePersona.financials?.accounts[0]?.accountNumberMasked.slice(-4) || '8912'})
-                </p>
-                <p className="text-[10px] text-emerald-800/80">
-                  Daily sachet repayment covenant: ~₹{Math.round((withdrawInputAmount * 1.14) / (app?.tenorDays || 90))} / day via evening UPI AutoPay.
-                </p>
-              </div>
-
-              <div className="flex justify-end gap-2.5 pt-2 border-t border-brand-forest/10">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsWithdrawModalOpen(false)}
-                  className="rounded-full text-xs"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="sm"
-                  disabled={availableToWithdraw <= 0}
-                  className="rounded-full text-xs font-semibold px-5 bg-brand-forest text-white hover:bg-brand-forest/90"
-                >
-                  Confirm Instant Disbursal
-                </Button>
-              </div>
-
-            </form>
-
-          </div>
-        </div>
-      )}
 
       {/* Feature 14: Business Financial Passport Modal */}
       {isPassportModalOpen && (
@@ -486,7 +339,7 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
                 <span>Verification Rail:</span>
                 <span>Sahamati Account Aggregator & NPCI AutoPay</span>
               </div>
-              <div className="text-[11px] text-white/75 pt-1 font-mono">
+              <div className="text-[10px] text-white/50 pt-1 font-mono">
                 SHA-256 Digest: 0x7f9a84b2e811c09930f7e...c3a1 (Anchored on Quai Cyprus-1)
               </div>
             </div>
