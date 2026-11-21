@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-title UDYOGA — Platform Launcher
+title UDYOGA — Platform Live Console
 
 echo =====================================================================
 echo          UDYOGA -- Beyond Credit. Beyond Barriers.
@@ -11,74 +11,46 @@ echo.
 set "ROOT_DIR=%~dp0"
 cd /d "%ROOT_DIR%"
 
-:: Check if port 5173 is already running
-netstat -aon | findstr /r ":5173.*LISTENING" >nul 2>&1
-if %errorlevel% equ 0 (
-    echo [INFO] UDYOGA is already running on http://localhost:5173!
-    echo Opening browser...
-    start http://localhost:5173
-    goto :done
+:: 1. Ensure port 5173 is clean and free
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr /r ":5173.*LISTENING"') do (
+    echo [*] Freeing port 5173 (closing old process PID %%a)...
+    taskkill /f /pid %%a >nul 2>&1
 )
 
-:: 1. Check Python Backend availability
-set "HAS_BACKEND=0"
+:: 2. Optional: Launch Python Backend in background if available
 if exist "%ROOT_DIR%.venv\Scripts\python.exe" (
-    set "HAS_BACKEND=1"
-    echo [1/3] Starting FastAPI Backend on http://127.0.0.1:8000 ...
+    echo [*] Starting FastAPI Backend on http://127.0.0.1:8000 ...
     start "UDYOGA Backend [FastAPI :8000]" cmd /k "cd /d ""%ROOT_DIR%"" && call .venv\Scripts\activate.bat && python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
 ) else (
     python -c "import fastapi, uvicorn" >nul 2>&1
     if !errorlevel! equ 0 (
-        set "HAS_BACKEND=1"
-        echo [1/3] Starting FastAPI Backend on http://127.0.0.1:8000 ...
+        echo [*] Starting FastAPI Backend on http://127.0.0.1:8000 ...
         start "UDYOGA Backend [FastAPI :8000]" cmd /k "cd /d ""%ROOT_DIR%"" && python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
     ) else (
-        echo [1/3] Python backend not detected - Running in Standalone Engine Mode (All personas active).
+        echo [*] Running Frontend in Standalone Engine Mode (all personas and models active).
     )
 )
 
-:: 2. Check frontend dependencies
+:: 3. Check frontend dependencies
 if not exist "%ROOT_DIR%frontend\node_modules" (
-    echo [2/3] Installing frontend dependencies (one-time setup)...
+    echo [*] Installing frontend dependencies (one-time setup)...
     cd /d "%ROOT_DIR%frontend"
     call npm install
     cd /d "%ROOT_DIR%"
 )
 
-:: 3. Start Frontend
-echo [2/3] Launching UDYOGA Frontend Application...
-start "UDYOGA Frontend [Vite :5173]" cmd /k "cd /d ""%ROOT_DIR%frontend"" && npm run dev"
-
-:: 4. Wait & Open Browser
-echo [3/3] Initializing platform services...
-timeout /t 3 /nobreak >nul
+:: 4. Automatically open browser to application in 2 seconds
+start "" cmd /c "timeout /t 2 /nobreak >nul && start http://localhost:5173"
 
 echo.
 echo =====================================================================
-echo  UDYOGA APPLICATION LAUNCHED!
+echo  STARTING VITE DEV SERVER (LIVE CONSOLE OUTPUT BELOW)
+echo  Application URL: http://localhost:5173
 echo =====================================================================
 echo.
-echo  * Web Application URL:   http://localhost:5173
-if "!HAS_BACKEND!"=="1" (
-    echo  * Backend API Docs:      http://127.0.0.1:8000/docs
-)
-echo.
-echo ---------------------------------------------------------------------
-echo  PRE-CONFIGURED 1-CLICK PERSONAS AVAILABLE IN APP:
-echo ---------------------------------------------------------------------
-echo  * Ramu Kirana (Micro Retailer)       - Zero-collateral flow underwriting
-echo  * Priya Patel (Small Manufacturer)    - Export invoice discounting
-echo  * Vikram Deshmukh (Credit Officer)    - Underwriter workbench
-echo  * Dr. Sunita Rao (Statutory Auditor)  - 7-Step algorithmic fairness trace
-echo  * Rajiv Mehta (Platform Admin)        - System health & audit logs
-echo ---------------------------------------------------------------------
-echo.
-echo Opening http://localhost:5173 in your default browser...
-start http://localhost:5173
 
-:done
-echo.
-echo To close the application, run 'stop_udyoga.bat' or close the terminal windows.
-echo =====================================================================
-echo.
+:: 5. Run Vite directly in the current window to stream all live output
+cd /d "%ROOT_DIR%frontend"
+call npm run dev
+
 pause
