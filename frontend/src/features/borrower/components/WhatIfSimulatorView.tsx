@@ -211,8 +211,8 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-[10px] bg-brand-forest/10 text-brand-forest border-brand-forest/20 flex items-center gap-1">
-                <Cpu className="w-3 h-3 text-brand-mint" />
+              <Badge variant="outline" className="text-xs bg-brand-forest/10 text-brand-forest border-brand-forest/20 flex items-center gap-1 font-semibold">
+                <Cpu className="w-3.5 h-3.5 text-brand-mint" />
                 Live Twin Engine
               </Badge>
               <Badge 
@@ -234,7 +234,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
           
           {/* Quick Preset Buttons */}
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-brand-charcoal/60 font-semibold block mb-2">
+            <span className="text-xs font-mono uppercase tracking-wider text-brand-charcoal/70 font-semibold block mb-2">
               1-Click Economic Shock Presets:
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
@@ -251,7 +251,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
                         : 'border-brand-forest/15 bg-brand-ivory/60 hover:bg-brand-ivory text-brand-charcoal text-xs'
                     }`}
                   >
-                    <span className="text-[11px] block leading-tight">{item.label}</span>
+                    <span className="text-xs font-medium block leading-tight">{item.label}</span>
                   </button>
                 );
               })}
@@ -270,9 +270,9 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
                 size="sm"
                 disabled={isSimulating}
                 onClick={() => triggerSimulation(revenueShockPct, expenseInflationPct, receivablesDelayDays)}
-                className="rounded-full text-xs h-8 px-4 bg-brand-forest text-white hover:bg-brand-forest/90 gap-1.5 shadow-sm"
+                className="rounded-full text-xs h-8 px-4 bg-brand-forest text-white hover:bg-brand-forest/90 gap-1.5 shadow-sm font-semibold"
               >
-                <RefreshCw className={`w-3 h-3 ${isSimulating ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${isSimulating ? 'animate-spin' : ''}`} />
                 <span>{isSimulating ? 'Simulating...' : 'Simulate Stress Test'}</span>
               </Button>
             </div>

@@ -118,35 +118,35 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
         );
       case 'UNDERWRITING_REVIEW':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-forest bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-forest bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
             Under Review
           </span>
         );
       case 'CONDITIONALLY_APPROVED':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple-800 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full">
-            <CheckCircle2 className="w-3 h-3 text-purple-600" />
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-purple-800 bg-purple-50 border border-purple-200 px-2.5 py-1 rounded-full">
+            <CheckCircle2 className="w-3.5 h-3.5 text-purple-600" />
             Decisions Pending
           </span>
         );
       case 'SANCTIONED':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-900 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full">
-            <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-900 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-full">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
             Sanctioned
           </span>
         );
       case 'DECLINED':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-800 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
-            <XCircle className="w-3 h-3 text-rose-600" />
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-800 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full">
+            <XCircle className="w-3.5 h-3.5 text-rose-600" />
             Declined
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-charcoal bg-white border border-brand-charcoal/20 px-2 py-0.5 rounded-full">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-charcoal bg-white border border-brand-charcoal/20 px-2.5 py-1 rounded-full">
             {app.status}
           </span>
         );
@@ -378,18 +378,18 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
         <CardContent className="p-0 overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-brand-forest/10 bg-brand-forest/5 text-brand-charcoal/70 uppercase font-mono text-[10px]">
-                <th className="py-3 px-4 font-semibold">Business Name</th>
-                <th className="py-3 px-4 font-semibold">Requested Amount</th>
-                <th className="py-3 px-4 font-semibold">Application Status</th>
-                <th className="py-3 px-4 font-semibold">Date Received</th>
-                <th className="py-3 px-4 font-semibold text-right">Next Action</th>
+              <tr className="border-b border-brand-forest/10 bg-brand-forest/5 text-brand-charcoal/80 uppercase font-mono text-xs">
+                <th className="py-3.5 px-4 font-semibold">Business Name</th>
+                <th className="py-3.5 px-4 font-semibold">Requested Amount</th>
+                <th className="py-3.5 px-4 font-semibold">Application Status</th>
+                <th className="py-3.5 px-4 font-semibold">Date Received</th>
+                <th className="py-3.5 px-4 font-semibold text-right">Next Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-forest/10">
               {displayedApplications.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-xs text-brand-charcoal/50">
+                  <td colSpan={5} className="py-8 text-center text-sm text-brand-charcoal/50">
                     No applications found matching the current filter.
                   </td>
                 </tr>
@@ -407,7 +407,7 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
                         <strong className="text-brand-charcoal block text-sm font-display font-bold group-hover:text-brand-forest transition-colors">
                           {app.businessName}
                         </strong>
-                        <span className="text-[11px] text-brand-charcoal/60 block">
+                        <span className="text-xs text-brand-charcoal/70 block mt-0.5">
                           {app.applicantName} · {app.city}, {app.state}
                         </span>
                       </td>
@@ -417,7 +417,7 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
                         <span className="text-sm font-mono font-bold text-brand-charcoal block">
                           {formatINR(app.requestedAmount)}
                         </span>
-                        <span className="text-[10px] text-brand-charcoal/50 font-mono">
+                        <span className="text-xs text-brand-charcoal/60 font-mono">
                           Tenor: {app.tenorDays} Days
                         </span>
                       </td>
@@ -428,9 +428,9 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
                       </td>
 
                       {/* Date Received */}
-                      <td className="py-3.5 px-4 text-brand-charcoal/70 font-mono text-[11px]">
+                      <td className="py-3.5 px-4 text-brand-charcoal/80 font-mono text-xs">
                         <div className="flex items-center gap-1.5">
-                          <Calendar className="w-3 h-3 text-brand-charcoal/40" />
+                          <Calendar className="w-3.5 h-3.5 text-brand-charcoal/40" />
                           <span>{formatReceivedDate(app.submittedAt)}</span>
                         </div>
                       </td>
