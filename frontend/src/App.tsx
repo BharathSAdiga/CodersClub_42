@@ -302,10 +302,10 @@ export function App() {
         {borrowerView === '/borrower/health' && (
           <FinancialHealthView activePersona={activePersona} />
         )}
-        {borrowerView === '/borrower/assessment' && (
+        {(borrowerView === '/borrower/assessment' || borrowerView === '/borrower/report') && (
           <AssessmentReportView activePersona={activePersona} />
         )}
-        {borrowerView === '/borrower/insights' && (
+        {(borrowerView === '/borrower/insights' || borrowerView === '/borrower/what-if') && (
           <WhatIfSimulatorView activePersona={activePersona} />
         )}
 

@@ -217,6 +217,41 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
 
       </div>
 
+      {/* 7-Agent Autonomous Evaluation Suite Banner */}
+      <div 
+        onClick={() => onNavigate('/borrower/assessment')}
+        className="p-6 rounded-3xl bg-gradient-to-r from-brand-forest via-brand-forest to-emerald-950 text-white shadow-soft cursor-pointer hover:shadow-elevated transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+      >
+        <div className="flex items-start sm:items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-brand-mint shrink-0">
+            <Sparkles className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-brand-mint font-bold">
+                Jury Showcase · Real-Time Orchestration
+              </span>
+              <Badge variant="mint" className="text-[10px] py-0 px-2">7 Agents Active</Badge>
+            </div>
+            <h4 className="font-display font-bold text-lg text-white mt-0.5">
+              Live 7-Agent Autonomous Underwriting Pipeline
+            </h4>
+            <p className="text-xs text-white/75 mt-0.5 max-w-2xl leading-relaxed">
+              Inspect Forensic Anti-Fraud, Bank Ingestion, Evidence Triangulation, Financial DNA, Resilience Twin, and Policy Engine running sequentially.
+            </p>
+          </div>
+        </div>
+
+        <Button
+          variant="accent"
+          size="sm"
+          className="rounded-full px-5 py-2 text-xs font-semibold bg-brand-mint text-brand-forest hover:bg-white shrink-0 gap-1.5"
+        >
+          <span>Launch 7-Agent Monitor</span>
+          <ArrowUpRight className="w-3.5 h-3.5" />
+        </Button>
+      </div>
+
       {/* Navigation Shortcuts to Key Views */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         

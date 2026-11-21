@@ -39,7 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: '/borrower/profile', label: 'Business Profile', icon: Building2 },
     { id: '/borrower/health', label: 'Financial DNA & Cashflow', icon: Activity },
     { id: '/borrower/insights', label: 'What-If Simulator', icon: Sparkles },
-    { id: '/borrower/assessment', label: 'Underwriting Report (CAM)', icon: FileText },
+    { id: '/borrower/assessment', label: '7-Agent Underwriting (CAM)', icon: Sparkles },
     { id: '/borrower/apply', label: 'Apply for Credit', icon: Wallet },
     { id: '/borrower/consent', label: 'DPDP Consent', icon: ShieldCheck },
     { id: '/borrower/documents', label: 'Documents & Bank Data', icon: Sliders },
