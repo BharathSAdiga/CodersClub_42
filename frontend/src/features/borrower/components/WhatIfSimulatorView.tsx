@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatINR } from '@/lib/utils';
+import { apiService, BackendShockResult } from '@/services/apiService';
 import { 
   Sparkles, 
   Sliders, 
@@ -13,7 +14,8 @@ import {
   Flame,
   Activity,
   Calendar,
-  Layers
+  Layers,
+  Cpu
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -29,6 +31,41 @@ export const WhatIfSimulatorView: React.FC = () => {
   const [admb, setAdmb] = useState<number>(18450);
   const [monthlyUpi, setMonthlyUpi] = useState<number>(512000);
   const [selectedStressPreset, setSelectedStressPreset] = useState<StressPresetKey>('NORMAL');
+  const [liveStressResult, setLiveStressResult] = useState<BackendShockResult | null>(null);
+  const [isSimulating, setIsSimulating] = useState<boolean>(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const scenarioMap: Record<StressPresetKey, { name: string; rev: number; opex: number; delay: number; months: number }> = {
+      NORMAL: { name: 'NORMAL', rev: 0, opex: 0, delay: 0, months: 1 },
+      REV_DROP_15: { name: 'REVENUE_DROP_15', rev: 15, opex: 0, delay: 0, months: 1 },
+      REV_DROP_30_TWO_MOS: { name: 'REVENUE_DROP_30', rev: 30, opex: 0, delay: 0, months: 2 },
+      OPEX_SURGE_15: { name: 'EXPENSE_SURGE_15', rev: 0, opex: 15, delay: 0, months: 1 },
+      RECEIVABLES_DELAY_30: { name: 'DELAYED_RECEIVABLES_30', rev: 0, opex: 0, delay: 30, months: 1 },
+      COMBINED_SHOCK: { name: 'COMBINED_STRESS', rev: 20, opex: 15, delay: 30, months: 2 },
+    };
+
+    const target = scenarioMap[selectedStressPreset];
+    setIsSimulating(true);
+    apiService.simulateResilience('msme_kirana_kanpur_001', {
+      scenario_name: target.name,
+      revenue_shock_pct: target.rev,
+      expense_inflation_pct: target.opex,
+      receivables_delay_days: target.delay,
+      shock_duration_months: target.months,
+    })
+    .then((res) => {
+      if (isMounted) {
+        setLiveStressResult(res);
+        setIsSimulating(false);
+      }
+    })
+    .catch(() => {
+      if (isMounted) setIsSimulating(false);
+    });
+
+    return () => { isMounted = false; };
+  }, [selectedStressPreset]);
 
   // Dynamic calculations for Counterfactual growth
   const baseLimit = 150000;
@@ -106,6 +143,16 @@ export const WhatIfSimulatorView: React.FC = () => {
 
   const activeStress = stressPresets[selectedStressPreset];
 
+  const activeCfads = liveStressResult ? Math.round(liveStressResult.post_shock_monthly_surplus) : activeStress.cfads;
+  const activeDscr = liveStressResult ? Number(liveStressResult.post_shock_dscr.toFixed(2)) : activeStress.dscr;
+  const activeViability = liveStressResult
+    ? (liveStressResult.post_shock_dscr >= 1.25 ? 'SAFE' : liveStressResult.post_shock_dscr >= 1.0 ? 'CONDITIONAL' : 'HIGH_RISK')
+    : activeStress.viability;
+  const activeDepletion = liveStressResult 
+    ? `${Math.round(liveStressResult.cash_runway_post_shock_days)} days runway remaining` 
+    : activeStress.reserveDepletion;
+  const activeDescription = liveStressResult?.scenario_evaluation || activeStress.description;
+
   const handleApplySimulatedTarget = () => {
     toast.success(`Target roadmap saved! Maintain ₹${admb.toLocaleString('en-IN')} ADMB for 30 days to unlock ${formatINR(projectedLimit)}.`);
   };
@@ -134,18 +181,26 @@ export const WhatIfSimulatorView: React.FC = () => {
                 Simulate your business's Debt Service Coverage Ratio (DSCR) under 6 economic shock presets
               </p>
             </div>
-            <Badge 
-              variant="outline" 
-              className={`text-xs ${
-                activeStress.viability === 'SAFE' 
-                  ? 'border-emerald-300 bg-emerald-50 text-emerald-800' 
-                  : activeStress.viability === 'CONDITIONAL' 
-                  ? 'border-amber-300 bg-amber-50 text-amber-800' 
-                  : 'border-rose-300 bg-rose-50 text-rose-800'
-              }`}
-            >
-              DSCR {activeStress.dscr}x • {activeStress.viability.replace('_', ' ')}
-            </Badge>
+            <div className="flex items-center gap-2">
+              {liveStressResult && (
+                <Badge variant="outline" className="text-[10px] bg-brand-forest/10 text-brand-forest border-brand-forest/20 flex items-center gap-1">
+                  <Cpu className="w-3 h-3 text-brand-mint" />
+                  Live Twin Engine
+                </Badge>
+              )}
+              <Badge 
+                variant="outline" 
+                className={`text-xs ${
+                  activeViability === 'SAFE' 
+                    ? 'border-emerald-300 bg-emerald-50 text-emerald-800' 
+                    : activeViability === 'CONDITIONAL' 
+                    ? 'border-amber-300 bg-amber-50 text-amber-800' 
+                    : 'border-rose-300 bg-rose-50 text-rose-800'
+                }`}
+              >
+                DSCR {activeDscr}x • {activeViability.replace('_', ' ')}
+              </Badge>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -177,7 +232,7 @@ export const WhatIfSimulatorView: React.FC = () => {
                 Cash Available for Debt (CFADS)
               </span>
               <span className="text-base font-bold font-mono text-brand-charcoal mt-0.5 block">
-                ₹{activeStress.cfads.toLocaleString('en-IN')}/mo
+                ₹{activeCfads.toLocaleString('en-IN')}/mo
               </span>
               <span className="text-[10px] text-brand-charcoal/60">Against ₹36,500 repayment</span>
             </div>
@@ -187,7 +242,7 @@ export const WhatIfSimulatorView: React.FC = () => {
                 Reserve Buffer Depletion
               </span>
               <span className="text-base font-bold font-mono text-brand-forest mt-0.5 block">
-                {activeStress.reserveDepletion}
+                {activeDepletion}
               </span>
               <span className="text-[10px] text-brand-charcoal/60">Estimated recovery: {activeStress.recoveryDays} days</span>
             </div>
@@ -197,7 +252,7 @@ export const WhatIfSimulatorView: React.FC = () => {
                 Stress Finding Summary
               </span>
               <p className="text-[11px] text-brand-charcoal/80 mt-0.5 leading-snug">
-                {activeStress.description}
+                {activeDescription}
               </p>
             </div>
           </div>

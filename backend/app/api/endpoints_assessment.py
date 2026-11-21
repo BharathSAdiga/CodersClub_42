@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException, BackgroundTasks, Request
 from fastapi.responses import StreamingResponse
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 from decimal import Decimal
 import uuid
 import asyncio
+import time
 from datetime import datetime, timezone
 
 from ..schemas.assessment import (
@@ -20,6 +21,7 @@ from ..core.event_bus import event_bus
 from .endpoints_business import BUSINESS_STORE
 from .endpoints_transactions import TRANSACTION_STORE
 from ..modules.agents import orchestrator
+from ..db import DatabaseBackedAssessmentStore
 
 router = APIRouter(prefix="/assessment", tags=["Assessment & Agent Orchestration"])
 
@@ -30,8 +32,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# In-memory store for assessments
-ASSESSMENT_STORE: Dict[str, CreditAppraisalMemo] = {}
+# Database-backed assessment store (persisted to SQLite)
+ASSESSMENT_STORE: Dict[str, CreditAppraisalMemo] = DatabaseBackedAssessmentStore()
+
+# In-flight execution registry to prevent duplicate concurrent runs for the same business
+ACTIVE_RUNS: Dict[str, Dict[str, Any]] = {}
+IDEMPOTENCY_CACHE: Dict[str, str] = {}
 
 def build_demo_memo(assessment_id: str, business_id: str) -> CreditAppraisalMemo:
     """Builds an indicative, explainable Credit Appraisal Memo without credit bureau claims."""
@@ -178,9 +184,17 @@ async def execute_agent_assessment(assessment_id: str, business_id: str):
     """
     profile = BUSINESS_STORE.get(business_id)
     if not profile:
+        ACTIVE_RUNS.pop(business_id, None)
         return
     txs = TRANSACTION_STORE.get(business_id, [])
     
+    # Record RUNNING status in SQLite database for recovery
+    try:
+        from ..db import assessment_repo
+        assessment_repo.record_started(assessment_id, business_id)
+    except Exception as dbe:
+        logger.warning(f"Could not record started status for {assessment_id} in SQLite: {dbe}")
+
     try:
         memo = await orchestrator.run_assessment_pipeline(
             business_profile=profile,
@@ -188,6 +202,11 @@ async def execute_agent_assessment(assessment_id: str, business_id: str):
             transactions=txs
         )
         ASSESSMENT_STORE[assessment_id] = memo
+        try:
+            from ..db import assessment_repo
+            assessment_repo.save(memo)
+        except Exception:
+            pass
     except Exception as e:
         logger.error(f"Error during async assessment {assessment_id}: {e}")
         fallback_memo = CreditAppraisalMemo(
@@ -213,18 +232,56 @@ async def execute_agent_assessment(assessment_id: str, business_id: str):
             fallback_reason=f"Pipeline error: {str(e)}"
         )
         ASSESSMENT_STORE[assessment_id] = fallback_memo
+        try:
+            from ..db import assessment_repo
+            assessment_repo.save(fallback_memo)
+        except Exception:
+            pass
+    finally:
+        ACTIVE_RUNS.pop(business_id, None)
 
 @router.post("/run", response_model=AssessmentTriggerResponse)
 async def trigger_assessment(
     payload: AssessmentTriggerRequest,
-    background_tasks: BackgroundTasks
+    background_tasks: BackgroundTasks,
+    request: Request
 ):
     """Triggers asynchronous agent pipeline for a business and returns streaming assessment ID."""
     business_id = payload.business_id
     if business_id not in BUSINESS_STORE:
         raise HTTPException(status_code=404, detail=f"Business '{business_id}' not found")
-        
+
+    idempotency_key = request.headers.get("Idempotency-Key") or request.headers.get("X-Idempotency-Key")
+    now_ts = time.time()
+
+    # 1. Idempotency Check: if identical idempotency key was received within 300 seconds
+    if idempotency_key and idempotency_key in IDEMPOTENCY_CACHE:
+        cached_id = IDEMPOTENCY_CACHE[idempotency_key]
+        return AssessmentTriggerResponse(
+            assessment_id=cached_id,
+            business_id=business_id,
+            status="QUEUED",
+            message="Idempotent request recognized. Returning existing assessment run.",
+            stream_url=f"/api/v1/assessment/{cached_id}/stream"
+        )
+
+    # 2. Concurrency De-duplication: Prevent duplicate concurrent runs for same business within 15 seconds
+    if business_id in ACTIVE_RUNS:
+        active = ACTIVE_RUNS[business_id]
+        if (now_ts - active.get("started_at", 0)) < 15.0:
+            existing_id = active.get("assessment_id")
+            return AssessmentTriggerResponse(
+                assessment_id=existing_id,
+                business_id=business_id,
+                status="RUNNING",
+                message="An assessment is already actively running for this business. Reusing active session.",
+                stream_url=f"/api/v1/assessment/{existing_id}/stream"
+            )
+
     assessment_id = f"eval_{uuid.uuid4().hex[:12]}"
+    ACTIVE_RUNS[business_id] = {"assessment_id": assessment_id, "started_at": now_ts}
+    if idempotency_key:
+        IDEMPOTENCY_CACHE[idempotency_key] = assessment_id
     
     # Emit initial started event
     init_event = AgentEvent(
@@ -237,6 +294,21 @@ async def trigger_assessment(
         message=f"Initiating UDYOGA agentic evaluation for {BUSINESS_STORE[business_id].trade_name}"
     )
     await event_bus.publish(init_event)
+
+    try:
+        from ..db import audit_repo
+        audit_repo.log_access(
+            user_id="system_orchestrator",
+            role="SYSTEM",
+            business_id=business_id,
+            resource_type="ASSESSMENT",
+            action="ASSESSMENT_EXECUTE",
+            details=f"Triggered 8-agent assessment '{assessment_id}' for business '{business_id}'.",
+            outcome="SUCCESS",
+            structured_metadata={"assessment_id": assessment_id, "business_id": business_id}
+        )
+    except Exception:
+        pass
     
     # Queue execution
     background_tasks.add_task(execute_agent_assessment, assessment_id, business_id)

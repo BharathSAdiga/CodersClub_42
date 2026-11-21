@@ -11,11 +11,14 @@ from ..schemas.transaction import (
     TransactionBatchIngest,
     TransactionIngestSummary
 )
+from ..db import DatabaseBackedTransactionStore
 
 router = APIRouter(prefix="/transactions", tags=["Transactions & Ingestion"])
 
-# Temporary in-memory transaction store for Phase 0
-TRANSACTION_STORE: dict[str, List[Transaction]] = {}
+# Database-backed transaction store (persisted to SQLite)
+TRANSACTION_STORE: dict[str, List[Transaction]] = DatabaseBackedTransactionStore()
+
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB limit
 
 @router.post("/batch", response_model=TransactionIngestSummary)
 async def ingest_batch_transactions(batch: TransactionBatchIngest):
@@ -59,6 +62,12 @@ async def upload_transactions_csv(
         raise HTTPException(status_code=400, detail="Only CSV files are supported")
         
     content = await file.read()
+    if len(content) > MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File size exceeds maximum allowed limit of {MAX_UPLOAD_SIZE // (1024*1024)}MB"
+        )
+
     text = content.decode("utf-8", errors="replace")
     reader = csv.DictReader(io.StringIO(text))
     
@@ -109,25 +118,49 @@ async def upload_transactions_csv(
             continue
 
     if not parsed_transactions:
-        # Fallback demo transactions if CSV had different format or empty
-        now = datetime.utcnow()
-        for i in range(30):
-            is_credit = (i % 4 != 0)
-            parsed_transactions.append(
-                Transaction(
-                    transaction_id=f"tx_demo_{i}",
-                    business_id=business_id,
-                    timestamp=now - timedelta(days=30-i),
-                    amount=Decimal(str(8500.0 + (i * 250))),
-                    direction="CREDIT" if is_credit else "DEBIT",
-                    channel="UPI_QR",
-                    counterparty_id=f"cp_retail_{i % 5}",
-                    counterparty_name=f"Retail Customer {i % 5}",
-                    category="CUSTOMER_REVENUE" if is_credit else "SUPPLIER_PURCHASE"
-                )
-            )
+        raise HTTPException(
+            status_code=400,
+            detail="CSV contains no valid transaction rows. Expected headers: date, amount, direction, channel, counterparty_id, category"
+        )
 
     TRANSACTION_STORE[business_id] = parsed_transactions
+
+    # Audit Trail: Record provenance and SHA-256 fingerprint into evidence repository
+    import hashlib
+    sha256_hash = hashlib.sha256(content).hexdigest()
+    try:
+        from ..db import evidence_repo, audit_repo
+        evidence_repo.record_evidence(
+            business_id=business_id,
+            document_name=file.filename,
+            document_type="BANK_STATEMENT_CSV",
+            provenance="SOURCE_LABELLED",
+            provenance_category="USER_UPLOADED",
+            source_type="FILE_UPLOAD",
+            source_name=file.filename,
+            verification_status="PENDING",
+            record_count=len(parsed_transactions),
+            file_hash=sha256_hash,
+            confidence_score=0.65
+        )
+        audit_repo.log_access(
+            user_id="user_uploader",
+            role="BORROWER",
+            business_id=business_id,
+            resource_type="FINANCIAL_DOCUMENT",
+            action="DOCUMENT_UPLOAD",
+            details=f"Uploaded bank statement CSV '{file.filename}' containing {len(parsed_transactions)} transactions.",
+            outcome="SUCCESS",
+            structured_metadata={
+                "filename": file.filename,
+                "file_hash": sha256_hash,
+                "record_count": len(parsed_transactions),
+                "provenance": "USER_UPLOADED"
+            }
+        )
+    except Exception:
+        pass
+
     credits = [t for t in parsed_transactions if t.direction == "CREDIT"]
     debits = [t for t in parsed_transactions if t.direction == "DEBIT"]
     timestamps = [t.timestamp for t in parsed_transactions]

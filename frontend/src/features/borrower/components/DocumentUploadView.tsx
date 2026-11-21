@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { apiService } from '@/services/apiService';
 import { 
   UploadCloud, 
   FileText, 
@@ -20,23 +21,49 @@ interface MockDocument {
   name: string;
   size: string;
   type: string;
-  status: 'VERIFIED' | 'UPLOADING';
-  provenance: 'INDEPENDENTLY_VERIFIED' | 'SOURCE_LABELLED' | 'SELF_REPORTED';
+  status: 'VERIFIED' | 'UPLOADING' | 'PENDING';
+  provenance: 'INDEPENDENTLY_VERIFIED' | 'SOURCE_LABELLED' | 'USER_UPLOADED' | 'SELF_REPORTED';
   recordCount?: number;
+  fileHash?: string;
 }
 
 export const DocumentUploadView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'REGULATORY' | 'CSV_CASHBOOK'>('REGULATORY');
   const [documents, setDocuments] = useState<MockDocument[]>([
-    { id: 'doc_1', name: 'PAN_Card_SriBalaji.pdf', size: '1.2 MB', type: 'PAN_CARD', status: 'VERIFIED', provenance: 'INDEPENDENTLY_VERIFIED' },
-    { id: 'doc_2', name: 'Udyam_Registration_Certificate.pdf', size: '850 KB', type: 'UDYAM', status: 'VERIFIED', provenance: 'INDEPENDENTLY_VERIFIED' },
-    { id: 'doc_3', name: 'Shop_Establishment_License.jpg', size: '2.1 MB', type: 'LICENSE', status: 'VERIFIED', provenance: 'INDEPENDENTLY_VERIFIED' },
-    { id: 'doc_4', name: 'Daily_Sales_Cashbook_Q3.csv', size: '340 KB', type: 'CASHBOOK_REGISTER', status: 'VERIFIED', provenance: 'SELF_REPORTED', recordCount: 184 },
+    { id: 'doc_1', name: 'PAN_Card_SriBalaji.pdf', size: '1.2 MB', type: 'PAN_CARD', status: 'VERIFIED', provenance: 'SOURCE_LABELLED' },
+    { id: 'doc_2', name: 'Udyam_Registration_Certificate.pdf', size: '850 KB', type: 'UDYAM', status: 'VERIFIED', provenance: 'SOURCE_LABELLED' },
+    { id: 'doc_3', name: 'Shop_Establishment_License.jpg', size: '2.1 MB', type: 'LICENSE', status: 'VERIFIED', provenance: 'SOURCE_LABELLED' },
+    { id: 'doc_4', name: 'Daily_Sales_Cashbook_Q3.csv', size: '340 KB', type: 'CASHBOOK_REGISTER', status: 'VERIFIED', provenance: 'USER_UPLOADED', recordCount: 184 },
   ]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-  const handleSimulateUpload = (e: React.ChangeEvent<HTMLInputElement>, isCsv = false) => {
+  useEffect(() => {
+    let isMounted = true;
+    apiService.getEvidenceAuditTrail('msme_kirana_kanpur_001')
+      .then((records) => {
+        if (!isMounted || !records || records.length === 0) return;
+        const mapped: MockDocument[] = records.map((r) => ({
+          id: r.evidence_id,
+          name: r.document_name || r.file_reference || 'Uploaded_Statement.csv',
+          size: `${r.record_count || 100} records`,
+          type: r.evidence_type || 'BANK_STATEMENT',
+          status: (r.verification_status === 'VERIFIED' ? 'VERIFIED' : 'PENDING'),
+          provenance: (r.provenance_category as any) || 'USER_UPLOADED',
+          recordCount: r.record_count || undefined,
+          fileHash: r.file_hash ? `${r.file_hash.substring(0, 8)}...` : undefined,
+        }));
+        setDocuments((prev) => {
+          const existingIds = new Set(prev.map((d) => d.name));
+          const uniqueNew = mapped.filter((m) => !existingIds.has(m.name));
+          return [...uniqueNew, ...prev];
+        });
+      })
+      .catch((err) => console.warn('Could not load live evidence audit trail:', err));
+    return () => { isMounted = false; };
+  }, []);
+
+  const handleSimulateUpload = async (e: React.ChangeEvent<HTMLInputElement>, isCsv = false) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -47,6 +74,31 @@ export const DocumentUploadView: React.FC = () => {
 
     setIsUploading(true);
     setUploadProgress(20);
+
+    if (isCsv) {
+      try {
+        setUploadProgress(50);
+        const result = await apiService.uploadCsv('msme_kirana_kanpur_001', file);
+        setUploadProgress(100);
+        setIsUploading(false);
+        const newDoc: MockDocument = {
+          id: `doc_${Date.now()}`,
+          name: file.name,
+          size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+          type: 'CASHBOOK_REGISTER',
+          status: 'VERIFIED',
+          provenance: 'USER_UPLOADED',
+          recordCount: result.total_parsed,
+        };
+        setDocuments((d) => [newDoc, ...d]);
+        toast.success(
+          `${file.name} ingested into UDYOGA Engine (${result.total_parsed} txs, ₹${Math.round(result.total_credit_volume).toLocaleString('en-IN')} inflow). Provenance: USER_UPLOADED.`
+        );
+        return;
+      } catch (err) {
+        console.warn('Real CSV upload fallback to client parser:', err);
+      }
+    }
 
     const interval = setInterval(() => {
       setUploadProgress((prev) => {

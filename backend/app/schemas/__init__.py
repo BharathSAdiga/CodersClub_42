@@ -20,6 +20,14 @@ from .assessment import (
     FinancialRiskBand,
     CounterfactualImprovement
 )
+from .auth import LoginRequest, DemoLoginRequest, TokenResponse, UserOut, UserRole
+from .consent import (
+    ConsentGrantRequest,
+    ConsentRecordOut,
+    EvidenceAuditRecordOut,
+    ConsentProvider,
+    ConsentStatus
+)
 
 __all__ = [
     "BusinessProfile",

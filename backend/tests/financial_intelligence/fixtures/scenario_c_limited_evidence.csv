@@ -1,0 +1,11 @@
+transaction_id,date,amount,direction,category,channel,counterparty_id,counterparty_name,description,is_recurring
+TXN-C-001,2024-09-02,5000.00,CREDIT,REVENUE,CASH,,,Over-the-counter cash sale,false
+TXN-C-002,2024-09-08,12000.00,CREDIT,REVENUE,UPI,CUST-C01,Local Customer X,Small retail supply,false
+TXN-C-003,2024-09-14,-2500.00,DEBIT,OPERATING_EXPENSE,CASH,,,Corrupted negative amount record,false
+TXN-C-004,2024-09-19,3000.00,DEBIT,OWNER_TRANSFER,UPI,PERS-01,Self Transfer,Personal drawings,false
+TXN-C-005,2024-09-25,8000.00,CREDIT,REVENUE,UPI,,,Counter sales without counterparty ID,false
+TXN-C-006,bad-date-string,4000.00,CREDIT,REVENUE,UPI,CUST-C02,Customer Y,Malformed date row,false
+TXN-C-007,2024-10-04,15000.00,CREDIT,REVENUE,NEFT,CUST-C01,Local Customer X,Secondary retail delivery,false
+TXN-C-008,2024-10-12,4500.00,DEBIT,SUPPLIER_PAYMENT,CASH,,,Unidentified cash supplier payment,false
+TXN-C-009,2024-10-20,7000.00,CREDIT,REVENUE,UPI,,,Unregistered customer payment,false
+TXN-C-010,2024-10-28,2000.00,DEBIT,UTILITY,UPI,SUPP-C02,State Power Utility,Electricity bill,true

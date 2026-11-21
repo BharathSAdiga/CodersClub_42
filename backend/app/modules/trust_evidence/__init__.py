@@ -1,9 +1,26 @@
-"""
-Trust & Evidence Module [OWNED BY AMULYA]
+"""UDYOGA — Trust & Evidence Module.
 
-Responsibilities:
-1. confidence_scorer.py: Evaluates EvidenceConfidence without treating missing data as negative creditworthiness
-2. synthetic_generator.py: Generates high-fidelity synthetic MSME datasets (Kirana, Weaver, Logistics)
-3. fairness_auditor.py: Ensures no demographic proxy bias in assessment
-4. explainability.py: Deterministic factor attribution for positive/vulnerability credit drivers
+Provides deterministic evidence provenance evaluation, confidence scoring,
+cross-source reconciliation, and auditability without conflating missing data
+with credit risk or delinquency.
 """
+
+from .confidence_scorer import (
+    EvidenceConfidenceScorer,
+    evidence_confidence_scorer,
+    PROVENANCE_RELIABILITY_WEIGHTS,
+    DEFAULT_WEIGHTS
+)
+from .reconciliation_engine import (
+    CrossSourceReconciliationEngine,
+    cross_source_reconciliation_engine
+)
+
+__all__ = [
+    "EvidenceConfidenceScorer",
+    "evidence_confidence_scorer",
+    "CrossSourceReconciliationEngine",
+    "cross_source_reconciliation_engine",
+    "PROVENANCE_RELIABILITY_WEIGHTS",
+    "DEFAULT_WEIGHTS"
+]

@@ -1,1 +1,1 @@
-# UDYOGA Backend Application Package
+"""UDYOGA Backend Application Package."""

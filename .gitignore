@@ -111,6 +111,8 @@ private/
 *.sqlite3
 *.db
 *.db-journal
+*.db-wal
+*.db-shm
 
 # ==========================================
 # IDE & Operating System Files

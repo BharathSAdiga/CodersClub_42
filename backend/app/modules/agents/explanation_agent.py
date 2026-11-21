@@ -40,6 +40,23 @@ class ExplanationAndPassportAgent(BaseAgent):
                 raise ValueError("Cannot generate explanation without completed underwriting memo.")
 
             profile = context.business_profile
+            ev = context.evidence_confidence
+
+            # Enrich limitations and covenants with deterministic evidence intelligence
+            if ev:
+                memo.evidence_confidence_score = ev.evidence_confidence_score
+                if ev.missing_evidence_fields:
+                    memo.data_limitations.extend([
+                        f"Missing Evidence: {field} not submitted (treated as neutral epistemic uncertainty)"
+                        for field in ev.missing_evidence_fields
+                        if f"Missing Evidence: {field}" not in " ".join(memo.data_limitations)
+                    ])
+                if ev.reconciliation and ev.reconciliation.discrepancies:
+                    for disc in ev.reconciliation.discrepancies:
+                        if disc.severity in ["HIGH", "CRITICAL"]:
+                            memo.recommended_covenants_and_mitigants.append(
+                                f"Audit Condition: Reconcile {disc.discrepancy_type} ({disc.source_a} vs {disc.source_b}) prior to second tranche disbursal."
+                            )
             
             # Attempt LLM narrative refinement if available
             try:

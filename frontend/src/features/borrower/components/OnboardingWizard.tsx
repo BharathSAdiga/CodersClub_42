@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { formatINR } from '@/lib/utils';
+import { apiService } from '@/services/apiService';
 import { 
   Building, 
   Landmark, 
@@ -34,7 +35,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
   const [tenor, setTenor] = useState<number>(90);
   const [frequency, setFrequency] = useState<'DAILY' | 'WEEKLY'>('DAILY');
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step === 2 && !aaApproved) {
       toast.error('Please approve Account Aggregator consent to proceed.');
       return;
@@ -42,6 +43,22 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
     if (step < 4) {
       setStep(step + 1);
     } else {
+      try {
+        await apiService.createBusinessProfile({
+          legal_name: 'Shree Balaji Provisions',
+          trade_name: 'Balaji Kirana & Provisions',
+          sector: 'RETAIL_KIRANA',
+          vintage_months: 48,
+          location_tier: 'TIER_2',
+          entity_type: 'PROPRIETORSHIP',
+          declared_monthly_turnover: requestedAmount * 2,
+          declared_existing_monthly_emi: 4500,
+          has_udyam_registration: true,
+          udyam_reg_number: udyam,
+        });
+      } catch (e) {
+        console.warn('Sync profile with backend:', e);
+      }
       toast.success('Onboarding complete! Working capital sanction approved.');
       onComplete();
     }

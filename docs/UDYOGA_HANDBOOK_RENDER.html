@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UDYOGA — Complete Application User Guide & Hackathon Jury Handbook</title>
+<style>
+    @page {
+        size: A4 portrait;
+        margin: 20mm 15mm 20mm 15mm;
+        @top-right {
+            content: "UDYOGA Technical Handbook";
+            font-size: 8pt;
+            color: #64748b;
+        }
+        @bottom-right {
+            content: "Page " counter(page);
+            font-size: 8pt;
+            color: #64748b;
+        }
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: #1e293b;
+        line-height: 1.55;
+        font-size: 9.5pt;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Cover Page */
+    .cover-page {
+        page-break-after: always;
+        height: 100vh;
+        background: linear-gradient(135deg, #091322 0%, #0d2137 60%, #08434d 100%);
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 60px 45px;
+        box-sizing: border-box;
+    }
+
+    .cover-top {
+        border-bottom: 2px solid #14b8a6;
+        padding-bottom: 25px;
+    }
+
+    .cover-badge {
+        display: inline-block;
+        background: rgba(20, 184, 166, 0.2);
+        border: 1px solid #14b8a6;
+        color: #5eead4;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 9pt;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .cover-title {
+        font-size: 34pt;
+        font-weight: 900;
+        letter-spacing: -1px;
+        margin: 10px 0;
+        color: #f8fafc;
+        line-height: 1.1;
+    }
+
+    .cover-subtitle {
+        font-size: 15pt;
+        font-weight: 400;
+        color: #94a3b8;
+        margin: 12px 0 6px 0;
+    }
+
+    .cover-sub-subtitle {
+        font-size: 11pt;
+        color: #5eead4;
+        font-weight: 600;
+        margin-top: 5px;
+    }
+
+    .cover-middle {
+        margin: 40px 0;
+    }
+
+    .cover-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .cover-card h3 {
+        color: #5eead4;
+        margin-top: 0;
+        margin-bottom: 8px;
+        font-size: 12pt;
+    }
+
+    .cover-card p {
+        color: #cbd5e1;
+        font-size: 9.5pt;
+        margin: 0;
+    }
+
+    .cover-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 8.5pt;
+        color: #94a3b8;
+    }
+
+    /* Typography & Section Titles */
+    .part-banner {
+        background: #0f172a;
+        color: #ffffff;
+        padding: 18px 24px;
+        border-left: 6px solid #14b8a6;
+        border-radius: 4px;
+        margin-top: 25px;
+        margin-bottom: 20px;
+    }
+
+    .part-title {
+        font-size: 16pt;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.3px;
+        color: #ffffff;
+    }
+
+    .h1-title {
+        font-size: 15pt;
+        color: #0f172a;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 6px;
+        margin-top: 24px;
+        margin-bottom: 14px;
+    }
+
+    .h2-title {
+        font-size: 12pt;
+        color: #0f766e;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .h3-title {
+        font-size: 10.5pt;
+        color: #1e293b;
+        margin-top: 14px;
+        margin-bottom: 8px;
+        font-weight: 700;
+    }
+
+    .h4-title {
+        font-size: 9.5pt;
+        color: #475569;
+        margin-top: 10px;
+        margin-bottom: 6px;
+        font-weight: 700;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 10px;
+        text-align: justify;
+    }
+
+    /* Tables */
+    .table-container {
+        margin: 14px 0;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8pt;
+        border: 1px solid #cbd5e1;
+    }
+
+    thead th {
+        background-color: #0f2b3c;
+        color: #ffffff;
+        font-weight: 700;
+        text-align: left;
+        padding: 8px 10px;
+        border: 1px solid #0f2b3c;
+    }
+
+    tbody td {
+        padding: 6px 10px;
+        border: 1px solid #e2e8f0;
+        vertical-align: top;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f8fafc;
+    }
+
+    /* Badges */
+    .badge {
+        display: inline-block;
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-size: 7.5pt;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    .badge-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .badge-warning { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+    .badge-info { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+    .badge-secondary { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+
+    /* Callouts */
+    .callout {
+        border-left: 4px solid #14b8a6;
+        background: #f0fdfa;
+        padding: 12px 16px;
+        margin: 14px 0;
+        border-radius: 0 4px 4px 0;
+    }
+    .callout-important {
+        border-left-color: #e11d48;
+        background: #fff1f2;
+    }
+    .callout-note {
+        border-left-color: #0284c7;
+        background: #f0f9ff;
+    }
+    .callout-tip {
+        border-left-color: #059669;
+        background: #ecfdf5;
+    }
+    .callout-tag {
+        font-size: 7.5pt;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        color: #0f766e;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+    }
+    .callout-important .callout-tag { color: #be123c; }
+    .callout-note .callout-tag { color: #0369a1; }
+    .callout-tip .callout-tag { color: #047857; }
+
+    /* Code Blocks */
+    .code-wrapper {
+        background: #0f172a;
+        border-radius: 4px;
+        margin: 12px 0;
+        overflow: hidden;
+    }
+    .code-header {
+        background: #1e293b;
+        color: #94a3b8;
+        font-size: 7.5pt;
+        padding: 4px 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        border-bottom: 1px solid #334155;
+    }
+    pre {
+        margin: 0;
+        padding: 10px 14px;
+        color: #f8fafc;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 7.5pt;
+        line-height: 1.45;
+        overflow-x: auto;
+    }
+    .inline-code {
+        background: #f1f5f9;
+        color: #0f766e;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-family: Consolas, monospace;
+        font-size: 8.5pt;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Math */
+    .math-display {
+        background: #f8fafc;
+        border-left: 3px solid #0d9488;
+        padding: 8px 14px;
+        margin: 10px 0;
+        font-family: "Cambria Math", serif;
+        font-size: 9.5pt;
+        color: #0f172a;
+        font-weight: 600;
+    }
+    .math-inline {
+        font-family: "Cambria Math", serif;
+        font-weight: 600;
+        color: #0f766e;
+    }
+
+    /* Lists */
+    li {
+        margin-bottom: 4px;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+    .no-break {
+        page-break-inside: avoid;
+    }
+</style>
+</head>
+<body>
+
+<!-- Cover Page -->
+<div class="cover-page">
+    <div class="cover-top">
+        <span class="cover-badge">HACKATHON JURY & ARCHITECTURE HANDBOOK</span>
+        <div class="cover-title">UDYOGA</div>
+        <div class="cover-subtitle">Beyond Credit. Beyond Barriers.</div>
+        <div class="cover-sub-subtitle">Complete Application User Guide, Feature Explanation & Technical Jury Handbook</div>
+    </div>
+
+    <div class="cover-middle">
+        <div class="cover-card">
+            <h3>Every Screen. Every Button. Every Feature. Every Agent. Explained.</h3>
+            <p>An exhaustive, code-verified operating manual and technical defense handbook for evaluating India's first agentic AI financial intelligence and cash-flow resilience lending platform for credit-invisible MSMEs.</p>
+        </div>
+        <div class="cover-card">
+            <h3>Key System Highlights Verified:</h3>
+            <p><strong>88/88 Backend Tests Passing (100%)</strong> &bull; 7 Asynchronous AI Agents &bull; 100% Deterministic Arithmetic (Decimal) &bull; NetworkX Graph Forensics &bull; SQLite WAL Mode Persistence &bull; JWT Authentication & RBAC &bull; RBI Fair Practices Compliance</p>
+        </div>
+    </div>
+
+    <div class="cover-footer">
+        <div><strong>Architect & Tech Lead:</strong> Atharv &nbsp;|&nbsp; <strong>Frontend Lead:</strong> Bharath</div>
+        <div><strong>Version:</strong> 2.0-Production-Hardened &nbsp;|&nbsp; <strong>Date:</strong> November 2026</div>
+    </div>
+</div>
+
+<!-- Main Body -->
+<div class="content-body">
+<h1 class="h1-title">UDYOGA — COMPLETE APPLICATION USER GUIDE</h1>
+<h2 class="h2-title">Every Screen. Every Button. Every Feature. Every Agent. Explained.</h2>
+<h3 class="h3-title">A Practical Operating Manual and Technical Demonstration Handbook for Hackathon Jury Evaluation</h3>
+<p><strong>Platform:</strong> UDYOGA — Beyond Credit. Beyond Barriers.</p>
+<p><strong>Version:</strong> 2.0-Production-Hardened</p>
+<p><strong>Date:</strong> November 2026</p>
+<p><strong>Authors:</strong> Atharv (Technical Lead & Agentic AI Architect) & Bharath (Frontend Architect & Lead UI Engineer)</p>
+<p><strong>Target Audience:</strong> Development Team, Fintech Product Evaluators, Credit Risk Officers, Hackathon Jury</p>
+<p>---</p>
+<h2 class="h2-title">TABLE OF CONTENTS</h2>
+<li class="ordered-item"><a href="#part-1--complete-application-architecture--inspection">Part 1 — Complete Application Architecture & Inspection</a></li>
+<li class="ordered-item"><a href="#part-2--application-navigation-guide--screen-directory">Part 2 — Application Navigation Guide & Screen Directory</a></li>
+<li class="ordered-item"><a href="#part-3--every-button-and-control-explained">Part 3 — Every Button and Control Explained</a></li>
+<li class="ordered-item"><a href="#part-4--complete-borrower-user-guide">Part 4 — Complete Borrower User Guide</a></li>
+<li class="ordered-item"><a href="#part-5--complete-lender-user-guide">Part 5 — Complete Lender User Guide</a></li>
+<li class="ordered-item"><a href="#part-6--complete-admin--auditor-user-guide">Part 6 — Complete Admin & Auditor User Guide</a></li>
+<li class="ordered-item"><a href="#part-7--business-financial-dna-explained">Part 7 — Business Financial DNA Explained</a></li>
+<li class="ordered-item"><a href="#part-8--all-seven-ai-agents-explained">Part 8 — All Seven AI Agents Explained</a></li>
+<li class="ordered-item"><a href="#part-9--complete-backend-working-in-simple-language">Part 9 — Complete Backend Working in Simple Language</a></li>
+<li class="ordered-item"><a href="#part-10--complete-end-to-end-demonstration-walkthrough">Part 10 — Complete End-to-End Demonstration Walkthrough</a></li>
+<li class="ordered-item"><a href="#part-11--jury-question--answer-handbook">Part 11 — Jury Question & Answer Handbook (45+ Questions)</a></li>
+<li class="ordered-item"><a href="#part-12--five-minute-live-demo-script">Part 12 — Five-Minute Live Demo Script & Emergency Fallback</a></li>
+<li class="ordered-item"><a href="#part-13--quick-reference-cheat-sheet">Part 13 — Quick Reference Cheat Sheet</a></li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 1 — COMPLETE APPLICATION ARCHITECTURE & INSPECTION</h1></div>
+<h2 class="h2-title">1.1 The Macroeconomic Problem Statement</h2>
+<p>In India, over <strong>63 million Micro, Small, and Medium Enterprises (MSMEs)</strong> generate more than 30% of national GDP and employ upwards of 110 million citizens. Yet over <strong>85% remain credit-invisible or credit-underserved</strong>, constrained by an addressable credit gap exceeding ₹25 Lakh Crore ($300 Billion).</p>
+<p>Traditional institutional underwriting models rely predominantly on:</p>
+<li class="ordered-item"><strong>Static Collateral</strong>: Immovable property or high-value fixed assets that micro-enterprises do not possess.</li>
+<li class="ordered-item"><strong>Formal Audited Balance Sheets</strong>: Historical statements that lag dynamic informal business reality by 12–18 months.</li>
+<li class="ordered-item"><strong>Credit Bureau Scores</strong>: Retail-oriented 300–900 scores that conflate the enterprise's cash-generating health with personal consumption debt.</li>
+<p>India's vibrant micro-economy operates on <strong>high-velocity daily cash flow cycles</strong>: merchant UPI QR settlements, daily market receipts, bank transfers, and local trade credit.</p>
+<p><strong>UDYOGA</strong> replaces asset-based collateral hurdles with <strong>behavioral cash-flow intelligence, topological counterparty graph auditing, and deterministic cash-flow resilience stress-testing</strong>.</p>
+<div class="code-wrapper no-break"><div class="code-header">mermaid</div><pre><code>
+flowchart TD
+    subgraph Data_Sources ["1. Multi-Source Ingestion Streams"]
+        CSV["Bank / UPI Statement CSVs"]
+        AA["Account Aggregator (AA) Framework"]
+        GSTN["GSTN Invoices &amp; 3B Filings"]
+        DIGI["DigiLocker Udyam Records"]
+    end
+
+    subgraph Backend_Engines ["2. Pure Deterministic Financial Arithmetic (Decimal)"]
+        DNA_ENG["Financial DNA Engine (Inflows, CV, Velocity)"]
+        GRAPH_ENG["NetworkX Directed Forensics Engine (Cycles &amp; Entropy)"]
+        RES_ENG["7-Scenario Cash-Flow Resilience Simulator"]
+        DEC_ENG["Underwriting Policy Rules &amp; Loan Boundaries"]
+    end
+
+    subgraph Agentic_Orchestrator ["3. Multi-Agent Orchestration Engine"]
+        A1["Financial Intelligence Agent"]
+        A2["Evidence Verification Agent"]
+        A3["Transaction Forensics Agent"]
+        A4["Business Vitality Agent"]
+        A5["Resilience Simulation Agent"]
+        A6["Underwriting Agent"]
+        A7["Explanation &amp; Passport Agent"]
+    end
+
+    subgraph UI_Portals ["4. User Experiences"]
+        PUB["Public Marketing &amp; Conversion Site"]
+        BOR["Borrower Financial Health Portal"]
+        LEN["Lender Underwriting Workbench"]
+        ADM["Fairness &amp; Audit Telemetry Portal"]
+    end
+
+    Data_Sources --&gt; Backend_Engines
+    Backend_Engines &lt;--&gt; Agentic_Orchestrator
+    Agentic_Orchestrator --&gt;|Real-Time SSE Streams &amp; REST APIs| UI_Portals
+</code></pre></div>
+<h2 class="h2-title">1.2 Core Architectural Principles & Regulatory Guarantees</h2>
+<li class="ordered-item"><strong>100% Deterministic Financial Arithmetic</strong>: All financial calculations—including cash velocity, DSCR, loan affordability ceilings, and multi-scenario shock simulations—are implemented in pure Python using exact Decimal precision. LLMs are never permitted to compute or adjust financial figures.</li>
+<li class="ordered-item"><strong>Zero Bureau Score Fabrication</strong>: UDYOGA does not generate synthetic 300–900 bureau credit scores. It outputs transparent qualitative assessment statuses (<code class="inline-code">INDICATIVE_RECOMMENDATION</code>, <code class="inline-code">CONDITIONAL_RECOMMENDATION</code>, <code class="inline-code">HUMAN_REVIEW_REQUIRED</code>, <code class="inline-code">INSUFFICIENT_EVIDENCE</code>) and explainable financial risk bands.</li>
+<li class="ordered-item"><strong>Regulatory Neutrality Policy (Absence <span class="math-inline">\neq</span> Negative Evidence)</strong>: Missing records (such as sub-threshold GST exemption for micro-enterprises under ₹40 Lakhs turnover) are classified as neutral epistemic uncertainty. They adjust confidence bands and exposure limits without penalizing underlying cash-flow health.</li>
+<li class="ordered-item"><strong>Forensic Graph Investigation (No Automated Fraud Convictions)</strong>: Topological graph anomalies (such as circular fund loops or high counterparty concentration) automatically flag applications for <code class="inline-code">HUMAN_REVIEW_REQUIRED</code> rather than generating automated rejections.</li>
+<li class="ordered-item"><strong>Individual Debt Reconciliation</strong>: Cash-flow affordability reconciles declared obligations with verified recurring bank debits on an individual obligation level, preventing double-counting while capturing undeclared debt service.</li>
+<li class="ordered-item"><strong>Deterministic Rule-Based Fallback</strong>: If LLM narrative synthesis is unavailable or encounters latency, a fully populated, rule-based Credit Appraisal Memo is generated without disruption.</li>
+<li class="ordered-item"><strong>Zero Private Chain-of-Thought Leakage</strong>: Internal reasoning tokens are strictly excluded from client-facing streams, logs, and APIs. Server-Sent Events expose only structured agent tasks, tool calls, findings, and statuses.</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 2 — APPLICATION NAVIGATION GUIDE & SCREEN DIRECTORY</h1></div>
+<p>UDYOGA is organized into four distinct application modes:</p>
+<div class="code-wrapper no-break"><div class="code-header">mermaid</div><pre><code>
+stateDiagram-v2
+    [*] --&gt; PUBLIC_WEBSITE: Visit http://localhost:5173
+    
+    PUBLIC_WEBSITE --&gt; BORROWER_PORTAL: Select Borrower (Ramesh / Priya)
+    PUBLIC_WEBSITE --&gt; LENDER_PORTAL: Select Credit Officer (Vikram)
+    PUBLIC_WEBSITE --&gt; ADMIN_PORTAL: Select Ethics Auditor (Dr. Sharma)
+
+    state BORROWER_PORTAL {
+        BorrowerDashboard --&gt; OnboardingWizard
+        BorrowerDashboard --&gt; DocumentVault
+        BorrowerDashboard --&gt; WhatIfSimulator
+        BorrowerDashboard --&gt; FinancialHealth
+        BorrowerDashboard --&gt; AssessmentReport
+        BorrowerDashboard --&gt; ConsentManager
+    }
+
+    state LENDER_PORTAL {
+        LenderDashboard --&gt; ApplicationPipeline
+        ApplicationPipeline --&gt; ApplicantWorkbench
+        ApplicantWorkbench --&gt; RunLiveAssessment
+    }
+
+    state ADMIN_PORTAL {
+        AdminOverview --&gt; FairnessMonitoring
+        AdminOverview --&gt; UserManagement
+        AdminOverview --&gt; MasterLedger
+        AdminOverview --&gt; AuditLogs
+        AdminOverview --&gt; SystemTelemetry
+    }
+</code></pre></div>
+<h3 class="h3-title">Complete Screen Directory</h3>
+<div class="table-container no-break"><table>
+<thead><tr>
+<th>Portal</th>
+<th>Screen / View Name</th>
+<th>Internal Route</th>
+<th>Primary Actor</th>
+<th>Key Purpose</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Public</strong></td>
+<td>Landing Hero</td>
+<td><code class="inline-code">/</code></td>
+<td>All visitors</td>
+<td>Value proposition, live loan tuner widget, phone simulator</td>
+</tr>
+<tr>
+<td><strong>Public</strong></td>
+<td>Problem & Solution</td>
+<td><code class="inline-code">/#problem-sec</code></td>
+<td>Borrowers/Lenders</td>
+<td>Visual comparison of traditional credit vs flow lending</td>
+</tr>
+<tr>
+<td><strong>Public</strong></td>
+<td>How It Works</td>
+<td><code class="inline-code">/#how-it-works-sec</code></td>
+<td>All visitors</td>
+<td>4-stage flow lending journey explanation</td>
+</tr>
+<tr>
+<td><strong>Public</strong></td>
+<td>Financial DNA Story</td>
+<td><code class="inline-code">/#dna-sec</code></td>
+<td>All visitors</td>
+<td>5-dimensional evaluation breakdown</td>
+</tr>
+<tr>
+<td><strong>Public</strong></td>
+<td>Benefits Grid</td>
+<td><code class="inline-code">/#benefits-sec</code></td>
+<td>Borrowers/Lenders</td>
+<td>Dual-sided benefits matrix</td>
+</tr>
+<tr>
+<td><strong>Public</strong></td>
+<td>Trust & Regulatory</td>
+<td><code class="inline-code">/#trust-sec</code></td>
+<td>Regulators/Jury</td>
+<td>DPDP Act compliance, RBI Fair Practices Code adherence</td>
+</tr>
+<tr>
+<td><strong>Public</strong></td>
+<td>FAQ Accordion</td>
+<td><code class="inline-code">/#faq-sec</code></td>
+<td>Borrowers</td>
+<td>Common questions on collateral, GST exemption, and privacy</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Borrower Dashboard</td>
+<td><code class="inline-code">/borrower/dashboard</code></td>
+<td>MSME Borrower</td>
+<td>Operational cash summary, active application card, quick actions</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Onboarding Wizard</td>
+<td><code class="inline-code">/borrower/onboarding</code></td>
+<td>MSME Borrower</td>
+<td>Multi-step enterprise registration (legal name, vintage, turnover)</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Business Profile</td>
+<td><code class="inline-code">/borrower/profile</code></td>
+<td>MSME Borrower</td>
+<td>Verified profile metadata, Udyam registration, entity structure</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Financials View</td>
+<td><code class="inline-code">/borrower/financials</code></td>
+<td>MSME Borrower</td>
+<td>Cash inflow vs outflow graphs, operating margins, daily averages</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Document Vault</td>
+<td><code class="inline-code">/borrower/documents</code></td>
+<td>MSME Borrower</td>
+<td>CSV statement ingestion dropzone, parsed counts, SHA-256 hashes</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Consent Manager</td>
+<td><code class="inline-code">/borrower/consent</code></td>
+<td>MSME Borrower</td>
+<td>Sovereign consent management (grant, list, revoke AA/GST permissions)</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Application Creation</td>
+<td><code class="inline-code">/borrower/apply</code></td>
+<td>MSME Borrower</td>
+<td>New loan facility wizard (amount, tenure, repayment preference)</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Application Tracking</td>
+<td><code class="inline-code">/borrower/tracking</code></td>
+<td>MSME Borrower</td>
+<td>5-stage milestone tracker (Submitted <span class="math-inline">\to</span> Underwriting <span class="math-inline">\to</span> Sanction)</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Financial Health</td>
+<td><code class="inline-code">/borrower/health</code></td>
+<td>MSME Borrower</td>
+<td>5-Dimensional Business Financial DNA diagnostic radar</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>What-If Simulator</td>
+<td><code class="inline-code">/borrower/insights</code></td>
+<td>MSME Borrower</td>
+<td>6-scenario cash-flow resilience stress-test workbench</td>
+</tr>
+<tr>
+<td><strong>Borrower</strong></td>
+<td>Credit Assessment</td>
+<td><code class="inline-code">/borrower/assessment</code></td>
+<td>MSME Borrower</td>
+<td>Official Credit Appraisal Memo, indicative APR, covenants, Path-to-Yes</td>
+</tr>
+<tr>
+<td><strong>Lender</strong></td>
+<td>Portfolio Dashboard</td>
+<td><code class="inline-code">/lender/dashboard</code></td>
+<td>Credit Officer</td>
+<td>Institutional portfolio metrics, queue velocity, high-confidence ratio</td>
+</tr>
+<tr>
+<td><strong>Lender</strong></td>
+<td>Application Pipeline</td>
+<td><code class="inline-code">/lender/pipeline</code></td>
+<td>Credit Officer</td>
+<td>Searchable, filterable queue of all applicants by risk classification</td>
+</tr>
+<tr>
+<td><strong>Lender</strong></td>
+<td>Applicant Workbench</td>
+<td><code class="inline-code">/lender/workbench</code></td>
+<td>Credit Officer</td>
+<td>Core underwriter workbench: live AI agent execution, graph forensics</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>System Overview</td>
+<td><code class="inline-code">/admin/overview</code></td>
+<td>Platform Admin</td>
+<td>System throughput, total credit volume evaluated, active connections</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Fairness Monitoring</td>
+<td><code class="inline-code">/admin/fairness</code></td>
+<td>Ethics Auditor</td>
+<td>Non-discrimination audits, demographic parity, Tier 2/3 equity</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>User Management</td>
+<td><code class="inline-code">/admin/users</code></td>
+<td>Platform Admin</td>
+<td>RBAC user directory, tenant business isolation, session telemetry</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Master Ledger</td>
+<td><code class="inline-code">/admin/applications</code></td>
+<td>Platform Admin</td>
+<td>Immutable application ledger tracking timestamps, amounts, outcomes</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Assessment Monitor</td>
+<td><code class="inline-code">/admin/assessments</code></td>
+<td>Platform Admin</td>
+<td>Live agent execution latency, subagent queues, error budgets</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Data Quality Monitor</td>
+<td><code class="inline-code">/admin/data-quality</code></td>
+<td>Data Auditor</td>
+<td>CSV parsing error rates, missing data distributions, concordance</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Audit Logs</td>
+<td><code class="inline-code">/admin/audit-logs</code></td>
+<td>Compliance Officer</td>
+<td>Cryptographic tamper-evident log of document uploads and SHA-256 hashes</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>System Telemetry</td>
+<td><code class="inline-code">/admin/system</code></td>
+<td>DevOps Engineer</td>
+<td>SQLite WAL status, DB connection pool health, API latencies</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Reports & Exports</td>
+<td><code class="inline-code">/admin/reports</code></td>
+<td>Compliance Officer</td>
+<td>Downloadable regulatory compliance packages (RBI, DPDP)</td>
+</tr>
+</tbody></table></div>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 3 — EVERY BUTTON AND CONTROL EXPLAINED</h1></div>
+<p>This chapter catalogs every interactive control across the entire UDYOGA platform.</p>
+<h3 class="h3-title">Table 3.1: Public Landing Page & Interactive Widgets</h3>
+<div class="table-container no-break"><table>
+<thead><tr>
+<th>Control Label</th>
+<th>Location</th>
+<th>Purpose</th>
+<th>User Action</th>
+<th>Backend Effect</th>
+<th>Expected Result</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>"UDYOGA"</strong></td>
+<td>Navbar</td>
+<td>Brand logo & home reset</td>
+<td>Click</td>
+<td>None (client scroll)</td>
+<td>Scrolls smoothly to hero section</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"How It Works"</strong></td>
+<td>Navbar</td>
+<td>Jump to workflow section</td>
+<td>Click</td>
+<td>None (client scroll)</td>
+<td>Scrolls to 4-stage process explanation</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"For Businesses"</strong></td>
+<td>Navbar</td>
+<td>Jump to borrower section</td>
+<td>Click</td>
+<td>None (client scroll)</td>
+<td>Scrolls to MSME benefits breakdown</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"For Lenders"</strong></td>
+<td>Navbar</td>
+<td>Access institutional portal</td>
+<td>Click</td>
+<td><code class="inline-code">setAppMode('LENDER_PORTAL')</code></td>
+<td>Opens Lender Portfolio Dashboard</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Fairness & Trust"</strong></td>
+<td>Navbar</td>
+<td>Access regulatory monitor</td>
+<td>Click</td>
+<td><code class="inline-code">setAppMode('ADMIN_PORTAL')</code></td>
+<td>Opens Admin Fairness Monitoring view</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Persona Pill"</strong></td>
+<td>Navbar (Right)</td>
+<td>View/toggle active persona</td>
+<td>Click</td>
+<td><code class="inline-code">setIsPersonaModalOpen(true)</code></td>
+<td>Opens 1-click Persona Switcher modal</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Apply Now"</strong></td>
+<td>Navbar (Right)</td>
+<td>Direct jump to loan wizard</td>
+<td>Click</td>
+<td><code class="inline-code">setAppMode('BORROWER_PORTAL')</code></td>
+<td>Opens Application Creation wizard</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Explore Live Platform"</strong></td>
+<td>Hero</td>
+<td>Primary conversion CTA</td>
+<td>Click</td>
+<td><code class="inline-code">setAppMode('BORROWER_PORTAL')</code></td>
+<td>Routes directly to Borrower Dashboard</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"How We Evaluate"</strong></td>
+<td>Hero</td>
+<td>Explanatory scroll CTA</td>
+<td>Click</td>
+<td>None (client scroll)</td>
+<td>Scrolls to architecture section</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Loan Amount Slider"</strong></td>
+<td>Hero Tuner</td>
+<td>Interactive loan estimation</td>
+<td>Drag (₹50k - ₹10L)</td>
+<td>Deterministic calculation</td>
+<td>Dynamically updates safe monthly EMI</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Tenure Pills (6/12/18m)"</strong></td>
+<td>Hero Tuner</td>
+<td>Adjust repayment tenure</td>
+<td>Click pill</td>
+<td>Deterministic calculation</td>
+<td>Updates monthly divisor and projected APR</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Start Application"</strong></td>
+<td>Hero Tuner</td>
+<td>Transfer tuned parameters</td>
+<td>Click</td>
+<td>Transfers state to wizard</td>
+<td>Opens loan application pre-filled with values</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Phone Preview Tabs"</strong></td>
+<td>Phone Widget</td>
+<td>Preview borrower mobile UX</td>
+<td>Click (UPI / Pass / Alert)</td>
+<td>State swap</td>
+<td>Swaps simulated WhatsApp alert previews</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+</tbody></table></div>
+<h3 class="h3-title">Table 3.2: Borrower Portal Controls</h3>
+<div class="table-container no-break"><table>
+<thead><tr>
+<th>Control Label</th>
+<th>Location</th>
+<th>Purpose</th>
+<th>User Action</th>
+<th>Backend Effect</th>
+<th>Expected Result</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>"Dashboard"</strong></td>
+<td>Sidebar Nav</td>
+<td>Return to main dashboard</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays borrower financial summary</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"My Application"</strong></td>
+<td>Sidebar Nav</td>
+<td>Check application progress</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays 5-stage milestone tracker</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Business Profile"</strong></td>
+<td>Sidebar Nav</td>
+<td>View registered profile</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays enterprise details & Udyam number</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Financials"</strong></td>
+<td>Sidebar Nav</td>
+<td>View cash-flow trends</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Renders inflow/outflow charts & surplus</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Document Vault"</strong></td>
+<td>Sidebar Nav</td>
+<td>Upload bank statements</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Opens CSV ingestion dropzone</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Consent Manager"</strong></td>
+<td>Sidebar Nav</td>
+<td>Manage data permissions</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays active AA & GST consents</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Financial Health"</strong></td>
+<td>Sidebar Nav</td>
+<td>View 5-dimensional DNA</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Renders radar chart & diagnostic cards</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"What-If Simulator"</strong></td>
+<td>Sidebar Nav</td>
+<td>Test cash resilience</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Opens 6-scenario stress simulator</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Credit Assessment"</strong></td>
+<td>Sidebar Nav</td>
+<td>Inspect Credit Memo</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays official CAM, APR, covenants</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Apply for Facility"</strong></td>
+<td>Dashboard</td>
+<td>Initiate loan request</td>
+<td>Click</td>
+<td>Routes to <code class="inline-code">/borrower/apply</code></td>
+<td>Opens facility application form</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Upload Statement"</strong></td>
+<td>Dashboard</td>
+<td>Quick jump to vault</td>
+<td>Click</td>
+<td>Routes to <code class="inline-code">/borrower/documents</code></td>
+<td>Opens Document Vault</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Test Cash Shock"</strong></td>
+<td>Dashboard</td>
+<td>Quick jump to simulator</td>
+<td>Click</td>
+<td>Routes to <code class="inline-code">/borrower/insights</code></td>
+<td>Opens What-If Simulator</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Select CSV File"</strong></td>
+<td>Document Vault</td>
+<td>Select statement file</td>
+<td>Click or drag CSV</td>
+<td>File read into memory</td>
+<td>Validates <code class="inline-code">.csv</code> format & file size</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Upload & Analyze"</strong></td>
+<td>Document Vault</td>
+<td>Ingest statement</td>
+<td>Click</td>
+<td><code class="inline-code">POST /api/v1/transactions/upload-csv</code></td>
+<td>Parses rows, hashes file, updates totals</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Grant Consent"</strong></td>
+<td>Consent View</td>
+<td>Authorize AA/GST sharing</td>
+<td>Click</td>
+<td><code class="inline-code">POST /api/v1/consent/grant</code></td>
+<td>Creates active consent row with expiry</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Revoke"</strong></td>
+<td>Consent View</td>
+<td>Cancel data permission</td>
+<td>Click</td>
+<td><code class="inline-code">POST /api/v1/consent/{id}/revoke</code></td>
+<td>Terminates consent immediately</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Scenario Presets"</strong></td>
+<td>What-If View</td>
+<td>Load standard stress test</td>
+<td>Click preset pill</td>
+<td>Sets slider parameters</td>
+<td>Configures pre-defined shock parameters</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Run Simulation"</strong></td>
+<td>What-If View</td>
+<td>Compute stressed metrics</td>
+<td>Click</td>
+<td><code class="inline-code">POST /api/v1/resilience/simulate</code></td>
+<td>Returns post-shock DSCR & cash runway</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Submit Application"</strong></td>
+<td>Apply Wizard</td>
+<td>Complete loan request</td>
+<td>Click</td>
+<td>Prepares pipeline record</td>
+<td>Transitions to tracking view</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+</tbody></table></div>
+<h3 class="h3-title">Table 3.3: Lender Portal Controls</h3>
+<div class="table-container no-break"><table>
+<thead><tr>
+<th>Control Label</th>
+<th>Location</th>
+<th>Purpose</th>
+<th>User Action</th>
+<th>Backend Effect</th>
+<th>Expected Result</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>"Portfolio Overview"</strong></td>
+<td>Sidebar Nav</td>
+<td>High-level portfolio metrics</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays queue metrics & average DSCR</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Application Pipeline"</strong></td>
+<td>Sidebar Nav</td>
+<td>View applicant queue</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays filterable table of borrowers</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Applicant Workbench"</strong></td>
+<td>Sidebar Nav</td>
+<td>Active underwriting station</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Opens deep analysis workbench</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Risk Filter Tabs"</strong></td>
+<td>Pipeline</td>
+<td>Filter queue by risk band</td>
+<td>Click (Low / Mod / High)</td>
+<td>Filters local table state</td>
+<td>Filters displayed applications by risk</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Search Applicant"</strong></td>
+<td>Pipeline</td>
+<td>Search by trade name / ID</td>
+<td>Type borrower name</td>
+<td>Filters local table state</td>
+<td>Filters rows matching search query</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Open Workbench"</strong></td>
+<td>Pipeline</td>
+<td>Select borrower for audit</td>
+<td>Click row action button</td>
+<td>Loads application state</td>
+<td>Opens borrower details in Workbench</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Run Live AI Assessment"</strong></td>
+<td>Workbench</td>
+<td>Launch 7-agent pipeline</td>
+<td>Click</td>
+<td><code class="inline-code">POST /api/v1/assessment/run</code></td>
+<td>Triggers agents, opens SSE stream</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Forensics Tab"</strong></td>
+<td>Workbench</td>
+<td>Inspect counterparty graph</td>
+<td>Click tab</td>
+<td>Loads graph metrics</td>
+<td>Displays NetworkX topology & cycles</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Stress Testing Tab"</strong></td>
+<td>Workbench</td>
+<td>Review resilience results</td>
+<td>Click tab</td>
+<td>Loads simulation</td>
+<td>Displays post-shock DSCR & headroom</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Credit Appraisal Memo"</strong></td>
+<td>Workbench</td>
+<td>Inspect generated CAM</td>
+<td>Click tab</td>
+<td><code class="inline-code">GET /api/v1/assessment/{id}/result</code></td>
+<td>Formats executive narrative & covenants</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Recommend Approval"</strong></td>
+<td>Workbench</td>
+<td>Underwriter decision</td>
+<td>Click</td>
+<td>UI toast / state update</td>
+<td>Records officer recommendation</td>
+<td><code class="inline-code"><span class="badge badge-info">DEMO / MOCK</span></code></td>
+</tr>
+<tr>
+<td><strong>"Flag for Field Audit"</strong></td>
+<td>Workbench</td>
+<td>Require physical visit</td>
+<td>Click</td>
+<td>UI toast / state update</td>
+<td>Flags application for investigator audit</td>
+<td><code class="inline-code"><span class="badge badge-info">DEMO / MOCK</span></code></td>
+</tr>
+<tr>
+<td><strong>"Conditional Sanction"</strong></td>
+<td>Workbench</td>
+<td>Propose revised covenants</td>
+<td>Click</td>
+<td>UI toast / state update</td>
+<td>Attaches covenants to indicative sanction</td>
+<td><code class="inline-code"><span class="badge badge-info">DEMO / MOCK</span></code></td>
+</tr>
+</tbody></table></div>
+<h3 class="h3-title">Table 3.4: Admin & Auditor Portal Controls</h3>
+<div class="table-container no-break"><table>
+<thead><tr>
+<th>Control Label</th>
+<th>Location</th>
+<th>Purpose</th>
+<th>User Action</th>
+<th>Backend Effect</th>
+<th>Expected Result</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>"System Overview"</strong></td>
+<td>Sidebar Nav</td>
+<td>Platform throughput</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays global MSME throughput</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Fairness Monitoring"</strong></td>
+<td>Sidebar Nav</td>
+<td>Audit demographic parity</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays approval parity across tiers</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"User Management"</strong></td>
+<td>Sidebar Nav</td>
+<td>Inspect RBAC accounts</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Lists registered users & tenant bindings</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Master Ledger"</strong></td>
+<td>Sidebar Nav</td>
+<td>Application audit ledger</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Complete ledger of all submissions</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Assessment Monitor"</strong></td>
+<td>Sidebar Nav</td>
+<td>Live agent latency monitor</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Subagent execution durations & queue</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Data Quality Monitor"</strong></td>
+<td>Sidebar Nav</td>
+<td>Ingestion error telemetry</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Ingested statement validity & errors</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Audit Logs"</strong></td>
+<td>Sidebar Nav</td>
+<td>Cryptographic evidence log</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Displays SHA-256 hashes & events</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"System Telemetry"</strong></td>
+<td>Sidebar Nav</td>
+<td>Database & server health</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>SQLite WAL status, DB pool, latency</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Reports & Exports"</strong></td>
+<td>Sidebar Nav</td>
+<td>Regulatory compliance export</td>
+<td>Click</td>
+<td>Client route change</td>
+<td>Export options for RBI / DPDP packages</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Export Audit CSV"</strong></td>
+<td>Reports View</td>
+<td>Export immutable audit log</td>
+<td>Click</td>
+<td>Client-side CSV generator</td>
+<td>Downloads CSV containing SHA-256 hashes</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+<tr>
+<td><strong>"Trigger Bias Audit"</strong></td>
+<td>Fairness View</td>
+<td>Re-evaluate fairness score</td>
+<td>Click</td>
+<td>Recalculates parity</td>
+<td>Refreshes Disparate Impact Ratio</td>
+<td><code class="inline-code"><span class="badge badge-success">FUNCTIONAL</span></code></td>
+</tr>
+</tbody></table></div>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 4 — COMPLETE BORROWER USER GUIDE</h1></div>
+<h2 class="h2-title">4.1 Onboarding & Business Profile</h2>
+<p>New MSME borrowers register their enterprise through the <strong>Onboarding Wizard</strong> (<code class="inline-code">/borrower/onboarding</code>), which captures:</p>
+<li class="bullet-item"><strong>Trade Name & Legal Entity</strong>: Sole Proprietorship, Partnership, or LLP.</li>
+<li class="bullet-item"><strong>Location Tier</strong>: Tier 1 (Metropolitan), Tier 2 (Developing Hub), or Tier 3 (Semi-Urban / Rural).</li>
+<li class="bullet-item"><strong>Declared Monthly Turnover</strong>: Stated monthly volume used as an initial benchmark against which digital transactions are triangulated.</li>
+<li class="bullet-item"><strong>Existing Monthly EMI Obligations</strong>: Declared ongoing debt service payments, reconciled against recurring bank debits to prevent double-counting.</li>
+<h2 class="h2-title">4.2 Document Vault & Statement Ingestion</h2>
+<p>In the <strong>Document Vault</strong> (<code class="inline-code">/borrower/documents</code>):</p>
+<li class="ordered-item">The borrower selects or drags a bank or UPI statement CSV (e.g. <code class="inline-code">Daily_Sales_Cashbook_Q3.csv</code>).</li>
+<li class="ordered-item">The frontend enforces a 10MB limit and ensures <code class="inline-code">.csv</code> formatting.</li>
+<li class="ordered-item">Upon clicking <strong>"Upload & Analyze Statement"</strong>, the backend validates headers (<code class="inline-code">date, amount, direction, channel, counterparty_id, category</code>), calculates a cryptographic <strong>SHA-256 fingerprint</strong>, stores records in SQLite <code class="inline-code">transactions</code>, and generates an ingestion summary.</li>
+<li class="ordered-item">If invalid rows are detected, the API returns a descriptive RFC-7807 problem details error.</li>
+<h2 class="h2-title">4.3 Financial Health Dashboard</h2>
+<p>The <strong>Financial Health</strong> dashboard presents real-time operational indicators:</p>
+<li class="bullet-item"><strong>Net Monthly Operating Cash Flow</strong>: Actual unencumbered cash remaining after operational debits.</li>
+<li class="bullet-item"><strong>Inflow Volatility (<span class="math-inline">CV</span>)</strong>: Coefficient of variation across weekly cash credits. Lower volatility indicates steady recurring revenue.</li>
+<li class="bullet-item"><strong>Cash Velocity (Days)</strong>: Average days between cash receipt and operational deployment.</li>
+<li class="bullet-item"><strong>Counterparty Concentration</strong>: Percentage of turnover routed through the top 3 buyers.</li>
+<h2 class="h2-title">4.4 What-If Cash-Flow Resilience Simulator</h2>
+<p>MSMEs often face sudden exogenous economic shocks. The <strong>What-If Simulator</strong> allows borrowers to test their business against six standard stress presets:</p>
+<li class="ordered-item"><strong>Normal Baseline</strong>: Current operational cash flows without shock.</li>
+<li class="ordered-item"><strong>Revenue Drop -15%</strong>: Moderate demand contraction (1 month).</li>
+<li class="ordered-item"><strong>Severe Revenue Shock -30%</strong>: Severe contraction lasting 2 months.</li>
+<li class="ordered-item"><strong>Expense Surge +15%</strong>: Raw material cost inflation (1 month).</li>
+<li class="ordered-item"><strong>Delayed Receivables (30 Days)</strong>: Wholesale customer payment delay.</li>
+<li class="ordered-item"><strong>Combined Macro Shock</strong>: -20% revenue drop, +15% cost surge, 30-day payment delay.</li>
+<p>The simulator immediately computes:</p>
+<p><div class="math-display">\text{Projected Operating Cash Flow} = \text{Stressed Inflows} - \text{Stressed Outflows}</div></p>
+<p><div class="math-display">\text{Post-Shock DSCR} = \frac{\text{Projected Monthly Operating Cash Flow}}{\text{Monthly Debt Service Obligations}}</div></p>
+<h2 class="h2-title">4.5 Consent Management</h2>
+<p>In compliance with RBI Account Aggregator guidelines and the DPDP Act, borrowers maintain sovereign control over their data:</p>
+<li class="bullet-item">Each data connection (AA, GSTN, NPCI UPI, DigiLocker) is explicitly granted for a specified duration (default 30 days).</li>
+<li class="bullet-item">Borrowers can revoke consent at any time, instantly removing active data fetch permissions.</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 5 — COMPLETE LENDER USER GUIDE</h1></div>
+<h2 class="h2-title">5.1 Lender Dashboard & Application Pipeline</h2>
+<p>Senior Credit Officers (Vikram Malhotra) view the centralized institutional pipeline:</p>
+<li class="bullet-item"><strong>Queue Overview</strong>: Total applications pending, high-confidence ratio, average portfolio DSCR.</li>
+<li class="bullet-item"><strong>Risk Band Filtering</strong>: Instantly isolate <code class="inline-code">LOW_RISK</code>, <code class="inline-code">MODERATE_RISK</code>, or <code class="inline-code">HIGH_RISK</code> applications.</li>
+<li class="bullet-item"><strong>Pipeline Search</strong>: Filter by MSME trade name, enterprise sector, or location tier.</li>
+<h2 class="h2-title">5.2 Applicant Detail Workbench & Live Agent Orchestration</h2>
+<p>Selecting an applicant opens the <strong>Applicant Detail Workbench</strong>. Clicking <strong>"Run Live AI Assessment"</strong> triggers the central agentic orchestration engine:</p>
+<div class="code-wrapper no-break"><div class="code-header">mermaid</div><pre><code>
+sequenceDiagram
+    autonumber
+    actor Lender as Credit Officer (Vikram)
+    participant UI as Applicant Workbench (React)
+    participant API as FastAPI Orchestrator
+    participant SSE as EventBus (SSE Stream)
+    participant Agents as Specialized Agents (Fan-Out)
+    participant DB as SQLite WAL Database
+
+    Lender-&gt;&gt;UI: Click "Run Live AI Assessment"
+    UI-&gt;&gt;API: POST /api/v1/assessment/run
+    API-&gt;&gt;DB: Check BusinessProfile &amp; Transactions
+    API-&gt;&gt;SSE: Emit STARTED event
+    API--&gt;&gt;UI: Return assessment_id (eval_...)
+    UI-&gt;&gt;SSE: Subscribe /api/v1/assessment/{id}/stream
+
+    par Concurrent Analysis Fan-Out
+        API-&gt;&gt;Agents: Financial Intelligence Agent
+        API-&gt;&gt;Agents: Evidence Verification Agent
+        API-&gt;&gt;Agents: Transaction Forensics Agent
+        API-&gt;&gt;Agents: Business Vitality Agent
+    end
+
+    Agents--&gt;&gt;SSE: Stream agent completion events
+    SSE--&gt;&gt;UI: Update live agent status cards
+
+    API-&gt;&gt;Agents: Resilience Simulation Agent
+    Agents--&gt;&gt;SSE: Stream resilience stress results
+    API-&gt;&gt;Agents: Underwriting Engine Agent
+    Agents--&gt;&gt;SSE: Stream decision &amp; risk band
+    API-&gt;&gt;Agents: Explanation &amp; Passport Agent
+    Agents--&gt;&gt;SSE: Stream final CAM generated
+
+    API-&gt;&gt;DB: Persist CreditAppraisalMemo &amp; Events
+    SSE--&gt;&gt;UI: Emit Orchestrator COMPLETED
+    UI-&gt;&gt;API: GET /api/v1/assessment/{id}/result
+    API--&gt;&gt;UI: Return full CAM &amp; narrative
+</code></pre></div>
+<h2 class="h2-title">5.3 Counterparty Network Graph Forensics</h2>
+<p>The workbench embeds topological graph analysis:</p>
+<li class="bullet-item">Identifies <strong>closed circular transaction loops</strong> (<span class="math-inline">A \to B \to C \to A</span>) where funds circle between related accounts without underlying economic delivery.</li>
+<li class="bullet-item">Flags transactions where debits return as credits within 48 hours without corresponding shipping or GST documentation.</li>
+<li class="bullet-item">Automatically marks anomalous applications as <code class="inline-code">HUMAN_REVIEW_REQUIRED</code> rather than generating automated rejections.</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 6 — COMPLETE ADMIN & AUDITOR USER GUIDE</h1></div>
+<h2 class="h2-title">6.1 Fairness & Non-Discrimination Monitoring</h2>
+<p>The <strong>Fairness Monitoring</strong> view (<code class="inline-code">/admin/fairness</code>) provides continuous compliance verification:</p>
+<li class="bullet-item"><strong>Demographic Parity</strong>: Measures approval rate parity across enterprise sectors (Kirana Retail, Textiles, Auto Components).</li>
+<li class="bullet-item"><strong>Geographic Equity</strong>: Audits that Tier 2/3 rural and semi-urban enterprises achieve equitable access compared to metropolitan Tier 1 enterprises.</li>
+<li class="bullet-item"><strong>Absence of Evidence Neutrality</strong>: Confirms that missing formal documentation (e.g. GST returns for micro-enterprises below the mandatory threshold) does not penalize base cash-flow scores.</li>
+<h2 class="h2-title">6.2 Application Master Ledger & Cryptographic Audit Trail</h2>
+<p>The <strong>Audit Logs</strong> view (<code class="inline-code">/admin/audit-logs</code>) provides immutable compliance logs:</p>
+<li class="bullet-item"><strong>SHA-256 Hashes</strong>: Every statement file uploaded is recorded alongside its file hash, record count, and provenance level.</li>
+<li class="bullet-item"><strong>Consent Records</strong>: Complete timestamped audit trail of consents granted, active, and revoked.</li>
+<li class="bullet-item"><strong>Underwriting Decisions</strong>: Records the exact version of the calculation engine (<code class="inline-code">1.0.0</code>) and underwriter acknowledgments.</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 7 — BUSINESS FINANCIAL DNA EXPLAINED</h1></div>
+<p>UDYOGA analyzes five core dimensions of MSME financial health:</p>
+<div class="code-wrapper no-break"><div class="code-header">mermaid</div><pre><code>
+quadrantChart
+    title Business Financial DNA Balance
+    x-axis Low Operational Activity --&gt; High Operational Activity
+    y-axis Low Data Confidence --&gt; High Data Confidence
+    quadrant-1 High Confidence Growth (Prime)
+    quadrant-2 Documented Low-Velocity
+    quadrant-3 Informal / Micro Cash Flow
+    quadrant-4 Unverified High-Velocity (Investigate)
+    "Kanpur Kirana": [0.65, 0.72]
+    "Surat Textile LLP": [0.82, 0.88]
+    "Erode Weaver": [0.45, 0.60]
+</code></pre></div>
+<h3 class="h3-title">1. Cash-Flow Vitality</h3>
+<li class="bullet-item"><strong>What it measures</strong>: The velocity, predictability, and volume of operational inflows.</li>
+<li class="bullet-item"><strong>Key metrics</strong>: Average daily cash inflow, coefficient of variation (<span class="math-inline">CV</span>), monthly operating surplus.</li>
+<li class="bullet-item"><strong>Source data</strong>: Bank credits, merchant QR UPI settlements.</li>
+<h3 class="h3-title">2. Business Continuity</h3>
+<li class="bullet-item"><strong>What it measures</strong>: Operational vintage, seasonality resilience, and revenue growth trajectory.</li>
+<li class="bullet-item"><strong>Key metrics</strong>: Operating months, month-over-month inflow trend, active trading days per month.</li>
+<li class="bullet-item"><strong>Source data</strong>: Transaction timestamps, Udyam registration records.</li>
+<h3 class="h3-title">3. Trade Reliability</h3>
+<li class="bullet-item"><strong>What it measures</strong>: Consistency of counterparty relationships and absence of circular or fictitious round-tripping.</li>
+<li class="bullet-item"><strong>Key metrics</strong>: Counterparty diversity, Shannon entropy of cash routing, circular loop count.</li>
+<li class="bullet-item"><strong>Source data</strong>: Directed transaction network graph.</li>
+<h3 class="h3-title">4. Financial Resilience</h3>
+<li class="bullet-item"><strong>What it measures</strong>: Repayment capacity when subjected to revenue contraction, expense surges, or payment delays.</li>
+<li class="bullet-item"><strong>Key metrics</strong>: Post-shock DSCR, cash runway days post-shock, unencumbered monthly surplus.</li>
+<li class="bullet-item"><strong>Source data</strong>: Cash-flow resilience simulation engine.</li>
+<h3 class="h3-title">5. Evidence Confidence</h3>
+<li class="bullet-item"><strong>What it measures</strong>: Epistemic certainty, recency, and verifiability of submitted data streams.</li>
+<li class="bullet-item"><strong>Key metrics</strong>: Cross-source concordance percentage, temporal coverage days, provenance weights.</li>
+<li class="bullet-item"><strong>Policy Guarantee</strong>: Missing evidence reflects epistemic uncertainty, not credit delinquency.</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 8 — ALL SEVEN AI AGENTS EXPLAINED</h1></div>
+<div class="code-wrapper no-break"><div class="code-header">mermaid</div><pre><code>
+flowchart LR
+    subgraph Parallel_Agents ["Phase 1: Concurrent Intelligence Fan-Out"]
+        A1["1. Financial Intelligence Agent"]
+        A2["2. Evidence Verification Agent"]
+        A3["3. Transaction Forensics Agent"]
+        A4["4. Business Vitality Agent"]
+    end
+
+    subgraph Sequential_Agents ["Phase 2: Synthesis &amp; Decisioning"]
+        A5["5. Resilience Simulation Agent"]
+        A6["6. Underwriting Agent"]
+        A7["7. Explanation &amp; Passport Agent"]
+    end
+
+    Parallel_Agents --&gt; A5
+    A5 --&gt; A6
+    A6 --&gt; A7
+</code></pre></div>
+<h3 class="h3-title">Agent 1 — Financial Intelligence Agent</h3>
+<li class="bullet-item"><strong>Purpose</strong>: Parses raw credits and debits to extract behavioral cash flows.</li>
+<li class="bullet-item"><strong>Inputs</strong>: Verified transactions, declared turnover.</li>
+<li class="bullet-item"><strong>Processing</strong>: Calculates daily average inflow, inflow volatility (<span class="math-inline">CV</span>), cash velocity, unencumbered operating surplus.</li>
+<li class="bullet-item"><strong>Outputs</strong>: <code class="inline-code">FinancialDNA</code> metrics.</li>
+<li class="bullet-item"><strong>Implementation</strong>: Pure deterministic Python/Decimal arithmetic (<code class="inline-code">analyzer.py</code>).</li>
+<h3 class="h3-title">Agent 2 — Evidence Verification Agent</h3>
+<li class="bullet-item"><strong>Purpose</strong>: Audits data provenance and tags evidence confidence.</li>
+<li class="bullet-item"><strong>Inputs</strong>: File metadata, transaction date spans, GST status.</li>
+<li class="bullet-item"><strong>Processing</strong>: Classifies attributes into <code class="inline-code">INDEPENDENTLY_VERIFIED</code>, <code class="inline-code">SOURCE_LABELLED</code>, <code class="inline-code">SELF_REPORTED</code>, or <code class="inline-code">MISSING</code>. Computes concordance between declared and verified turnover.</li>
+<li class="bullet-item"><strong>Outputs</strong>: <code class="inline-code">EvidenceConfidence</code> schema.</li>
+<li class="bullet-item"><strong>Implementation</strong>: Deterministic provenance rules (<code class="inline-code">engine.py</code>).</li>
+<h3 class="h3-title">Agent 3 — Transaction Forensics Agent</h3>
+<li class="bullet-item"><strong>Purpose</strong>: Investigates counterparty network topology for anomalies and circular loops.</li>
+<li class="bullet-item"><strong>Inputs</strong>: Categorized transactions with counterparty identifiers.</li>
+<li class="bullet-item"><strong>Processing</strong>: Builds a directed NetworkX graph (<span class="math-inline">G</span>). Computes Shannon entropy of cash flows and executes Johnson's simple cycle detection algorithm to identify circular fund transfers.</li>
+<li class="bullet-item"><strong>Outputs</strong>: <code class="inline-code">GraphMetrics</code> schema (nodes, edges, cycles, anomaly flags).</li>
+<li class="bullet-item"><strong>Implementation</strong>: NetworkX directed graph analysis (<code class="inline-code">graph_forensics.py</code>).</li>
+<h3 class="h3-title">Agent 4 — Business Vitality Agent</h3>
+<li class="bullet-item"><strong>Purpose</strong>: Evaluates operational stability and revenue growth rhythm.</li>
+<li class="bullet-item"><strong>Inputs</strong>: Business vintage, historical monthly turnover.</li>
+<li class="bullet-item"><strong>Processing</strong>: Computes month-over-month trajectory, seasonal dips, and operating regularity.</li>
+<li class="bullet-item"><strong>Outputs</strong>: Business vitality indices and early-warning signals.</li>
+<li class="bullet-item"><strong>Implementation</strong>: Deterministic statistical scoring.</li>
+<h3 class="h3-title">Agent 5 — Resilience Simulation Agent</h3>
+<li class="bullet-item"><strong>Purpose</strong>: Executes macroeconomic stress-testing against debt obligations.</li>
+<li class="bullet-item"><strong>Inputs</strong>: Operating surplus, reconciled monthly EMIs, stress parameters.</li>
+<li class="bullet-item"><strong>Processing</strong>: Reconciles declared EMIs against bank debit patterns. Runs the 7-scenario shock suite to compute post-shock DSCR and cash runway.</li>
+<li class="bullet-item"><strong>Outputs</strong>: <code class="inline-code">ShockSimulationResult</code> and <code class="inline-code">AffordabilityAnalysis</code>.</li>
+<li class="bullet-item"><strong>Implementation</strong>: Deterministic cash-flow simulation (<code class="inline-code">simulator.py</code>).</li>
+<h3 class="h3-title">Agent 6 — Underwriting Agent</h3>
+<li class="bullet-item"><strong>Purpose</strong>: Formulates loan recommendations, indicative APR ranges, and covenants.</li>
+<li class="bullet-item"><strong>Inputs</strong>: Synthesized outputs from Agents 1 through 5.</li>
+<li class="bullet-item"><strong>Processing</strong>: Evaluates policy rules. If circular loops or critical risks are present, routes to <code class="inline-code">HUMAN_REVIEW_REQUIRED</code>. Sets maximum loan amount capped by affordable monthly EMI:</li>
+<p><div class="math-display">P_{\max} = \text{Affordable EMI} \times \left[ \frac{1 - (1 + r)^{-n}}{r} \right]</div></p>
+<li class="bullet-item"><strong>Outputs</strong>: <code class="inline-code">AssessmentStatus</code>, <code class="inline-code">FinancialRiskBand</code>, recommended facility and APR.</li>
+<li class="bullet-item"><strong>Implementation</strong>: Deterministic underwriting rule engine (<code class="inline-code">engine.py</code>).</li>
+<h3 class="h3-title">Agent 7 — Explanation & Passport Agent</h3>
+<li class="bullet-item"><strong>Purpose</strong>: Synthesizes the final human-readable Credit Appraisal Memo (CAM).</li>
+<li class="bullet-item"><strong>Inputs</strong>: Full assessment state and agent findings.</li>
+<li class="bullet-item"><strong>Processing</strong>: Generates an explainable narrative detailing strengths, vulnerabilities, covenants, and counterfactual improvements ("Path-to-Yes").</li>
+<li class="bullet-item"><strong>Fallback Guarantee</strong>: If LLM API is unavailable, instantly generates a fully populated, deterministic rule-based CAM narrative.</li>
+<li class="bullet-item"><strong>Outputs</strong>: <code class="inline-code">CreditAppraisalMemo</code> (CAM).</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 9 — COMPLETE BACKEND WORKING IN SIMPLE LANGUAGE</h1></div>
+<h2 class="h2-title">9.1 Technical Stack Summary</h2>
+<li class="bullet-item"><strong>Python 3.12</strong>: Core runtime.</li>
+<li class="bullet-item"><strong>FastAPI</strong>: Asynchronous web framework with auto-generated OpenAPI/Swagger documentation.</li>
+<li class="bullet-item"><strong>Pydantic v2</strong>: High-performance schema validation and JSON serialization.</li>
+<li class="bullet-item"><strong>SQLite 3 + SQLAlchemy 2.0</strong>: Relational persistence configured with Write-Ahead Logging (<code class="inline-code">WAL</code>), foreign keys, and 5-second busy timeouts.</li>
+<li class="bullet-item"><strong>NetworkX</strong>: Directed topological graph analytics and circular cycle detection.</li>
+<li class="bullet-item"><strong>Pandas & NumPy</strong>: High-performance numerical aggregation.</li>
+<h2 class="h2-title">9.2 Complete API Endpoint Reference</h2>
+<div class="table-container no-break"><table>
+<thead><tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Request Body</th>
+<th>Response Body</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code class="inline-code">GET</code></td>
+<td><code class="inline-code">/api/v1/health</code></td>
+<td>None</td>
+<td><code class="inline-code">{ status: "ok", ... }</code></td>
+<td>Subsystem health check</td>
+</tr>
+<tr>
+<td><code class="inline-code">POST</code></td>
+<td><code class="inline-code">/api/v1/auth/demo-login</code></td>
+<td><code class="inline-code">{ persona_key: str }</code></td>
+<td><code class="inline-code">TokenResponse</code></td>
+<td>1-click JWT token issue</td>
+</tr>
+<tr>
+<td><code class="inline-code">GET</code></td>
+<td><code class="inline-code">/api/v1/business/demo/scenarios</code></td>
+<td>None</td>
+<td><code class="inline-code">List[BusinessProfile]</code></td>
+<td>Pre-seeded demo MSMEs</td>
+</tr>
+<tr>
+<td><code class="inline-code">POST</code></td>
+<td><code class="inline-code">/api/v1/business/profile</code></td>
+<td><code class="inline-code">BusinessProfileCreate</code></td>
+<td><code class="inline-code">BusinessProfile</code></td>
+<td>Register new MSME profile</td>
+</tr>
+<tr>
+<td><code class="inline-code">POST</code></td>
+<td><code class="inline-code">/api/v1/transactions/upload-csv</code></td>
+<td>Multipart Form (<code class="inline-code">file, business_id</code>)</td>
+<td><code class="inline-code">TransactionIngestSummary</code></td>
+<td>Parse & fingerprint statement</td>
+</tr>
+<tr>
+<td><code class="inline-code">POST</code></td>
+<td><code class="inline-code">/api/v1/resilience/simulate</code></td>
+<td><code class="inline-code">ShockScenarioPayload</code></td>
+<td><code class="inline-code">ShockSimulationResult</code></td>
+<td>Run deterministic shock test</td>
+</tr>
+<tr>
+<td><code class="inline-code">POST</code></td>
+<td><code class="inline-code">/api/v1/assessment/run</code></td>
+<td><code class="inline-code">{ business_id, requested_amount }</code></td>
+<td><code class="inline-code">{ assessment_id, stream_url }</code></td>
+<td>Trigger multi-agent pipeline</td>
+</tr>
+<tr>
+<td><code class="inline-code">GET</code></td>
+<td><code class="inline-code">/api/v1/assessment/{id}/stream</code></td>
+<td>None (SSE)</td>
+<td>Stream of <code class="inline-code">AgentEvent</code></td>
+<td>Real-time Server-Sent Events</td>
+</tr>
+<tr>
+<td><code class="inline-code">GET</code></td>
+<td><code class="inline-code">/api/v1/assessment/{id}/result</code></td>
+<td>None</td>
+<td><code class="inline-code">CreditAppraisalMemo</code></td>
+<td>Final CAM and recommendations</td>
+</tr>
+<tr>
+<td><code class="inline-code">POST</code></td>
+<td><code class="inline-code">/api/v1/consent/grant</code></td>
+<td><code class="inline-code">ConsentGrantRequest</code></td>
+<td><code class="inline-code">ConsentRecordOut</code></td>
+<td>Authorize data sharing</td>
+</tr>
+<tr>
+<td><code class="inline-code">POST</code></td>
+<td><code class="inline-code">/api/v1/consent/{id}/revoke</code></td>
+<td>None</td>
+<td><code class="inline-code">{ status: "REVOKED" }</code></td>
+<td>Terminate data permission</td>
+</tr>
+<tr>
+<td><code class="inline-code">GET</code></td>
+<td><code class="inline-code">/api/v1/evidence/audit-trail/{id}</code></td>
+<td>None</td>
+<td><code class="inline-code">List[EvidenceAuditRecordOut]</code></td>
+<td>View cryptographic file hashes</td>
+</tr>
+</tbody></table></div>
+<h2 class="h2-title">9.3 Financial Calculation Formulas</h2>
+<h3 class="h3-title">1. Unencumbered Monthly Operating Cash Flow</h3>
+<p><div class="math-display">\text{Operating Surplus} = \sum \text{Operational Credits} - \sum \text{Operational Debits}</div></p>
+<h3 class="h3-title">2. Debt Service Coverage Ratio (DSCR)</h3>
+<p><div class="math-display">\text{DSCR} = \frac{\text{Net Monthly Operating Cash Flow}}{\sum \text{Monthly Debt Service Obligations}}</div></p>
+<p><em>Benchmark</em>: DSCR <span class="math-inline">\ge 1.25</span> indicates robust debt-servicing headroom; DSCR <span class="math-inline">< 1.0</span> indicates cash deficit.</p>
+<h3 class="h3-title">3. Maximum Safe Monthly EMI</h3>
+<p><div class="math-display">\text{Max Safe EMI} = \max\left(0, \text{Operating Surplus} \times 0.50 - \text{Existing Debt Obligations}\right)</div></p>
+<p><em>Policy</em>: Fixed obligations must never exceed 50% of verified monthly operating surplus.</p>
+<h3 class="h3-title">4. Maximum Affordable Loan Principal (<span class="math-inline">P_{\max}</span>)</h3>
+<p><div class="math-display">P_{\max} = \text{Max Safe EMI} \times \left[ \frac{1 - (1 + r)^{-n}}{r} \right]</div></p>
+<p>where <span class="math-inline">r = \frac{\text{APR}}{12}</span> and <span class="math-inline">n = \text{Tenure in Months}</span>.</p>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 10 — COMPLETE END-TO-END DEMONSTRATION WALKTHROUGH</h1></div>
+<h3 class="h3-title">Scenario: Ramesh Kumar — Kanpur Kirana Provisions Store</h3>
+<li class="bullet-item"><strong>Business Profile</strong>: Kirana & General Store, Kanpur (Tier 2 location). Vintage: 36 months.</li>
+<li class="bullet-item"><strong>Declared Financials</strong>: Declared Monthly Turnover: ₹5,00,000. Existing EMI: ₹15,000.</li>
+<li class="bullet-item"><strong>Target Facility</strong>: ₹2,50,000 Working Capital Credit Line for festive inventory.</li>
+<h3 class="h3-title">Step-by-Step Walkthrough:</h3>
+<li class="ordered-item"><strong>Persona Selection</strong>: Click the persona pill in the navbar and select <strong>Ramesh Kumar (Kirana Owner)</strong>.</li>
+<li class="ordered-item"><strong>Onboarding Inspection</strong>: Navigate to <strong>Business Profile</strong>; verify Udyam registration <code class="inline-code">UDYAM-UP-28-0019284</code>.</li>
+<li class="ordered-item"><strong>Upload Statement</strong>: Open <strong>Document Vault</strong> (<code class="inline-code">/borrower/documents</code>); upload <code class="inline-code">Daily_Sales_Cashbook_Q3.csv</code>. The backend parses 120 transactions, confirms ₹5.2 Lakhs in credits, calculates SHA-256 fingerprint, and updates SQLite.</li>
+<li class="ordered-item"><strong>Inspect Financial Health</strong>: Open <strong>Financial Health</strong>; review 5-dimensional DNA radar. Cash-Flow Vitality is rated high with healthy <span class="math-inline">CV = 0.28</span>.</li>
+<li class="ordered-item"><strong>Simulate Resilience</strong>: Open <strong>What-If Simulator</strong>; select <strong>"Revenue Drop -15%"</strong>. Projected DSCR holds at <span class="math-inline">1.42</span>, confirming strong repayment capacity.</li>
+<li class="ordered-item"><strong>Switch to Lender</strong>: Click persona pill; switch to <strong>Vikram Malhotra (Credit Officer)</strong>.</li>
+<li class="ordered-item"><strong>Locate in Pipeline</strong>: Open <strong>Application Pipeline</strong>; locate Ramesh Kumar's application. Click <strong>"Open Workbench"</strong>.</li>
+<li class="ordered-item"><strong>Run Live Assessment</strong>: Click <strong>"Run Live AI Assessment"</strong>. Observe live SSE cards animating as all 7 agents execute in real time.</li>
+<li class="ordered-item"><strong>Review Graph Forensics</strong>: Forensics Agent reports <strong>0 circular loops</strong>, with healthy counterparty entropy (<span class="math-inline">2.45</span> bits).</li>
+<li class="ordered-item"><strong>Review Final CAM</strong>: Final status is <code class="inline-code">INDICATIVE_RECOMMENDATION</code> for ₹2,50,000 at 13.5%–14.5% APR, with covenant for quarterly statement updates.</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 11 — JURY QUESTION & ANSWER HANDBOOK</h1></div>
+<h3 class="h3-title">Q1: What is UDYOGA in one sentence?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "UDYOGA is an agentic AI-powered flow lending and financial intelligence platform that assesses credit-invisible MSMEs based on real-time cash flow and resilience rather than static physical collateral."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: Replaces credit bureau reliance with multi-source evidence triangulation, NetworkX topological graph analysis, and deterministic 7-scenario cash-flow stress simulations.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: 5-Dimensional Business Financial DNA.</li>
+<h3 class="h3-title">Q2: Why did you build multiple AI agents instead of prompting one large LLM?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "Financial underwriting requires strict separation between mathematical calculation and narrative synthesis to completely prevent hallucinations."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: Agents 1 through 6 run deterministic Python arithmetic (Decimal, NetworkX, Pandas). Only Agent 7 uses LLM narrative synthesis, with an instant deterministic rule-based fallback if the API is offline.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: Multi-Agent State Machine (<code class="inline-code">orchestrator.py</code>).</li>
+<h3 class="h3-title">Q3: How do you detect fraud or fake invoices?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "We construct directed counterparty transaction graphs and run cycle detection algorithms to identify circular round-tripping of funds."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: Using NetworkX, we analyze cash flow entropy and flag closed loops (<span class="math-inline">A \to B \to C \to A</span>) where funds circle back within 48 hours without corresponding shipping or tax invoices.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: Transaction Forensics Agent.</li>
+<h3 class="h3-title">Q4: What happens if a micro-enterprise doesn't have GST filings?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "In India, micro-enterprises under ₹40 Lakhs turnover are legally exempt from GST. We treat missing GST records with neutral epistemic uncertainty, never as a credit penalty."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: Absence of evidence adjusts uncertainty bands and limits exposure without penalizing base financial health.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: Evidence Verification Agent & Regulatory Neutrality Policy.</li>
+<h3 class="h3-title">Q5: How do you prevent double-counting existing debt?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "We reconcile declared loan EMIs with verified recurring bank debits on an individual obligation level."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: The debt reconciliation engine matches declared payments against recurring debits using fuzzy name and amount matching, taking the higher of verified or declared obligations without double-counting.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: Resilience Engine Debt Reconciler (<code class="inline-code">simulator.py</code>).</li>
+<h3 class="h3-title">Q6: Can UDYOGA reject an applicant automatically?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "No. In strict accordance with the RBI Fair Practices Code, automated rejections are prohibited. Anomalies or elevated risks flag applications for Human Review."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: High-risk findings trigger <code class="inline-code">HUMAN_REVIEW_REQUIRED</code>, routing the file to a senior underwriter with specific evidentiary flags.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: Underwriting Engine & Applicant Detail Workbench.</li>
+<h3 class="h3-title">Q7: Why use Server-Sent Events (SSE) instead of WebSockets?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "SSE provides lightweight, unidirectional HTTP streaming that works through corporate proxies and firewalls without connection negotiation overhead."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: SSE natively supports automatic browser reconnection and delivers structured JSON payloads directly into React state.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: EventBus (<code class="inline-code">event_bus.py</code>).</li>
+<h3 class="h3-title">Q8: How is maximum loan affordability calculated?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "We cap debt service at 50% of verified monthly operating cash surplus, amortized over the proposed tenure."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: We use the standard actuarial present-value annuity formula: <span class="math-inline">P_{\max} = \text{EMI} \times \frac{1 - (1+r)^{-n}}{r}</span>.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: Loan Affordability Boundaries (<code class="inline-code">simulator.py</code>).</li>
+<h3 class="h3-title">Q9: Does UDYOGA store financial data securely?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "Yes, all data is persisted in a local SQLite database with Write-Ahead Logging, strict tenant isolation, and bcrypt password hashing."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: Enforces foreign key constraints, 5-second busy timeouts, JWT authentication, and cross-tenant security checks preventing horizontal privilege escalation.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: SQLite WAL Persistence & RBAC Guards (<code class="inline-code">session.py</code>, <code class="inline-code">auth_deps.py</code>).</li>
+<h3 class="h3-title">Q10: How do you prevent hallucinated APR or loan recommendations?</h3>
+<li class="bullet-item"><strong>Spoken Answer</strong>: "The underwriting agent strictly enforces deterministic policy rules; LLMs have zero authority to set loan amounts or interest rates."</li>
+<li class="bullet-item"><strong>Technical Deep Dive</strong>: APR spreads (13.0%–18.5%) and loan amounts are computed using pure Python logic; the LLM merely translates structured findings into narrative explanations.</li>
+<li class="bullet-item"><strong>Relevant Feature</strong>: Underwriting Engine (<code class="inline-code">engine.py</code>).</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 12 — FIVE-MINUTE LIVE DEMO SCRIPT</h1></div>
+<h3 class="h3-title">[0:00 - 0:45] The MSME Credit Deficit</h3>
+<li class="bullet-item"><strong>Action</strong>: Open Public Landing Page (<code class="inline-code">http://localhost:5173</code>).</li>
+<li class="bullet-item"><strong>Spoken</strong>: "Judges, over 63 million MSMEs power India's economy, yet 85% cannot access formal bank credit because they lack static collateral or multi-year audited balance sheets. Today, we present <strong>UDYOGA</strong>—a platform that unlocks flow-based lending through AI financial intelligence."</li>
+<li class="bullet-item"><strong>Visual</strong>: Show Split Waveform Hero and the Live Tuner Widget.</li>
+<h3 class="h3-title">[0:45 - 1:45] Borrower Journey & Document Ingestion</h3>
+<li class="bullet-item"><strong>Action</strong>: Switch persona to <strong>Ramesh Kumar (Kirana Owner)</strong>. Navigate to <strong>Document Vault</strong> (<code class="inline-code">/borrower/documents</code>).</li>
+<li class="bullet-item"><strong>Spoken</strong>: "Ramesh operates a high-velocity kirana store in Kanpur. He uploads his digital bank and UPI statement CSV. Notice that the platform instantly validates the rows, records a cryptographic SHA-256 fingerprint, and updates his financial indicators."</li>
+<li class="bullet-item"><strong>Visual</strong>: Drop CSV, click "Upload & Analyze", point out transaction counts and credit volume.</li>
+<h3 class="h3-title">[1:45 - 2:45] What-If Resilience Simulator</h3>
+<li class="bullet-item"><strong>Action</strong>: Open <strong>What-If Simulator</strong> (<code class="inline-code">/borrower/insights</code>).</li>
+<li class="bullet-item"><strong>Spoken</strong>: "Instead of static history, lenders care about resilience under stress. With our deterministic simulator, we test a 15% revenue drop. The engine instantly computes a post-shock DSCR of 1.42 and 45 days of cash runway, proving Ramesh can service debt even during economic headwinds."</li>
+<li class="bullet-item"><strong>Visual</strong>: Click "Revenue Drop -15%", point out post-shock DSCR and runway gauges.</li>
+<h3 class="h3-title">[2:45 - 4:00] Lender Workbench & Live Agent Orchestration</h3>
+<li class="bullet-item"><strong>Action</strong>: Switch persona to <strong>Vikram Malhotra (Credit Officer)</strong>. Open <strong>Applicant Workbench</strong> and click <strong>"Run Live AI Assessment"</strong>.</li>
+<li class="bullet-item"><strong>Spoken</strong>: "Now let's switch to the lender. Vikram opens Ramesh's application and triggers our multi-agent assessment. Watch as four agents fan out in parallel via Server-Sent Events: analyzing financial DNA, auditing data provenance, constructing counterparty graphs in NetworkX, and evaluating business vitality."</li>
+<li class="bullet-item"><strong>Visual</strong>: Point to animating agent cards, then click Forensics Tab to show the clean counterparty graph.</li>
+<h3 class="h3-title">[4:00 - 4:45] Explainable Credit Appraisal Memo (CAM)</h3>
+<li class="bullet-item"><strong>Action</strong>: Click the <strong>Credit Appraisal Memo</strong> tab.</li>
+<li class="bullet-item"><strong>Spoken</strong>: "Within seconds, UDYOGA compiles a comprehensive, explainable Credit Appraisal Memo recommending a ₹2,50,000 working capital facility at 13.5% APR. Notice that every recommendation cites exact evidence references and includes counterfactual improvements."</li>
+<li class="bullet-item"><strong>Visual</strong>: Highlight recommendation badge, APR range, positive factors, and covenants.</li>
+<h3 class="h3-title">[4:45 - 5:00] Closing & Value Proposition</h3>
+<li class="bullet-item"><strong>Spoken</strong>: "UDYOGA transforms informal cash flow into verifiable credit intelligence. 88 passing backend tests, deterministic arithmetic, zero hallucinations, and full regulatory compliance. Thank you!"</li>
+<h3 class="h3-title">Emergency Backup Plan</h3>
+<li class="bullet-item"><strong>Backend Offline</strong>: Launch <code class="inline-code">run_udyoga.bat</code> or run backend directly via <code class="inline-code">python -m uvicorn backend.app.main:app</code>.</li>
+<li class="bullet-item"><strong>LLM Unavailable</strong>: UDYOGA automatically falls back to its deterministic rule-based narrative generator with zero user-visible degradation.</li>
+<li class="bullet-item"><strong>Demo Reset</strong>: Seeded demo profiles (<code class="inline-code">msme_kirana_kanpur_001</code>, <code class="inline-code">msme_trading_surat_002</code>) are permanently available in SQLite.</li>
+<p>---</p>
+<div class="page-break"></div><div class="part-banner"><h1 class="part-title">PART 13 — QUICK REFERENCE CHEAT SHEET</h1></div>
+<h3 class="h3-title">Top 5 Financial Formulas</h3>
+<li class="ordered-item"><strong>Operating Surplus</strong>: <span class="math-inline">\sum \text{Credits} - \sum \text{Debits}</span></li>
+<li class="ordered-item"><strong>DSCR</strong>: <span class="math-inline">\frac{\text{Operating Surplus}}{\sum \text{Monthly Debt Service}}</span></li>
+<li class="ordered-item"><strong>Max Safe EMI</strong>: <span class="math-inline">\max(0, \text{Operating Surplus} \times 0.50 - \text{Existing Debt})</span></li>
+<li class="ordered-item"><strong>Max Loan Principal</strong>: <span class="math-inline">\text{Max Safe EMI} \times \left[\frac{1 - (1+r)^{-n}}{r}\right]</span></li>
+<li class="ordered-item"><strong>Cash Velocity (Days)</strong>: <span class="math-inline">\frac{30 \times \text{Average Balance}}{\text{Monthly Debits}}</span></li>
+<h3 class="h3-title">Top 5 Preloaded Demo Personas</h3>
+<li class="bullet-item"><strong>Ramesh Kumar</strong>: Micro Kirana Store Owner (<code class="inline-code">ramesh</code> / <code class="inline-code">password123</code>)</li>
+<li class="bullet-item"><strong>Priya Patel</strong>: Growth Textile Manufacturer (<code class="inline-code">priya</code> / <code class="inline-code">password123</code>)</li>
+<li class="bullet-item"><strong>Vikram Malhotra</strong>: Senior Underwriting Officer (<code class="inline-code">vikram</code> / <code class="inline-code">password123</code>)</li>
+<li class="bullet-item"><strong>Dr. Ananya Sharma</strong>: Independent Ethics & Fair-Lending Auditor (<code class="inline-code">auditor</code> / <code class="inline-code">password123</code>)</li>
+<li class="bullet-item"><strong>Platform Admin</strong>: System Administrator (<code class="inline-code">admin</code> / <code class="inline-code">adminpassword123</code>)</li>
+<p>---</p>
+<p><em>UDYOGA Complete User Guide & Hackathon Jury Handbook — Verified and Approved.</em></p>
+</div>
+
+</body>
+</html>

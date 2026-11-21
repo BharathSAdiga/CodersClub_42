@@ -3,6 +3,7 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime, timezone
 
 from ...schemas.evidence import EvidenceConfidence, EvidenceItem, FairnessAuditStatus
+from ...modules.trust_evidence import evidence_confidence_scorer, cross_source_reconciliation_engine
 from .base_agent import BaseAgent
 from .context import AssessmentContext
 
@@ -10,11 +11,13 @@ class EvidenceVerificationAgent(BaseAgent):
     """
     Evidence Verification Agent.
     Evaluates data completeness, provenance, and credibility across data streams.
-    Distinguishes USER_PROVIDED, SOURCE_LABELLED, and INDEPENDENTLY_VERIFIED data.
+    Distinguishes USER_UPLOADED, SOURCE_LABELLED, and INDEPENDENTLY_VERIFIED data.
     
     Guarantees:
     - Never treats missing evidence as automatic negative financial evidence.
     - Missing evidence reflects solely in data limitations, confidence score, and unassessed flags.
+    - Performs cross-source reconciliation between declared profile, transactions, and debt obligations.
+    - User-uploaded bank statements are categorized as USER_UPLOADED, not independently verified.
     """
     def __init__(self):
         super().__init__(agent_name="EvidenceVerificationAgent")
@@ -37,115 +40,54 @@ class EvidenceVerificationAgent(BaseAgent):
             profile = context.business_profile
             txs = context.transactions
             
-            evidence_items: List[EvidenceItem] = []
-            missing_fields: List[str] = []
-            data_sources: List[str] = []
+            # 1. Retrieve persisted evidence records from database
+            persisted_evidence = []
+            debt_obligations = []
+            try:
+                from ...db import evidence_repo, debt_obligation_repo
+                persisted_evidence = evidence_repo.list_for_business(context.business_id)
+                debt_obligations = debt_obligation_repo.get_for_business(context.business_id)
+            except Exception:
+                pass
 
-            # 1. Profile evidence
-            evidence_items.append(
-                EvidenceItem(
-                    attribute_name="business_profile_declaration",
-                    provenance="USER_PROVIDED",
-                    source_reference="self_declared_profile",
-                    is_verified=False,
-                    confidence_weight=0.75
-                )
+            # 2. Compute deterministic evidence confidence
+            evidence_result = evidence_confidence_scorer.evaluate(
+                business_profile=profile,
+                transactions=txs,
+                persisted_evidence_records=persisted_evidence,
+                assessment_id=context.assessment_id
             )
-            data_sources.append("USER_DECLARED_PROFILE")
 
-            # 2. Transaction evidence
-            if txs:
-                # Determine channels
-                channels = {t.channel for t in txs}
-                has_bank = "NEFT_RTGS" in channels or "IMPS" in channels or "CHEQUE" in channels or "CASH_DEPOSIT" in channels
-                has_upi = "UPI_QR" in channels or "POS_SWIPE" in channels
-
-                if has_bank:
-                    data_sources.append("BANK_STATEMENTS")
-                    evidence_items.append(
-                        EvidenceItem(
-                            attribute_name="bank_statement_cashflow",
-                            provenance="INDEPENDENTLY_VERIFIED",
-                            source_reference=f"bank_statement_{len(txs)}_records",
-                            is_verified=True,
-                            confidence_weight=0.92
-                        )
-                    )
-                if has_upi:
-                    data_sources.append("UPI_QR_LOGS")
-                    evidence_items.append(
-                        EvidenceItem(
-                            attribute_name="merchant_qr_settlements",
-                            provenance="SOURCE_LABELLED",
-                            source_reference="upi_qr_logs",
-                            is_verified=True,
-                            confidence_weight=0.85
-                        )
-                    )
-                temporal_days = 180 if len(txs) >= 10 else 90
-                completeness_pct = 85.0 if len(txs) >= 20 else 65.0
-            else:
-                temporal_days = 0
-                completeness_pct = 40.0
-                missing_fields.append("DIGITAL_TRANSACTION_HISTORY")
-
-            # 3. GST Returns
-            if profile.has_gstin and profile.gstin:
-                data_sources.append("GST_PORTAL")
-                evidence_items.append(
-                    EvidenceItem(
-                        attribute_name="gst_3b_tax_filings",
-                        provenance="INDEPENDENTLY_VERIFIED",
-                        source_reference=f"gstin_{profile.gstin}",
-                        is_verified=True,
-                        confidence_weight=0.95
-                    )
-                )
-            else:
-                missing_fields.append("GSTIN_RETURNS_3B")
-                evidence_items.append(
-                    EvidenceItem(
-                        attribute_name="gst_3b_tax_filings",
-                        provenance="MISSING",
-                        source_reference=None,
-                        is_verified=False,
-                        confidence_weight=0.0
-                    )
-                )
-
-            # Calculate composite evidence confidence score
-            valid_scores = [item.confidence_weight * 100.0 for item in evidence_items if item.provenance != "MISSING"]
-            avg_score = sum(valid_scores) / len(valid_scores) if valid_scores else 40.0
-            
-            # Missing coverage impacts confidence only, never creditworthiness
-            penalty = len(missing_fields) * 8.0
-            composite_confidence = max(20.0, min(95.0, avg_score - penalty + (10.0 if txs else 0.0)))
-
-            evidence_result = EvidenceConfidence(
-                business_id=context.business_id,
-                assessment_id=context.assessment_id,
-                evidence_confidence_score=round(composite_confidence, 1),
-                data_completeness_pct=round(completeness_pct, 1),
-                temporal_coverage_days=temporal_days,
-                total_records_analyzed=len(txs),
-                available_data_sources=data_sources,
-                missing_evidence_fields=missing_fields,
-                evidence_items=evidence_items,
-                fairness_audit_status="PASSED",
-                provenance_breakdown={
-                    "user_provided_count": sum(1 for i in evidence_items if i.provenance == "USER_PROVIDED"),
-                    "source_labelled_count": sum(1 for i in evidence_items if i.provenance == "SOURCE_LABELLED"),
-                    "independently_verified_count": sum(1 for i in evidence_items if i.provenance == "INDEPENDENTLY_VERIFIED"),
-                    "missing_count": sum(1 for i in evidence_items if i.provenance == "MISSING")
-                }
+            # 3. Perform deterministic cross-source reconciliation
+            reconciliation_result = cross_source_reconciliation_engine.reconcile(
+                business_profile=profile,
+                transactions=txs,
+                debt_obligations=debt_obligations,
+                evidence_records=persisted_evidence
             )
+            evidence_result.reconciliation = reconciliation_result
+
+            # 4. Link assessment to persisted evidence records
+            try:
+                from ...db import evidence_repo
+                for ev in persisted_evidence:
+                    evidence_repo.link_assessment(ev.id, context.assessment_id)
+            except Exception:
+                pass
 
             context.evidence_confidence = evidence_result
             context.agent_results["evidence_verification"] = {
                 "evidence_confidence_score": evidence_result.evidence_confidence_score,
+                "confidence_band": evidence_result.confidence_band,
                 "data_completeness_pct": evidence_result.data_completeness_pct,
+                "consistency_pct": evidence_result.consistency_pct,
+                "source_reliability_pct": evidence_result.source_reliability_pct,
                 "temporal_coverage_days": evidence_result.temporal_coverage_days,
                 "missing_fields": evidence_result.missing_evidence_fields,
+                "inconsistent_fields": evidence_result.inconsistent_fields,
+                "reconciliation_concordance_score": reconciliation_result.concordance_score,
+                "reconciliation_discrepancies_count": reconciliation_result.total_discrepancies,
+                "unmatched_liabilities_count": reconciliation_result.unmatched_liabilities_count,
                 "fairness_audit_status": evidence_result.fairness_audit_status
             }
 
@@ -158,7 +100,10 @@ class EvidenceVerificationAgent(BaseAgent):
                 tool_called="audit_evidence_sources",
                 execution_duration_ms=duration_ms,
                 structured_findings=context.agent_results["evidence_verification"],
-                message=f"Evidence audit complete: Confidence {evidence_result.evidence_confidence_score}/100. Missing: {len(missing_fields)} items (treated neutrally)."
+                message=(
+                    f"Evidence audit complete: Confidence {evidence_result.evidence_confidence_score}/100 ({evidence_result.confidence_band}). "
+                    f"Reconciliation concordance {reconciliation_result.concordance_score}%. Discrepancies: {reconciliation_result.total_discrepancies}."
+                )
             )
             context.record_stage("EVIDENCE_ANALYSIS", "COMPLETED")
             return evidence_result

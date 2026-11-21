@@ -1,19 +1,20 @@
 import React from 'react';
 import { PersonaProfile } from '@/types';
-import { 
-  LayoutDashboard, 
-  Users, 
-  FileText, 
-  Activity, 
-  Scale, 
-  ShieldCheck, 
-  Settings, 
-  Download, 
-  ArrowLeft, 
-  User, 
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  Activity,
+  Scale,
+  ShieldCheck,
+  Settings,
+  Download,
+  ArrowLeft,
+  User,
   Wrench,
   CheckCircle2,
-  Database
+  Database,
+  LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +25,7 @@ interface AdminLayoutProps {
   onNavigate: (view: string) => void;
   onReturnToPublic: () => void;
   onOpenPersonaModal: () => void;
+  onLogout?: () => void;
   children: React.ReactNode;
 }
 
@@ -33,6 +35,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   onNavigate,
   onReturnToPublic,
   onOpenPersonaModal,
+  onLogout,
   children,
 }) => {
   const isAuditor = activePersona.role === 'ETHICS_AUDITOR';
@@ -51,7 +54,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
   return (
     <div className="min-h-screen bg-brand-ivory text-brand-charcoal flex flex-col">
-      
+
       {/* Top Admin Header */}
       <header className="h-16 px-4 sm:px-8 bg-brand-charcoal text-white flex items-center justify-between sticky top-0 z-40 border-b border-white/10 shadow-elevated">
         <div className="flex items-center gap-4">
@@ -95,6 +98,17 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             <User className="w-3.5 h-3.5 text-brand-mint" />
             <span className="max-w-[120px] truncate">{activePersona.name}</span>
           </button>
+
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-500/40 text-xs transition-colors"
+              title="Sign out of administrative session"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </button>
+          )}
         </div>
       </header>
 
@@ -108,11 +122,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                  isActive
-                    ? 'bg-brand-forest text-white shadow-sm'
-                    : 'text-brand-charcoal/70 hover:bg-brand-forest/5 hover:text-brand-charcoal'
-                }`}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${isActive
+                  ? 'bg-brand-forest text-white shadow-sm'
+                  : 'text-brand-charcoal/70 hover:bg-brand-forest/5 hover:text-brand-charcoal'
+                  }`}
               >
                 <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-brand-mint' : 'text-brand-charcoal/50'}`} />
                 <span>{item.label}</span>

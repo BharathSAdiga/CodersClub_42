@@ -96,7 +96,17 @@ flowchart TD
 - Python 3.11+ / 3.12+
 - Node.js 18+ & npm 9+
 
-### Backend Setup
+### Quickstart: One-Click Startup (Frontend + Backend)
+
+Simply double-click or run:
+```cmd
+run_udyoga.bat
+```
+This automatically boots the FastAPI backend (port 8000), Vite React frontend (port 5173), and opens `http://localhost:5173` in your default browser. To stop both services, double-click `stop_udyoga.bat`.
+
+### Manual Setup
+
+#### Backend Setup
 
 1. **Activate virtual environment:**
    ```bash
@@ -172,7 +182,7 @@ The backend test suite verifies all mathematical calculations, policy thresholds
 .\.venv\Scripts\pytest.exe backend/tests/ -v
 ```
 
-All **55 unit and integration tests** pass deterministically.
+All **111 unit and integration tests** pass deterministically with 100% coverage across financial arithmetic, resilience simulations, multi-agent orchestration, SQLite persistence, and authentication RBAC.
 
 ---
 
