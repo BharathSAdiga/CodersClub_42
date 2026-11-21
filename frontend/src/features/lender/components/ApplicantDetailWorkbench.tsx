@@ -88,6 +88,8 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
   const [decisionOutcome, setDecisionOutcome] = useState<'PENDING' | 'APPROVED' | 'DECLINED'>('PENDING');
   const [expandedAgentIndex, setExpandedAgentIndex] = useState<number | null>(null);
   const [selectedStressPreset, setSelectedStressPreset] = useState<string>('NORMAL');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const [pendingDecisionAction, setPendingDecisionAction] = useState<'APPROVE' | 'DECLINE' | null>(null);
 
   // Dynamic calculations
   const recommendedAmount = Math.round(application.requestedAmount * (1 - haircutPercentage / 100));
@@ -414,7 +416,7 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
             activeTab === 'DECISION' ? 'bg-emerald-700 text-white shadow-sm font-bold' : 'text-brand-charcoal/70 hover:bg-white/60'
           }`}
         >
-          8. Decision & Sanction
+          8. Decision History
         </button>
 
       </div>
@@ -1378,7 +1380,10 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
                     <Button
                       variant="primary"
                       size="lg"
-                      onClick={() => handleDecision('APPROVE')}
+                      onClick={() => {
+                        setPendingDecisionAction('APPROVE');
+                        setIsConfirmModalOpen(true);
+                      }}
                       className="w-full bg-emerald-600 hover:bg-emerald-700 text-white gap-2 font-display font-semibold"
                     >
                       <CheckCircle2 className="w-4 h-4" />
@@ -1388,7 +1393,10 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
                     <Button
                       variant="outline"
                       size="lg"
-                      onClick={() => handleDecision('DECLINE')}
+                      onClick={() => {
+                        setPendingDecisionAction('DECLINE');
+                        setIsConfirmModalOpen(true);
+                      }}
                       className="w-full border-white/20 text-white hover:bg-rose-950/60 hover:border-rose-500 gap-2 font-display text-xs"
                     >
                       <XCircle className="w-4 h-4 text-rose-400" />
@@ -1405,6 +1413,179 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
             </div>
           )}
 
+          {/* Decision History & Committee Audit Log */}
+          <Card className="border-brand-forest/15 shadow-soft">
+            <CardHeader className="pb-3 border-b border-brand-forest/10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base font-display font-bold text-brand-charcoal">
+                    Decision History & Immutable Committee Audit Trail
+                  </CardTitle>
+                  <p className="text-xs text-brand-charcoal/65 mt-0.5">
+                    Chronological record of underwriter reviews, limit adjustments, and state machine transitions.
+                  </p>
+                </div>
+                <Badge variant="mint" className="text-xs font-mono">
+                  Audit Verifiable
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-3">
+              <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-brand-forest/20 text-xs">
+                
+                {/* Event 1 */}
+                <div className="relative">
+                  <span className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full bg-emerald-600 ring-4 ring-white" />
+                  <div className="flex items-center justify-between">
+                    <strong className="text-brand-charcoal">Digital Account Aggregator Consent Granted</strong>
+                    <span className="text-[10px] font-mono text-brand-charcoal/50">21 Nov 2026, 09:12 AM</span>
+                  </div>
+                  <p className="text-[11px] text-brand-charcoal/70 mt-0.5">
+                    Borrower completed Setu/Sahamati OTP authentication linking State Bank of India current account.
+                  </p>
+                </div>
+
+                {/* Event 2 */}
+                <div className="relative">
+                  <span className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full bg-emerald-600 ring-4 ring-white" />
+                  <div className="flex items-center justify-between">
+                    <strong className="text-brand-charcoal">3-Way Cross-Stream Triangulation Passed (95.8% Match)</strong>
+                    <span className="text-[10px] font-mono text-brand-charcoal/50">21 Nov 2026, 09:14 AM</span>
+                  </div>
+                  <p className="text-[11px] text-brand-charcoal/70 mt-0.5">
+                    Engine reconciled 428 bank credits, GSTR-3B filings, and 184 PhonePe QR daily settlements with 0 unverified claims.
+                  </p>
+                </div>
+
+                {/* Event 3 */}
+                <div className="relative">
+                  <span className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full bg-emerald-600 ring-4 ring-white" />
+                  <div className="flex items-center justify-between">
+                    <strong className="text-brand-charcoal">Vitality Score Dossier Formulated (768 / 900 Prime Band)</strong>
+                    <span className="text-[10px] font-mono text-brand-charcoal/50">21 Nov 2026, 09:15 AM</span>
+                  </div>
+                  <p className="text-[11px] text-brand-charcoal/70 mt-0.5">
+                    Recommended indicative facility ceiling: ₹1,50,000. Cash Available for Repayment: ₹78,500/month.
+                  </p>
+                </div>
+
+                {/* Event 4 */}
+                <div className="relative">
+                  <span className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full bg-brand-forest ring-4 ring-white" />
+                  <div className="flex items-center justify-between">
+                    <strong className="text-brand-charcoal">Underwriter Inspection Opened</strong>
+                    <span className="text-[10px] font-mono text-brand-charcoal/50">21 Nov 2026, 09:18 AM</span>
+                  </div>
+                  <p className="text-[11px] text-brand-charcoal/70 mt-0.5">
+                    Assigned Credit Officer: Vikram Deshmukh. Haircut calibrated at {haircutPercentage}%. Mandatory daily sweep covenant attached.
+                  </p>
+                </div>
+
+                {decisionOutcome !== 'PENDING' && (
+                  <div className="relative">
+                    <span className={`absolute -left-6 top-1 w-2.5 h-2.5 rounded-full ring-4 ring-white ${
+                      decisionOutcome === 'APPROVED' ? 'bg-emerald-600' : 'bg-rose-600'
+                    }`} />
+                    <div className="flex items-center justify-between">
+                      <strong className={decisionOutcome === 'APPROVED' ? 'text-emerald-800' : 'text-rose-800'}>
+                        {decisionOutcome === 'APPROVED' ? 'Loan Sanction Formally Recorded' : 'Loan Application Declined'}
+                      </strong>
+                      <span className="text-[10px] font-mono text-brand-charcoal/50">Just now</span>
+                    </div>
+                    <p className="text-[11px] text-brand-charcoal/70 mt-0.5">
+                      {decisionOutcome === 'APPROVED'
+                        ? `Sanction letter generated for ${formatINR(recommendedAmount)}. Cryptographic hash anchored on Quai Network block.`
+                        : `Formal decline notice issued with counterfactual recourse advice.`}
+                    </p>
+                  </div>
+                )}
+
+              </div>
+            </CardContent>
+          </Card>
+
+        </div>
+      )}
+
+      {/* Interactive Decision Confirmation Dialog */}
+      {isConfirmModalOpen && pendingDecisionAction && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-charcoal/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white rounded-3xl border border-brand-forest/20 shadow-elevated p-6 space-y-4">
+            <div className="flex items-center gap-3 pb-3 border-b border-brand-forest/10">
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white ${
+                pendingDecisionAction === 'APPROVE' ? 'bg-emerald-600' : 'bg-rose-600'
+              }`}>
+                {pendingDecisionAction === 'APPROVE' ? <CheckCircle2 className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
+              </div>
+              <div>
+                <h3 className="font-display font-bold text-base text-brand-charcoal">
+                  {pendingDecisionAction === 'APPROVE' ? 'Confirm Loan Sanction' : 'Confirm Application Decline'}
+                </h3>
+                <span className="text-xs text-brand-charcoal/60 block">
+                  {application.businessName}
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-brand-ivory border border-brand-forest/10 space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-brand-charcoal/65">Requested Amount:</span>
+                <strong className="text-brand-charcoal font-mono">{formatINR(application.requestedAmount)}</strong>
+              </div>
+              {pendingDecisionAction === 'APPROVE' && (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-brand-charcoal/65">Sanctioned Amount ({haircutPercentage}% haircut):</span>
+                    <strong className="text-emerald-800 font-mono font-bold">{formatINR(recommendedAmount)}</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-brand-charcoal/65">Daily UPI Sweep Covenant:</span>
+                    <strong className="text-brand-forest font-mono">₹{Math.round((recommendedAmount * 1.14) / application.tenorDays)} / day</strong>
+                  </div>
+                </>
+              )}
+              <div className="pt-2 border-t border-brand-forest/10 text-[11px] text-brand-charcoal/70">
+                <span>Credit Committee Note:</span>
+                <p className="italic mt-0.5 font-sans">"{underwriterNotes}"</p>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-brand-charcoal/60 leading-relaxed">
+              {pendingDecisionAction === 'APPROVE'
+                ? 'Confirming will issue the formal digital sanction letter, trigger UPI AutoPay mandate authorization, and write the immutable audit seal to the Quai blockchain.'
+                : 'Confirming will register a formal statutory decline code and notify the borrower with plain-English coaching on how to qualify in the future.'}
+            </p>
+
+            <div className="flex justify-end gap-2.5 pt-2 border-t border-brand-forest/10">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setIsConfirmModalOpen(false);
+                  setPendingDecisionAction(null);
+                }}
+                className="rounded-full text-xs"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  if (pendingDecisionAction) {
+                    handleDecision(pendingDecisionAction);
+                  }
+                  setIsConfirmModalOpen(false);
+                  setPendingDecisionAction(null);
+                }}
+                className={`rounded-full text-xs font-semibold px-5 ${
+                  pendingDecisionAction === 'APPROVE' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-rose-600 hover:bg-rose-700 text-white'
+                }`}
+              >
+                {pendingDecisionAction === 'APPROVE' ? 'Confirm & Issue Sanction' : 'Confirm Decline'}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 
