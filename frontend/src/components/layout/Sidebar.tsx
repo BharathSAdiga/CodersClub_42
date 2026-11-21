@@ -111,8 +111,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
                 className={`w-full flex items-center justify-between text-left gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${active
-                    ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
-                    : 'text-white/85 hover:bg-white/10 hover:text-white'
+                  ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
+                  : 'text-white/85 hover:bg-white/10 hover:text-white'
                   }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -122,8 +122,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {item.badge && (
                   <span
                     className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 uppercase tracking-wider font-bold ${active
-                        ? 'bg-brand-charcoal/15 text-brand-charcoal'
-                        : 'bg-white/10 text-brand-mint border border-brand-mint/30'
+                      ? 'bg-brand-charcoal/15 text-brand-charcoal'
+                      : 'bg-white/10 text-brand-mint border border-brand-mint/30'
                       }`}
                   >
                     {item.badge}
