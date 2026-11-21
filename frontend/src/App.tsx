@@ -41,6 +41,7 @@ import { AdminLayout } from '@/features/admin/layout/AdminLayout';
 import { AdminDashboard } from '@/features/admin/components/AdminDashboard';
 import { FairnessMonitoringView } from '@/features/admin/components/FairnessMonitoringView';
 import { UserManagementView } from '@/features/admin/components/UserManagementView';
+import { BusinessDirectoryView } from '@/features/admin/components/BusinessDirectoryView';
 import { ApplicationMasterLedger } from '@/features/admin/components/ApplicationMasterLedger';
 import { AssessmentMonitoringView } from '@/features/admin/components/AssessmentMonitoringView';
 import { DataQualityMonitoringView } from '@/features/admin/components/DataQualityMonitoringView';
@@ -177,6 +178,9 @@ export function App() {
         )}
         {adminView === '/admin/users' && (
           <UserManagementView />
+        )}
+        {adminView === '/admin/businesses' && (
+          <BusinessDirectoryView />
         )}
         {adminView === '/admin/applications' && (
           <ApplicationMasterLedger />

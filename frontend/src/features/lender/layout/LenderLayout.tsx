@@ -20,6 +20,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 
+import { mockPipelineApplications } from '../data/mockPipeline';
+
 interface LenderLayoutProps {
   activePersona: PersonaProfile;
   currentView: string;
@@ -42,8 +44,8 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: '/lender/dashboard', label: 'Lender Overview', icon: LayoutDashboard },
-    { id: '/lender/pipeline', label: 'Application Queue (42)', icon: FileText },
+    { id: '/lender/dashboard', label: 'Overview', icon: LayoutDashboard },
+    { id: '/lender/pipeline', label: `Applications (${mockPipelineApplications.length})`, icon: FileText },
   ];
 
   return (

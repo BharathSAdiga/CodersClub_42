@@ -14,6 +14,8 @@ import {
   Wrench,
   CheckCircle2,
   Database,
+  Building2,
+  Server,
   LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -41,15 +43,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const isAuditor = activePersona.role === 'ETHICS_AUDITOR';
 
   const navItems = [
-    { id: '/admin/overview', label: 'Platform Overview', icon: LayoutDashboard },
-    { id: '/admin/fairness', label: 'Fair Lending & Bias', icon: Scale },
-    { id: '/admin/users', label: 'User Directory', icon: Users },
-    { id: '/admin/applications', label: 'All Applications', icon: FileText },
-    { id: '/admin/assessments', label: 'Model Stability', icon: Activity },
-    { id: '/admin/data-quality', label: 'Data Completeness', icon: Database },
-    { id: '/admin/audit-logs', label: 'Activity Log', icon: ShieldCheck },
-    { id: '/admin/system', label: 'Integrations Health', icon: Settings },
-    { id: '/admin/reports', label: 'Regulatory Reports', icon: Download },
+    { id: '/admin/overview', label: 'Overview', icon: LayoutDashboard },
+    { id: '/admin/users', label: 'Users', icon: Users },
+    { id: '/admin/businesses', label: 'Businesses', icon: Building2 },
+    { id: '/admin/applications', label: 'Applications', icon: FileText },
+    { id: '/admin/system', label: 'System Health', icon: Server },
+    { id: '/admin/fairness', label: 'Fairness & Reports', icon: Scale },
+    { id: '/admin/audit-logs', label: 'Activity History', icon: ShieldCheck },
   ];
 
   return (
