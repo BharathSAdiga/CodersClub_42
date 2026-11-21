@@ -11,6 +11,7 @@ import { CountUpNumber } from '@/components/interactive/CountUpNumber';
 import { MovingStatsTicker } from '@/components/interactive/MovingStatsTicker';
 import { ProblemSolution } from '@/features/public/components/ProblemSolution';
 import { HowItWorks } from '@/features/public/components/HowItWorks';
+import { AgenticAiSection } from '@/features/public/components/AgenticAiSection';
 import { AcieExplanation } from '@/features/public/components/AcieExplanation';
 import { BenefitsSection } from '@/features/public/components/BenefitsSection';
 import { TrustSafetySection } from '@/features/public/components/TrustSafetySection';
@@ -40,6 +41,7 @@ import { AdminLayout } from '@/features/admin/layout/AdminLayout';
 import { AdminDashboard } from '@/features/admin/components/AdminDashboard';
 import { FairnessMonitoringView } from '@/features/admin/components/FairnessMonitoringView';
 import { UserManagementView } from '@/features/admin/components/UserManagementView';
+import { BusinessDirectoryView } from '@/features/admin/components/BusinessDirectoryView';
 import { ApplicationMasterLedger } from '@/features/admin/components/ApplicationMasterLedger';
 import { AssessmentMonitoringView } from '@/features/admin/components/AssessmentMonitoringView';
 import { DataQualityMonitoringView } from '@/features/admin/components/DataQualityMonitoringView';
@@ -176,6 +178,9 @@ export function App() {
         )}
         {adminView === '/admin/users' && (
           <UserManagementView />
+        )}
+        {adminView === '/admin/businesses' && (
+          <BusinessDirectoryView />
         )}
         {adminView === '/admin/applications' && (
           <ApplicationMasterLedger />
@@ -328,6 +333,7 @@ export function App() {
         onLogout={handleLogout}
         onNavigate={(sec) => {
           if (sec === 'how-it-works') handleScrollTo('how-it-works-sec');
+          if (sec === 'how-our-ai-works') handleScrollTo('agentic-ai-sec');
           if (sec === 'stories') handleScrollTo('stories-sec');
           if (sec === 'for-businesses') handleScrollTo('problem-sec');
           if (sec === 'for-lenders') {
@@ -448,6 +454,11 @@ export function App() {
       {/* How it Works / Workflow Walkthrough */}
       <div id="how-it-works-sec" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <HowItWorks />
+      </div>
+
+      {/* Agentic AI Multi-Agent Intelligence Section */}
+      <div id="agentic-ai-sec" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AgenticAiSection />
       </div>
 
       {/* Interactive Feature Flagship: Live Accessibility / Tuner Widget */}
@@ -590,6 +601,12 @@ export function App() {
               </button>
               <button onClick={() => handleScrollTo('trust-sec')} className="hover:text-white transition-colors cursor-pointer">
                 DPDP Policy
+              </button>
+              <button onClick={() => handleScrollTo('how-it-works-sec')} className="hover:text-white transition-colors cursor-pointer">
+                How It Works
+              </button>
+              <button onClick={() => handleScrollTo('agentic-ai-sec')} className="hover:text-white transition-colors cursor-pointer">
+                How Our AI Works
               </button>
               <button onClick={() => handleScrollTo('how-it-works-sec')} className="hover:text-white transition-colors cursor-pointer">
                 Account Aggregator

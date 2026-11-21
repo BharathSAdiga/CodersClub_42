@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,11 +14,15 @@ import {
   Building2,
   HelpCircle,
   AlertCircle,
-  Eye
+  Eye,
+  FileText
 } from 'lucide-react';
+import { ReportsExportsView } from './ReportsExportsView';
 import { toast } from 'sonner';
 
 export const FairnessMonitoringView: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'FAIRNESS' | 'REPORTS'>('FAIRNESS');
+
   const handleExportCertificate = () => {
     toast.success('Algorithmic Fairness Compliance Certificate (Q4 2026) exported for regulatory review.');
   };
@@ -33,24 +37,44 @@ export const FairnessMonitoringView: React.FC = () => {
             Algorithmic Governance & Ethics Desk
           </span>
           <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-0.5">
-            Fair Lending & Bias Audit Console
+            Fairness & Regulatory Reports
           </h2>
           <p className="text-xs text-brand-charcoal/65 mt-0.5">
-            Monitors whether loan evaluation algorithms treat all applicant demographics equally and without discrimination.
+            Monitors demographic parity under the 80% Rule and provides verified compliance documentation for RBI and auditors.
           </p>
         </div>
 
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={handleExportCertificate}
-          className="gap-2 text-xs h-9 font-semibold rounded-full"
-        >
-          <Download className="w-3.5 h-3.5" />
-          <span>Export Compliance Certificate</span>
-        </Button>
+        {/* Tab Switcher */}
+        <div className="flex items-center gap-1.5 p-1 bg-brand-forest/5 rounded-2xl border border-brand-forest/15 self-start sm:self-center">
+          <button
+            onClick={() => setActiveTab('FAIRNESS')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              activeTab === 'FAIRNESS'
+                ? 'bg-brand-forest text-white shadow-xs'
+                : 'text-brand-charcoal/70 hover:text-brand-charcoal'
+            }`}
+          >
+            <Scale className="w-3.5 h-3.5" />
+            <span>Fair Lending Parity</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('REPORTS')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              activeTab === 'REPORTS'
+                ? 'bg-brand-forest text-white shadow-xs'
+                : 'text-brand-charcoal/70 hover:text-brand-charcoal'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Regulatory Reports</span>
+          </button>
+        </div>
       </div>
 
+      {activeTab === 'REPORTS' ? (
+        <ReportsExportsView />
+      ) : (
+        <>
       {/* Structured Benchmark Overview Card */}
       <div className="p-6 sm:p-8 rounded-3xl bg-brand-forest text-brand-ivory border border-brand-forest/30 shadow-card">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
@@ -282,6 +306,8 @@ export const FairnessMonitoringView: React.FC = () => {
         </Card>
 
       </div>
+        </>
+      )}
 
     </div>
   );

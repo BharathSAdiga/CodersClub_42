@@ -38,7 +38,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, [scrollY]);
 
   const navLinks = [
-    { id: 'how-it-works', label: 'How it works' },
+    { id: 'how-it-works', label: 'How It Works' },
+    { id: 'how-our-ai-works', label: 'How Our AI Works' },
     { id: 'stories', label: 'Interactive Story' },
     { id: 'for-businesses', label: 'For MSMEs' },
     { id: 'for-lenders', label: 'For Lenders' },
