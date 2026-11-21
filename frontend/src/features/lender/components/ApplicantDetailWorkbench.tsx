@@ -775,26 +775,26 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
                 </div>
 
                 <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 z-10 text-xs">
-                  <div className="p-3 rounded-xl bg-white/10 border border-white/10 text-center">
-                    <span className="text-[10px] text-white/50 block font-mono">Top Supplier 1</span>
+                  <div className="p-3 rounded-xl bg-white/15 border border-white/20 text-center">
+                    <span className="text-[10px] text-white/80 block font-mono">Top Supplier 1</span>
                     <strong className="text-white block">ITC Distribution</strong>
-                    <span className="text-[10px] text-emerald-300">₹1.8L monthly</span>
+                    <span className="text-[10px] text-emerald-300 font-semibold">₹1.8L monthly</span>
                   </div>
 
-                  <span className="text-emerald-400 font-bold text-lg">$\rightarrow$</span>
+                  <span className="text-emerald-400 font-bold text-lg">→</span>
 
-                  <div className="p-3.5 rounded-xl bg-emerald-600/30 border border-emerald-400/50 text-center shadow-lg">
-                    <span className="text-[10px] text-emerald-300 block font-mono">Borrower Node</span>
+                  <div className="p-3.5 rounded-xl bg-emerald-600/40 border border-emerald-300 text-center shadow-lg">
+                    <span className="text-[10px] text-emerald-200 block font-mono font-bold">Borrower Node</span>
                     <strong className="text-white text-sm block">{application.businessName}</strong>
-                    <span className="text-[10px] text-white/80">Primary Node</span>
+                    <span className="text-[10px] text-emerald-100">Primary Node</span>
                   </div>
 
-                  <span className="text-emerald-400 font-bold text-lg">$\rightarrow$</span>
+                  <span className="text-emerald-400 font-bold text-lg">→</span>
 
-                  <div className="p-3 rounded-xl bg-white/10 border border-white/10 text-center">
-                    <span className="text-[10px] text-white/50 block font-mono">Counterparties</span>
+                  <div className="p-3 rounded-xl bg-white/15 border border-white/20 text-center">
+                    <span className="text-[10px] text-white/80 block font-mono">Counterparties</span>
                     <strong className="text-white block">Retail Consumers</strong>
-                    <span className="text-[10px] text-emerald-300">142 transactions/day</span>
+                    <span className="text-[10px] text-emerald-300 font-semibold">142 transactions/day</span>
                   </div>
                 </div>
               </div>

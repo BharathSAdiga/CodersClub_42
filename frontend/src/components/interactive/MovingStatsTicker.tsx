@@ -179,7 +179,7 @@ export const MovingStatsTicker: React.FC = () => {
                       {item.value}
                     </span>
                     {item.tag && (
-                      <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-white/60 border border-white/5">
+                      <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/15 text-white/90 border border-white/20 font-medium">
                         {item.tag}
                       </span>
                     )}
@@ -203,7 +203,7 @@ export const MovingStatsTicker: React.FC = () => {
                       {item.value}
                     </span>
                     {item.tag && (
-                      <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-white/60 border border-white/5">
+                      <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/15 text-white/90 border border-white/20 font-medium">
                         {item.tag}
                       </span>
                     )}
