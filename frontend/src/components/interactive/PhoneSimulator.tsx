@@ -2,24 +2,28 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, PhoneOff, Mic, Volume2, ShieldCheck, Check, ArrowRight, Zap, RefreshCw } from 'lucide-react';
 
-export const PhoneSimulator: React.FC = () => {
+interface PhoneSimulatorProps {
+  onOpenDemo?: () => void;
+}
+
+export const PhoneSimulator: React.FC<PhoneSimulatorProps> = ({ onOpenDemo }) => {
   const [activeStep, setActiveStep] = useState<number>(1);
 
   const steps = [
     {
       id: 1,
-      title: 'Zero Paperwork Verification',
-      desc: 'Connect your Udyam or PAN once. UDYOGA instantly reconciles your business footprint across public rails in seconds.',
+      title: 'Digital Verification',
+      desc: 'Link your Udyam or PAN once. UDYOGA verifies your business registration and public data rails in moments.',
     },
     {
       id: 2,
-      title: 'Consented Cash-Flow Telemetry',
-      desc: 'Account Aggregator streams tamper-proof banking data directly to the lender. No bank statement PDFs or login passwords shared.',
+      title: 'Consent-Based Cash Flow Data',
+      desc: 'The Account Aggregator network transfers certified banking records directly to lenders upon your OTP authorization. No passwords shared.',
     },
     {
       id: 3,
-      title: 'Instant Sanction & UPI Disbursal',
-      desc: 'Within 3 minutes, approved funds disburse directly to your operational current account with automated UPI AutoPay sweeps.',
+      title: 'Underwriter Review & Disbursal',
+      desc: 'Once approved by a partner bank or NBFC, funds disburse directly to your business account with scheduled UPI AutoPay sweeps.',
     },
   ];
 
@@ -31,13 +35,13 @@ export const PhoneSimulator: React.FC = () => {
         <div className="lg:col-span-7 space-y-6">
           <div>
             <span className="text-xs font-mono uppercase tracking-widest text-brand-mint font-semibold">
-              The 3-Minute Credit Rail
+              Digital Verification Rail
             </span>
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight mt-1">
               Credit that moves at the speed of your shop.
             </h2>
-            <p className="text-sm text-white/70 mt-2 leading-relaxed">
-              No loan officer visits, no property deed pledge, no 4-week waiting period. If you run a business with daily customer payments, you qualify for UDYOGA.
+            <p className="text-sm text-white/80 mt-2 leading-relaxed">
+              No physical paperwork, no property deeds to pledge, and no multi-week waiting periods. If you operate a small business with regular sales transactions, your cash flow can be evaluated for institutional credit.
             </p>
           </div>
 
@@ -61,13 +65,16 @@ export const PhoneSimulator: React.FC = () => {
                   </span>
                   <h4 className="font-display font-semibold text-sm text-white">{s.title}</h4>
                 </div>
-                <p className="text-xs text-white/60 ml-9 leading-relaxed">{s.desc}</p>
+                <p className="text-xs text-white/70 ml-9 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
 
           <div className="pt-2">
-            <button className="px-6 py-2.5 rounded-full bg-brand-mint text-brand-charcoal font-display font-bold text-xs hover:bg-white transition-colors shadow-soft">
+            <button
+              onClick={onOpenDemo}
+              className="px-6 py-2.5 rounded-full bg-brand-mint text-brand-charcoal font-display font-bold text-xs hover:bg-white transition-colors shadow-soft cursor-pointer active:scale-95"
+            >
               Experience Live Demo
             </button>
           </div>
@@ -83,10 +90,13 @@ export const PhoneSimulator: React.FC = () => {
               <div className="p-4 border-b border-brand-charcoal/10 bg-white/70">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h5 className="font-display font-bold text-xs text-brand-charcoal">UDYOGA Underwriting</h5>
+                    <div className="flex items-center gap-1.5">
+                      <h5 className="font-display font-bold text-xs text-brand-charcoal">UDYOGA Assistant</h5>
+                      <span className="text-[9px] bg-brand-forest/10 text-brand-forest px-1.5 py-0.2 rounded font-mono font-semibold">Demo</span>
+                    </div>
                     <span className="text-[10px] text-emerald-600 font-medium flex items-center gap-1 mt-0.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      Live Verification · 01:42
+                      Digital Verification · 01:42
                     </span>
                   </div>
                   <div className="w-7 h-7 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
@@ -102,9 +112,9 @@ export const PhoneSimulator: React.FC = () => {
               <div className="p-3.5 space-y-2.5 text-xs overflow-y-auto max-h-[300px]">
                 {/* Agent Bubble */}
                 <div className="bg-white p-3 rounded-2xl rounded-tl-sm shadow-sm border border-brand-forest/10 max-w-[85%]">
-                  <span className="text-[10px] text-brand-forest/60 font-semibold block mb-0.5">Automated Engine</span>
+                  <span className="text-[10px] text-brand-forest/60 font-semibold block mb-0.5">Verification Engine</span>
                   <p className="text-xs text-brand-charcoal/80">
-                    Reconciled 142 daily UPI transactions for Sri Balaji Provisions. Zero bounces recorded.
+                    Reconciled 142 daily UPI transactions for Sri Balaji Provisions. No payment bounces recorded.
                   </p>
                 </div>
 
@@ -112,7 +122,7 @@ export const PhoneSimulator: React.FC = () => {
                 <div className="ml-auto bg-brand-mint/30 p-3 rounded-2xl rounded-tr-sm shadow-sm border border-brand-mint/40 max-w-[85%]">
                   <span className="text-[10px] text-emerald-900 font-semibold block mb-0.5">Ramesh Kumar</span>
                   <p className="text-xs text-brand-charcoal">
-                    Confirmed ₹1,50,000 required for Diwali FMCG stock.
+                    Confirmed ₹1,50,000 required for inventory replenishment.
                   </p>
                 </div>
 
@@ -123,11 +133,11 @@ export const PhoneSimulator: React.FC = () => {
                   transition={{ duration: 0.5 }}
                 >
                   <span className="text-[10px] uppercase tracking-wider text-brand-mint font-bold block">
-                    ✓ Sanction Approved
+                    ✓ Sanction Recommended
                   </span>
                   <span className="text-base font-bold font-mono">₹1,50,000</span>
-                  <span className="text-[10px] text-white/70 block mt-0.5">
-                    Disbursal ready to SBI •••• 4892
+                  <span className="text-[10px] text-white/80 block mt-0.5">
+                    Disbursal ready to SBI •••• 4892 upon lender sign-off
                   </span>
                 </motion.div>
               </div>
@@ -142,9 +152,9 @@ export const PhoneSimulator: React.FC = () => {
                   <Mic className="w-4 h-4" />
                   <span className="text-[9px]">Mute</span>
                 </div>
-                <div className="flex flex-col items-center gap-1 cursor-pointer hover:text-brand-forest text-brand-forest font-bold">
-                  <ShieldCheck className="w-4 h-4 text-brand-mint" />
-                  <span className="text-[9px]">Secured</span>
+                <div className="flex flex-col items-center gap-1 cursor-pointer hover:text-brand-forest">
+                  <RefreshCw className="w-4 h-4" />
+                  <span className="text-[9px]">Repeat</span>
                 </div>
               </div>
 

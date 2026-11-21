@@ -10,23 +10,23 @@ export const FaqSection: React.FC = () => {
   const faqs = [
     {
       q: 'Do I need land or property documents to apply for a loan?',
-      a: 'No. UDYOGA is 100% unsecured and flow-based. We evaluate your business vitality using your live merchant UPI transactions, Account Aggregator cash flows, and GST tax filings.',
+      a: 'No. UDYOGA is designed for cash-flow based financing. Lenders evaluate your business activity using verifiable records such as daily merchant UPI receipts, Account Aggregator bank records, and GST filings where applicable.',
     },
     {
       q: 'What if my CIBIL credit score is -1 or "No-Hit"?',
-      a: 'A "No-Hit" bureau record does not disqualify you on UDYOGA. Our Alternative Credit Intelligence Engine (ACIE) is explicitly designed for new-to-credit micro-enterprises with thin files.',
+      a: 'Having limited conventional credit history does not prevent your application from being reviewed. UDYOGA provides alternative financial insights based on your real cash flow, helping partner lenders assess your ability to manage repayments.',
     },
     {
-      q: 'How does daily sachet sweep repayment work?',
-      a: 'Instead of deducting a huge lump-sum EMI at the start of each month, a small micro-sweep (e.g. ₹1,200) is deducted automatically via UPI AutoPay during your evening shop closing hours.',
+      q: 'How does daily or weekly repayment work?',
+      a: 'Instead of facing a large lump-sum EMI at the beginning of the month, repayments can be divided into smaller daily or weekly deductions via automated UPI AutoPay, aligned with when your customers pay you.',
     },
     {
-      q: 'Can I revoke access to my financial data after receiving the loan?',
-      a: 'Yes. In strict compliance with the DPDP Act 2023, you can toggle off or revoke any connected Account Aggregator or UPI data stream at any time from your Consent Management dashboard.',
+      q: 'Can I manage or revoke access to my financial data?',
+      a: 'Yes. In full compliance with the Digital Personal Data Protection (DPDP) Act, data access is strictly consent-based. You can review active data connections or revoke access at any time from your Consent Management dashboard.',
     },
     {
-      q: 'How quickly is the loan disbursed into my account?',
-      a: 'Once you sign the digital agreement and e-mandate via Aadhaar OTP, approved funds disburse directly to your verified bank current account in under 15 minutes.',
+      q: 'Does receiving a vitality assessment guarantee loan approval?',
+      a: 'No. UDYOGA provides objective financial analysis and evidence to institutional lenders. Final credit decisions, sanction limits, and loan agreements are determined by licensed partner banks and NBFCs.',
     },
   ];
 
@@ -51,7 +51,7 @@ export const FaqSection: React.FC = () => {
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-5 text-left flex items-center justify-between font-display font-semibold text-sm sm:text-base text-brand-charcoal hover:text-brand-forest transition-colors"
+                  className="w-full p-5 text-left flex items-center justify-between font-display font-semibold text-sm sm:text-base text-brand-charcoal hover:text-brand-forest transition-colors cursor-pointer"
                 >
                   <span>{faq.q}</span>
                   <motion.div

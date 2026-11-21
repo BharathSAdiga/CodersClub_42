@@ -21,18 +21,18 @@ const STATS_DATA: StatItem[] = [
     countEnd: 25,
     prefix: '₹',
     suffix: 'L Cr',
-    label: 'MSME Credit Gap in India',
+    label: 'Estimated MSME Credit Gap in India (UK Sinha Committee)',
     colorClass: 'text-brand-mint',
-    tag: 'Macro Deficit',
+    tag: 'Macro Context',
   },
   {
     id: 'collateral-lack',
     value: '85%',
     countEnd: 85,
     suffix: '%',
-    label: 'Lack Formal Collateral Assets',
+    label: 'Small businesses without real estate collateral to pledge',
     colorClass: 'text-white',
-    tag: 'Collateral Wall',
+    tag: 'Collateral Barrier',
   },
   {
     id: 'assessment-tat',
@@ -40,46 +40,46 @@ const STATS_DATA: StatItem[] = [
     countEnd: 15,
     prefix: '< ',
     suffix: ' Mins',
-    label: 'Average Flow Assessment Turnaround',
+    label: 'Typical assessment turnaround with connected accounts',
     colorClass: 'text-brand-mint',
-    tag: 'Real-Time TAT',
+    tag: 'Fast Evaluation',
   },
   {
     id: 'algorithmic-bias',
-    value: '0 Bias',
-    label: 'Audit-Ready Explainable Decisions',
+    value: 'DIR > 0.80',
+    label: 'Monitored for statutory demographic parity',
     colorClass: 'text-brand-terracotta',
-    tag: 'Disparate Impact = 0',
+    tag: 'Fair Lending Monitored',
   },
   {
     id: 'aa-consent',
     value: '100% Consent',
     countEnd: 100,
     suffix: '%',
-    label: 'RBI Account Aggregator Rail',
+    label: 'RBI Account Aggregator Framework',
     colorClass: 'text-brand-mint',
-    tag: 'DPDP Compliant',
+    tag: 'DPDP Privacy Aligned',
   },
   {
     id: 'quai-ledger',
-    value: 'Cyprus-1 Anchor',
-    label: 'Immutable On-Chain Ledger Proofs',
+    value: 'Quai Anchor',
+    label: 'Tamper-evident assessment audit log',
     colorClass: 'text-amber-300',
-    tag: 'Quai Network',
+    tag: 'Audit Verification',
   },
   {
     id: 'sachet-sweeps',
-    value: 'Daily Sachet',
-    label: 'Evening Store Turnover Sweeps',
+    value: 'Daily Sweeps',
+    label: 'Small evening deductions matching shop turnover',
     colorClass: 'text-white',
-    tag: 'Micro-Repayment',
+    tag: 'Flexible Repayment',
   },
   {
-    id: 'zero-collateral',
-    value: 'Zero Collateral',
-    label: 'Verifiable Flow-Based Underwriting',
+    id: 'flow-based',
+    value: 'Cash-Flow First',
+    label: 'Assessments based on actual business transactions',
     colorClass: 'text-brand-mint',
-    tag: 'Pure Cashflow',
+    tag: 'Alternative Data',
   },
 ];
 
@@ -102,10 +102,10 @@ export const MovingStatsTicker: React.FC = () => {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-mint"></span>
           </span>
           <span className="font-mono text-white/90 uppercase tracking-wider text-[11px] font-semibold">
-            Live MSME Impact Telemetry
+            Live Platform Indicators
           </span>
-          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-white/10 text-brand-mint text-[10px] font-mono border border-white/10">
-            Real-Time Stream
+          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-white/15 text-brand-mint text-[10px] font-mono border border-white/10">
+            National MSME Context
           </span>
         </div>
 
@@ -128,49 +128,41 @@ export const MovingStatsTicker: React.FC = () => {
               className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all ${
                 viewMode === 'marquee'
                   ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
-                  : 'text-white/60 hover:text-white'
+                  : 'text-white/70 hover:text-white'
               }`}
-              title="Continuous Moving Text Marquee"
             >
               <MoveHorizontal className="w-3 h-3" />
-              <span>Moving</span>
+              <span className="hidden sm:inline">Ticker</span>
             </button>
             <button
               onClick={() => setViewMode('grid')}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all ${
                 viewMode === 'grid'
                   ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
-                  : 'text-white/60 hover:text-white'
+                  : 'text-white/70 hover:text-white'
               }`}
-              title="Static 4-Column Grid View"
             >
               <LayoutGrid className="w-3 h-3" />
-              <span>Grid</span>
+              <span className="hidden sm:inline">Grid</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Main Content Area */}
-      {viewMode === 'marquee' ? (
-        /* ================= MOVING TEXT MARQUEE ANIMATION ================= */
-        <div 
-          className="relative py-7 sm:py-8 overflow-hidden select-none"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          {/* Subtle gradient feathering on left and right edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-brand-forest via-brand-forest/90 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-brand-forest via-brand-forest/90 to-transparent z-10 pointer-events-none" />
-
-          {/* Infinite Moving Marquee Track */}
-          <div 
-            className="flex items-center w-max animate-marquee"
-            style={{
-              animationPlayState: isPaused ? 'paused' : 'running',
-            }}
+      <div 
+        className="py-6 sm:py-8 overflow-hidden relative"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        {viewMode === 'marquee' ? (
+          /* Marquee Infinite Loop Track with Pausing */
+          <div
+            className={`flex items-center whitespace-nowrap will-change-transform ${
+              isPaused ? '' : 'animate-ticker-marquee'
+            }`}
           >
-            {/* First sequence of stats */}
+            {/* Primary sequence */}
             {STATS_DATA.map((item, idx) => (
               <React.Fragment key={`first-${item.id}-${idx}`}>
                 <div className="inline-flex flex-col justify-center px-6 sm:px-10 shrink-0 group/item transition-transform duration-200 hover:scale-105">
@@ -184,7 +176,7 @@ export const MovingStatsTicker: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1 font-normal whitespace-nowrap">
+                  <div className="text-xs sm:text-sm text-brand-ivory/80 mt-1 font-normal whitespace-nowrap">
                     {item.label}
                   </div>
                 </div>
@@ -194,7 +186,7 @@ export const MovingStatsTicker: React.FC = () => {
               </React.Fragment>
             ))}
 
-            {/* Seamless duplicate sequence for infinite seamless loop */}
+            {/* Seamless duplicate sequence for infinite loop */}
             {STATS_DATA.map((item, idx) => (
               <React.Fragment key={`dup-${item.id}-${idx}`}>
                 <div className="inline-flex flex-col justify-center px-6 sm:px-10 shrink-0 group/item transition-transform duration-200 hover:scale-105">
@@ -208,7 +200,7 @@ export const MovingStatsTicker: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1 font-normal whitespace-nowrap">
+                  <div className="text-xs sm:text-sm text-brand-ivory/80 mt-1 font-normal whitespace-nowrap">
                     {item.label}
                   </div>
                 </div>
@@ -218,43 +210,38 @@ export const MovingStatsTicker: React.FC = () => {
               </React.Fragment>
             ))}
           </div>
-        </div>
-      ) : (
-        /* ================= STATIC 4-COLUMN GRID VIEW ================= */
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6 sm:p-8">
-          {STATS_DATA.slice(0, 4).map((item) => (
-            <div key={item.id} className="transition-transform duration-200 hover:translate-y-[-2px]">
-              <div className={`text-3xl sm:text-4xl font-display font-bold font-mono ${item.colorClass}`}>
-                {item.countEnd ? (
-                  <>
-                    {item.prefix}
-                    <CountUpNumber end={item.countEnd} />
-                    {item.suffix}
-                  </>
-                ) : (
-                  item.value
-                )}
+        ) : (
+          /* Static Responsive Grid Mode */
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 px-6 sm:px-8">
+            {STATS_DATA.map((item) => (
+              <div
+                key={item.id}
+                className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] transition-colors"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/60">
+                    {item.tag}
+                  </span>
+                  <Activity className="w-3.5 h-3.5 text-brand-mint/60" />
+                </div>
+                <div className={`text-2xl sm:text-3xl font-display font-bold font-mono tracking-tight ${item.colorClass}`}>
+                  {item.value}
+                </div>
+                <div className="text-xs text-brand-ivory/80 mt-1 leading-snug">
+                  {item.label}
+                </div>
               </div>
-              <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">
-                {item.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Bottom Micro Bar */}
-      <div className="px-6 sm:px-8 py-2.5 bg-black/20 border-t border-white/10 flex items-center justify-between text-[11px] text-white/50 font-mono">
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="w-3.5 h-3.5 text-brand-mint" />
-          <span>India Stack & Account Aggregator Telemetry Feed</span>
-        </div>
-        <div className="hidden sm:flex items-center gap-3">
-          <span>Continuous Flow</span>
-          <span>•</span>
-          <span>Zero Hallucination</span>
-        </div>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Bottom Legal Subtext */}
+      <div className="px-6 sm:px-8 py-2.5 bg-black/20 border-t border-white/10 flex items-center justify-between text-[11px] text-white/70 font-mono">
+        <span>Frameworks: Reserve Bank of India (RBI) DLG · DPDP Act 2023 · Sahamati Account Aggregator</span>
+        <span className="hidden md:inline">Audited & Monitored</span>
+      </div>
+
     </div>
   );
 };
