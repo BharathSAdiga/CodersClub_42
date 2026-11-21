@@ -1182,7 +1182,7 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
               <div className="p-6 rounded-3xl bg-brand-charcoal text-white space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/10">
                   <div>
-                    <span className="text-[10px] uppercase font-mono text-emerald-300 block">Simulated Scenario Output</span>
+                    <span className="text-[10px] uppercase font-mono text-emerald-300 block">Stress Scenario Projected Output</span>
                     <h4 className="font-display font-bold text-lg text-white">{currentStress.label}</h4>
                   </div>
                   <Badge variant="mint-pill" className="text-xs font-mono">

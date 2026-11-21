@@ -336,7 +336,7 @@ export const WhatIfSimulatorView: React.FC = () => {
           <div className="p-6 rounded-3xl bg-brand-charcoal text-brand-ivory border border-white/10 shadow-elevated space-y-6">
             <div>
               <span className="text-xs uppercase font-mono tracking-widest text-brand-mint font-bold block">
-                Simulated Credit Unlocked
+                Projected Credit Unlocked
               </span>
               <h3 className="text-3xl font-display font-extrabold text-white font-mono mt-1">
                 {formatINR(projectedLimit)}
