@@ -1,5 +1,6 @@
 import time
 import math
+import hashlib
 from typing import Optional, List, Dict, Any, Set
 from collections import defaultdict
 import networkx as nx
@@ -13,7 +14,7 @@ class TransactionForensicsAgent(BaseAgent):
     Transaction Forensics Agent.
     Investigates transaction graph topology, circular flow cycles, counterparty entropy,
     and reciprocal transfers using NetworkX.
-    
+
     Guarantees:
     - Never automatically declares a fraud verdict.
     - Anomalous topology triggers HUMAN_REVIEW_RECOMMENDED / HUMAN_REVIEW_REQUIRED.
@@ -24,7 +25,7 @@ class TransactionForensicsAgent(BaseAgent):
     async def execute(self, context: AssessmentContext) -> GraphMetrics:
         start_time = time.monotonic()
         context.record_stage("TRANSACTION_INVESTIGATION", "RUNNING")
-        
+
         await self.emit_event(
             context=context,
             step_name="investigate_transaction_graph",
@@ -38,7 +39,7 @@ class TransactionForensicsAgent(BaseAgent):
         try:
             txs = context.transactions
             business_id = context.business_id
-            
+
             G = nx.DiGraph()
             G.add_node(business_id, type="PRIMARY_MSME")
 
@@ -47,9 +48,14 @@ class TransactionForensicsAgent(BaseAgent):
             node_types = {business_id: "PRIMARY_MSME"}
 
             for t in txs:
-                cp = t.counterparty_id or f"anon_cp_{t.transaction_id[:6]}"
+                if t.counterparty_id:
+                    cp = t.counterparty_id
+                elif t.counterparty_name and t.counterparty_name != "Undisclosed":
+                    cp = f"party_{hashlib.md5(t.counterparty_name.strip().lower().encode()).hexdigest()[:12]}"
+                else:
+                    cp = f"anon_{t.transaction_id}"
                 amt = float(t.amount)
-                
+
                 if t.direction == "CREDIT":
                     # Counterparty -> MSME (Customer)
                     u, v = cp, business_id
@@ -192,7 +198,7 @@ class TransactionForensicsAgent(BaseAgent):
             error_msg = f"Transaction forensics error: {str(e)}"
             context.record_error("TransactionForensicsAgent", "investigate_transaction_graph", error_msg)
             context.record_stage("TRANSACTION_INVESTIGATION", "FAILED")
-            
+
             await self.emit_event(
                 context=context,
                 step_name="investigate_transaction_graph",

@@ -22,7 +22,7 @@ class FinancialIntelligenceAgent(BaseAgent):
     async def execute(self, context: AssessmentContext) -> FinancialDNA:
         start_time = time.monotonic()
         context.record_stage("FINANCIAL_ANALYSIS", "RUNNING")
-        
+
         await self.emit_event(
             context=context,
             step_name="analyze_financial_dna",
@@ -36,7 +36,7 @@ class FinancialIntelligenceAgent(BaseAgent):
         try:
             txs = context.transactions
             profile = context.business_profile
-            
+
             credit_txs = [t for t in txs if t.direction == "CREDIT"]
             debit_txs = [t for t in txs if t.direction == "DEBIT"]
 
@@ -66,20 +66,36 @@ class FinancialIntelligenceAgent(BaseAgent):
 
             # Turnovers and balances
             if total_credits > Decimal("0.0"):
-                # Normalize turnover
-                monthly_turnover = total_credits
+                # Normalize turnover across observed time window
+                timestamps = [t.timestamp for t in txs]
+                coverage_days = (max(timestamps) - min(timestamps)).days if timestamps else 0
+                if coverage_days >= 28:
+                    months_count = Decimal(str(max(coverage_days, 1))) / Decimal("30.0")
+                    monthly_turnover = (total_credits / months_count).quantize(Decimal("0.01"))
+                else:
+                    monthly_turnover = total_credits
+
                 total_credits_val = total_credits
                 total_debits_val = total_debits
                 daily_balance_proxy = Decimal("35000.00") if len(txs) >= 10 else None
                 cash_velocity = 3.2 if len(txs) >= 5 else None
-                
-                # Volatility CV proxy from credit amounts
+
+                # Volatility CV from credit transactions
                 amounts = [float(t.amount) for t in credit_txs]
                 mean_amt = sum(amounts) / len(amounts) if amounts else 1.0
                 variance = sum((x - mean_amt) ** 2 for x in amounts) / len(amounts) if len(amounts) > 1 else 0.0
                 std_dev = math.sqrt(variance)
                 volatility_cv = round(min(1.5, max(0.08, std_dev / mean_amt if mean_amt > 0 else 0.2)), 2)
                 seasonality_idx = 1.15
+
+                # Detect recurring loan EMIs from bank debits
+                emi_txs = [t for t in debit_txs if t.category == "EXISTING_LOAN_EMI"]
+                if emi_txs and coverage_days >= 28:
+                    months_count = Decimal(str(max(coverage_days, 1))) / Decimal("30.0")
+                    detected_emi = (sum((t.amount for t in emi_txs), Decimal("0.0")) / months_count).quantize(Decimal("0.01"))
+                    detected_emi = max(profile.declared_existing_monthly_emi, detected_emi)
+                else:
+                    detected_emi = profile.declared_existing_monthly_emi
             else:
                 # Deterministic fallback to declared profile
                 monthly_turnover = profile.declared_monthly_turnover
@@ -89,6 +105,7 @@ class FinancialIntelligenceAgent(BaseAgent):
                 cash_velocity = None
                 volatility_cv = 0.22
                 seasonality_idx = 1.10
+                detected_emi = profile.declared_existing_monthly_emi
 
             net_operating_cashflow = total_credits_val - total_debits_val
             daily_inflow = round(monthly_turnover / Decimal("30.0"), 2)
@@ -105,7 +122,7 @@ class FinancialIntelligenceAgent(BaseAgent):
                 inflow_volatility_cv=volatility_cv,
                 cash_velocity_days=cash_velocity,
                 seasonality_index=seasonality_idx,
-                detected_existing_monthly_emi=profile.declared_existing_monthly_emi
+                detected_existing_monthly_emi=detected_emi
             )
 
             context.financial_dna = dna
@@ -137,7 +154,7 @@ class FinancialIntelligenceAgent(BaseAgent):
             error_msg = f"Financial analysis error: {str(e)}"
             context.record_error("FinancialIntelligenceAgent", "analyze_financial_dna", error_msg)
             context.record_stage("FINANCIAL_ANALYSIS", "FAILED")
-            
+
             await self.emit_event(
                 context=context,
                 step_name="analyze_financial_dna",

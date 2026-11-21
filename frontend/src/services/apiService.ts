@@ -226,8 +226,8 @@ class ApiService {
       body: JSON.stringify({ username, password }),
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Invalid credentials' }));
-      throw new Error(err.detail || 'Login failed');
+      const msg = await this.extractErrorMessage(res, 'Login failed');
+      throw new Error(msg);
     }
     const data: AuthTokenResponse = await res.json();
     this.setSession(data);
@@ -255,8 +255,8 @@ class ApiService {
       }),
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Registration failed' }));
-      throw new Error(err.detail || 'Registration failed');
+      const msg = await this.extractErrorMessage(res, 'Registration failed');
+      throw new Error(msg);
     }
     const data: AuthTokenResponse = await res.json();
     this.setSession(data);
@@ -270,8 +270,8 @@ class ApiService {
       body: JSON.stringify({ persona_key: personaKey }),
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Demo login failed' }));
-      throw new Error(err.detail || 'Demo login failed');
+      const msg = await this.extractErrorMessage(res, 'Demo login failed');
+      throw new Error(msg);
     }
     const data: AuthTokenResponse = await res.json();
     this.setSession(data);
@@ -371,8 +371,8 @@ class ApiService {
       body: formData,
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(err.detail || 'CSV upload failed');
+      const msg = await this.extractErrorMessage(res, 'CSV upload failed');
+      throw new Error(msg);
     }
     return res.json();
   }
@@ -398,9 +398,26 @@ class ApiService {
       const err = await res.json();
       if (typeof err.detail === 'string') return err.detail;
       if (Array.isArray(err.detail) && err.detail.length > 0) {
-        return err.detail.map((d: any) => d.msg || JSON.stringify(d)).join('; ');
+        return err.detail
+          .map((d: any) => {
+            if (typeof d === 'string') return d;
+            if (d && typeof d === 'object') {
+              const field = Array.isArray(d.loc) && d.loc.length > 0 ? d.loc[d.loc.length - 1] : '';
+              const msg = d.msg || JSON.stringify(d);
+              return field ? `${field}: ${msg}` : msg;
+            }
+            return String(d);
+          })
+          .join('; ');
       }
-      return err.detail || err.message || err.title || defaultMsg;
+      if (err.detail && typeof err.detail === 'object') {
+        return JSON.stringify(err.detail);
+      }
+      if (typeof err.message === 'string') return err.message;
+      if (typeof err.title === 'string' && err.title !== 'HTTP Error' && err.title !== 'Unprocessable Entity') {
+        return err.title;
+      }
+      return defaultMsg;
     } catch {
       return `${defaultMsg} (${res.status} ${res.statusText})`;
     }

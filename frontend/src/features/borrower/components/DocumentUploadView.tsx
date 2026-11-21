@@ -56,7 +56,8 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-  const bizId = activePersona?.business?.id || 'msme_kirana_kanpur_001';
+  const user = apiService.getCurrentUser();
+  const bizId = activePersona?.business?.id || user?.business_id || 'msme_kirana_kanpur_001';
 
   // Sync with localStorage
   useEffect(() => {

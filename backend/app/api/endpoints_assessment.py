@@ -348,3 +348,19 @@ async def get_assessment_result(assessment_id: str):
             detail=f"Assessment '{assessment_id}' not found or still processing. Connect to stream endpoint to observe status."
         )
     return ASSESSMENT_STORE[assessment_id]
+
+@router.get("/business/{business_id}/latest", response_model=CreditAppraisalMemo)
+async def get_latest_assessment_for_business(business_id: str):
+    """Retrieve the latest completed Credit Appraisal Memo (CAM) for a given business ID."""
+    matching = [memo for memo in ASSESSMENT_STORE.values() if memo.business_id == business_id]
+    if matching:
+        matching.sort(key=lambda m: m.generated_at, reverse=True)
+        return matching[0]
+    try:
+        from ..db import assessment_repo
+        memos = assessment_repo.list_for_business(business_id)
+        if memos:
+            return memos[0]
+    except Exception:
+        pass
+    raise HTTPException(status_code=404, detail=f"No completed assessment found for business '{business_id}'")

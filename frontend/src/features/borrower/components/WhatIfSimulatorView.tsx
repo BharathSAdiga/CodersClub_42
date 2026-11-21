@@ -45,8 +45,9 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
 
   // Business Parameters
+  const user = apiService.getCurrentUser();
   const initialBiz = activePersona?.business;
-  const bizId = initialBiz?.id || 'biz_artisan_02';
+  const bizId = initialBiz?.id || user?.business_id || 'biz_artisan_02';
   const baselineMonthlyTurnover = initialBiz ? 340000 : 285000;
   const existingMonthlyEmi = 8500;
 

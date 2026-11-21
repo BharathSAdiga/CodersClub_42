@@ -6,6 +6,7 @@ from decimal import Decimal
 from ..schemas.resilience import ShockScenarioInput, ShockSimulationResult, DebtObligation
 from ..modules.resilience_engine import run_cashflow_stress_simulation
 from .endpoints_business import BUSINESS_STORE
+from .endpoints_transactions import TRANSACTION_STORE
 
 router = APIRouter(prefix="/resilience", tags=["Resilience & Shock Simulation"])
 
@@ -23,9 +24,30 @@ async def simulate_stress_test(
     Calculations use pure Decimal precision and obligation-level debt matching.
     """
     profile = BUSINESS_STORE.get(business_id)
-    monthly_inflow = profile.declared_monthly_turnover if profile else Decimal("285000.0")
-    declared_emi = profile.declared_existing_monthly_emi if profile else Decimal("4500.0")
-    
+    txs = TRANSACTION_STORE.get(business_id, [])
+
+    if txs:
+        credits = [t for t in txs if t.direction == "CREDIT"]
+        total_credits = sum((t.amount for t in credits), Decimal("0.0"))
+        timestamps = [t.timestamp for t in txs]
+        coverage_days = (max(timestamps) - min(timestamps)).days if timestamps else 0
+        if coverage_days >= 28 and total_credits > Decimal("0.0"):
+            monthly_inflow = (total_credits / (Decimal(str(coverage_days)) / Decimal("30.0"))).quantize(Decimal("0.01"))
+        elif total_credits > Decimal("0.0"):
+            monthly_inflow = total_credits
+        else:
+            monthly_inflow = profile.declared_monthly_turnover if profile else Decimal("285000.0")
+
+        emi_txs = [t for t in txs if t.direction == "DEBIT" and t.category == "EXISTING_LOAN_EMI"]
+        if emi_txs and coverage_days >= 28:
+            detected_emi = (sum((t.amount for t in emi_txs), Decimal("0.0")) / (Decimal(str(coverage_days)) / Decimal("30.0"))).quantize(Decimal("0.01"))
+            declared_emi = max(profile.declared_existing_monthly_emi if profile else Decimal("0.0"), detected_emi)
+        else:
+            declared_emi = profile.declared_existing_monthly_emi if profile else Decimal("4500.0")
+    else:
+        monthly_inflow = profile.declared_monthly_turnover if profile else Decimal("285000.0")
+        declared_emi = profile.declared_existing_monthly_emi if profile else Decimal("4500.0")
+
     declared_obs = []
     verified_obs = []
     if declared_emi > Decimal("0.0"):

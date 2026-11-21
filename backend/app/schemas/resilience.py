@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import List, Literal, Dict, Optional
+from pydantic import BaseModel, Field, model_validator
+from typing import List, Literal, Dict, Optional, Any
 from datetime import datetime, timezone
 from decimal import Decimal
 
@@ -12,6 +12,18 @@ class ShockScenarioInput(BaseModel):
     cogs_inflation_pct: float = Field(default=15.0, ge=0.0, le=90.0, description="Cost of goods / operating expense increase %")
     receivable_delay_days: int = Field(default=30, ge=0, le=120, description="Delay in customer cash realization")
     scenario_name: str = Field(default="Standard Economic Stress Scenario")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_aliases(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "revenue_shock_pct" in data and "revenue_contraction_pct" not in data:
+                data["revenue_contraction_pct"] = data["revenue_shock_pct"]
+            if "expense_inflation_pct" in data and "cogs_inflation_pct" not in data:
+                data["cogs_inflation_pct"] = data["expense_inflation_pct"]
+            if "receivables_delay_days" in data and "receivable_delay_days" not in data:
+                data["receivable_delay_days"] = data["receivables_delay_days"]
+        return data
 
 class DebtObligation(BaseModel):
     """Individual loan or recurring debt obligation for obligation-level matching."""
@@ -91,7 +103,7 @@ class AffordabilityAnalysis(BaseModel):
     monthly_operating_inflow: Decimal = Field(..., ge=Decimal("0.0"))
     monthly_operating_expenses: Decimal = Field(..., ge=Decimal("0.0"))
     net_operating_surplus_pre_debt: Decimal
-    
+
     # Obligation-Level Debt Reconciliation
     declared_obligations: List[DebtObligation] = Field(default_factory=list)
     verified_obligations: List[DebtObligation] = Field(default_factory=list)
@@ -107,7 +119,7 @@ class AffordabilityAnalysis(BaseModel):
         default_factory=list,
         description="Bank recurring loan debits not declared by applicant"
     )
-    
+
     # Reconciled Totals (Decimal precision)
     declared_existing_monthly_emi: Decimal = Field(default=Decimal("0.0"), ge=Decimal("0.0"))
     verified_existing_monthly_debt_debits: Decimal = Field(default=Decimal("0.0"), ge=Decimal("0.0"))
@@ -119,19 +131,19 @@ class AffordabilityAnalysis(BaseModel):
     debt_reconciliation_method: str = Field(
         default="OBLIGATION_LEVEL_MATCHING: Matched obligations counted once; unmatched obligations added without double-counting."
     )
-    
+
     # Unencumbered Cash Surplus (Can be negative if operating expenses + existing debt > inflows)
     unencumbered_monthly_cash_surplus: Decimal = Field(
         ...,
         description="Operating surplus minus reconciled existing debt"
     )
-    
+
     # Proposed Loan Facility
     proposed_loan_amount_inr: Decimal = Field(default=Decimal("0.0"), ge=Decimal("0.0"))
     proposed_tenure_months: int = Field(default=0, ge=0)
     indicative_annual_interest_rate_pct: float = Field(default=0.0, ge=0.0)
     proposed_monthly_emi: Decimal = Field(default=Decimal("0.0"), ge=Decimal("0.0"))
-    
+
     # Debt Service Coverage Ratio (DSCR) with safe zero-debt handling
     total_post_borrowing_monthly_debt_service: Decimal = Field(
         ...,
@@ -139,7 +151,7 @@ class AffordabilityAnalysis(BaseModel):
         description="reconciled_existing_debt_service + proposed_monthly_emi"
     )
     is_debt_free: bool = Field(
-        default=False, 
+        default=False,
         description="True if total existing debt and proposed debt service are both zero"
     )
     projected_dscr: Optional[float] = Field(
@@ -167,10 +179,10 @@ class ShockSimulationResult(BaseModel):
     business_id: str
     assessment_id: Optional[str] = None
     calculated_at: datetime = Field(default_factory=utc_now)
-    
+
     # Applied Stress Parameters
     applied_scenario: ShockScenarioInput
-    
+
     # Runway and Liquidity (Safe handling for zero burn or unavailable bank balance)
     baseline_cash_runway_days: Optional[int] = Field(
         default=None,
@@ -198,7 +210,7 @@ class ShockSimulationResult(BaseModel):
         default=None,
         description="Estimated months to restore liquidity buffer to baseline"
     )
-    
+
     # Post-Shock Affordability
     post_shock_monthly_surplus: Decimal
     post_shock_dscr: Optional[float] = Field(
@@ -206,10 +218,10 @@ class ShockSimulationResult(BaseModel):
         description="Post-shock DSCR (None if post-borrowing debt service is zero)"
     )
     max_tolerable_revenue_contraction_pct: float = Field(
-        ..., 
+        ...,
         description="Break-even revenue drop percentage before pre-debt operating cashflow drops below zero"
     )
-    
+
     # Qualitative Resilience Categorization
     resilience_classification: Literal[
         "HIGHLY_RESILIENT",
@@ -217,11 +229,11 @@ class ShockSimulationResult(BaseModel):
         "VULNERABLE_TO_SHOCK",
         "CRITICAL_ILLIQUIDITY"
     ]
-    
+
     # Affordability Breakdown & Multi-Scenario Suite
     affordability: AffordabilityAnalysis
     scenario_suite_evaluations: List[ScenarioEvaluation] = Field(default_factory=list)
-    
+
     calculation_assumptions: List[str] = Field(
         default_factory=lambda: [
             "Fixed operating costs cannot be immediately cut in the first 60 days of shock",

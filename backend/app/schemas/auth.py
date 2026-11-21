@@ -19,7 +19,7 @@ UserRole = Literal[
 ]
 
 class RegisterRequest(BaseModel):
-    username: str = Field(..., min_length=3, max_length=64, description="Unique username")
+    username: str = Field(..., min_length=2, max_length=64, description="Unique username")
     email: str = Field(..., description="Valid unique email address")
     full_name: str = Field(..., min_length=2, max_length=128, description="Legal full name")
     password: str = Field(..., min_length=8, max_length=128, description="Password adhering to enterprise security policy")

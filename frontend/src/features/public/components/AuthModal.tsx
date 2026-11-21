@@ -116,20 +116,40 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!regUsername || !regEmail || !regPassword || !regFullName) {
+    const cleanUsername = regUsername.trim();
+    const cleanFullName = regFullName.trim();
+    const cleanEmail = regEmail.trim();
+
+    if (!cleanUsername || !cleanEmail || !regPassword || !cleanFullName) {
       toast.error('Please fill in all required registration fields.');
+      return;
+    }
+    if (cleanFullName.length < 2) {
+      toast.error('Full legal name must be at least 2 characters.');
+      return;
+    }
+    if (cleanUsername.length < 2) {
+      toast.error('Username must be at least 2 characters long.');
       return;
     }
     if (regPassword.length < 8) {
       toast.error('Password must be at least 8 characters long.');
       return;
     }
+    if (!/[a-zA-Z]/.test(regPassword)) {
+      toast.error('Password must contain at least one alphabet letter.');
+      return;
+    }
+    if (!/[\d\W_]/.test(regPassword)) {
+      toast.error('Password must contain at least one number or special character.');
+      return;
+    }
     setIsRegistering(true);
     try {
       const resp = await apiService.register({
-        username: regUsername,
-        email: regEmail,
-        full_name: regFullName,
+        username: cleanUsername,
+        email: cleanEmail,
+        full_name: cleanFullName,
         password: regPassword,
         role: regRole,
       });
@@ -194,7 +214,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       onLoginSuccess(personaKey);
       onClose();
     } catch (err: any) {
-      toast.error(err.message || 'Registration failed.');
+      const msg = typeof err === 'string' ? err : err?.message || 'Registration failed.';
+      toast.error(msg);
     } finally {
       setIsRegistering(false);
     }
