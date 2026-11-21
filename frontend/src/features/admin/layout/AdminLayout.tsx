@@ -54,13 +54,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
     <aside className="w-64 min-h-screen bg-brand-forest text-brand-ivory p-6 flex flex-col justify-between border-r border-white/10 select-none">
       <div>
         {/* Brand Header */}
-        <div className="flex items-center gap-2.5 mb-8">
-          <div className="w-9 h-9 rounded-2xl bg-white/15 flex items-center justify-center border border-white/20">
-            <span className="font-display font-black text-brand-mint text-base">U</span>
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center border border-white/20 shrink-0">
+            <span className="font-display font-black text-brand-mint text-lg">U</span>
           </div>
           <div>
-            <span className="font-display font-bold text-lg text-white tracking-tight">UDYOGA</span>
-            <span className="text-[10px] text-white/50 block font-mono">
+            <span className="font-display font-bold text-xl text-white tracking-tight block leading-tight">UDYOGA</span>
+            <span className="text-xs text-white/70 block font-mono mt-0.5">
               {isAuditor ? 'Ethics & Audit Desk' : 'Admin & Governance'}
             </span>
           </div>
@@ -68,13 +68,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
         {/* Active Authority Badge */}
         <div className="p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-sm border border-white/15 mb-6">
-          <span className="text-[10px] uppercase font-mono tracking-wider text-emerald-300 font-bold block">
+          <span className="text-xs uppercase font-mono tracking-wider text-emerald-300 font-bold block">
             Active Authority
           </span>
-          <h4 className="font-display font-semibold text-xs text-white truncate mt-0.5">
+          <h4 className="font-display font-semibold text-sm text-white truncate mt-1">
             {isAuditor ? 'Fair Lending Council' : 'Platform Administration'}
           </h4>
-          <span className="text-[10px] text-white/50 block font-mono mt-0.5">
+          <span className="text-xs text-white/70 block font-mono mt-0.5">
             {isAuditor ? 'Statutory Auditor Access' : 'Super Administrator'}
           </span>
         </div>
@@ -91,10 +91,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   onNavigate(item.id);
                   setMobileSidebarOpen(false);
                 }}
-                className={`w-full flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                className={`w-full flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
                     ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
-                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                    : 'text-white/85 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
@@ -110,16 +110,16 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         {onLogout && (
           <button
             onClick={onLogout}
-            className="w-full flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors mb-3"
+            className="w-full flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-white/75 hover:bg-white/10 hover:text-white transition-colors mb-3"
           >
             <LogOut className="w-4 h-4 shrink-0 text-brand-terracotta" />
             <span className="text-left">Sign Out Session</span>
           </button>
         )}
 
-        <div className="flex items-center gap-2 text-xs text-white/50">
+        <div className="flex items-center gap-2 text-xs text-white/70 font-medium">
           <div className="w-2 h-2 rounded-full bg-brand-mint animate-pulse" />
-          <span className="text-[11px]">DPDP & RBI DLG Monitored</span>
+          <span>DPDP & RBI DLG Monitored</span>
         </div>
       </div>
     </aside>

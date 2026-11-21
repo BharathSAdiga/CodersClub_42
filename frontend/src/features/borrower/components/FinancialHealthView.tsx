@@ -135,16 +135,16 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
             <div>
               <CardTitle className="text-lg font-display font-bold text-brand-charcoal flex items-center gap-2">
                 <span>4-Tier Financial DNA Synthesis</span>
-                <Badge variant="outline" className="text-[10px] bg-brand-forest/10 text-brand-forest border-brand-forest/30">
+                <Badge variant="outline" className="text-xs font-semibold bg-brand-forest/10 text-brand-forest border-brand-forest/30">
                   Agent 4 Verified
                 </Badge>
               </CardTitle>
-              <p className="text-xs text-brand-charcoal/65 mt-0.5">
+              <p className="text-xs text-brand-charcoal/75 mt-0.5">
                 Multi-dimensional cash-flow vector synthesized from verified bank debits, UPI QR settlements, and GST filings.
               </p>
             </div>
             <div className="text-right">
-              <span className="text-[10px] font-mono text-brand-charcoal/50 uppercase block">Composite DNA Index</span>
+              <span className="text-xs font-mono text-brand-charcoal/60 uppercase block font-semibold">Composite DNA Index</span>
               <span className="text-lg font-mono font-bold text-brand-forest">88.4 / 100</span>
             </div>
           </div>
@@ -156,7 +156,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
             <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-brand-charcoal">1. Volume & Velocity</span>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
                   89 / 100
                 </span>
               </div>
@@ -174,7 +174,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
                   <span className="font-semibold text-emerald-800">98.2% Active</span>
                 </div>
               </div>
-              <p className="text-[11px] text-brand-charcoal/60 pt-1 border-t border-brand-forest/10 leading-snug">
+              <p className="text-xs text-brand-charcoal/70 pt-1 border-t border-brand-forest/10 leading-snug">
                 Consistent digital settlements across bank and merchant QR channels.
               </p>
             </div>
@@ -183,7 +183,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
             <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-brand-charcoal">2. Volatility & Margin</span>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
                   84 / 100
                 </span>
               </div>
@@ -201,7 +201,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
                   <span className="font-semibold text-brand-charcoal">1.32x</span>
                 </div>
               </div>
-              <p className="text-[11px] text-brand-charcoal/60 pt-1 border-t border-brand-forest/10 leading-snug">
+              <p className="text-xs text-brand-charcoal/70 pt-1 border-t border-brand-forest/10 leading-snug">
                 Controlled expense burn with healthy operational margins.
               </p>
             </div>
@@ -210,7 +210,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
             <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-brand-charcoal">3. Seasonality & Continuity</span>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
                   92 / 100
                 </span>
               </div>
@@ -228,7 +228,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
                   <span className="font-semibold text-brand-charcoal">0% (Resilient)</span>
                 </div>
               </div>
-              <p className="text-[11px] text-brand-charcoal/60 pt-1 border-t border-brand-forest/10 leading-snug">
+              <p className="text-xs text-brand-charcoal/70 pt-1 border-t border-brand-forest/10 leading-snug">
                 Uninterrupted operational activity across festive and non-festive cycles.
               </p>
             </div>
@@ -237,7 +237,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
             <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-brand-charcoal">4. Debt Burden & Coverage</span>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
                   88 / 100
                 </span>
               </div>
@@ -255,7 +255,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
                   <span className="font-semibold text-brand-forest">+{formatINR(netSurplus)}</span>
                 </div>
               </div>
-              <p className="text-[11px] text-brand-charcoal/60 pt-1 border-t border-brand-forest/10 leading-snug">
+              <p className="text-xs text-brand-charcoal/70 pt-1 border-t border-brand-forest/10 leading-snug">
                 All existing EMI debits matched 100% against bank transaction statements.
               </p>
             </div>

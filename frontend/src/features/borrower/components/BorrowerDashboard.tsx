@@ -194,7 +194,7 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
             </div>
           </CardHeader>
           <CardContent>
-            <Badge variant="mint" className="text-[10px] font-mono">
+            <Badge variant="mint" className="text-xs font-mono font-semibold">
               {activePersona.acieReport?.scoreBand || 'PRIME'} TIER
             </Badge>
           </CardContent>
@@ -445,20 +445,20 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
                   U
                 </div>
                 <div>
-                  <Badge variant="forest" className="text-[10px] mb-1">
+                  <Badge variant="forest" className="text-xs mb-1">
                     Verified Digital Credential
                   </Badge>
-                  <h3 className="font-display font-bold text-lg text-brand-charcoal">
+                  <h3 className="font-display font-bold text-xl text-brand-charcoal">
                     Business Financial Passport
                   </h3>
-                  <span className="text-[10px] font-mono text-brand-charcoal/60">
+                  <span className="text-xs font-mono text-brand-charcoal/70">
                     Credential ID: PASSPORT-IN-2026-0891 · Issued under DPDP Framework
                   </span>
                 </div>
               </div>
               <button 
                 onClick={() => setIsPassportModalOpen(false)}
-                className="p-1 rounded-full text-brand-charcoal/40 hover:text-brand-charcoal"
+                className="p-1.5 rounded-full text-brand-charcoal/50 hover:text-brand-charcoal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -467,61 +467,61 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
             {/* Passport Identity Header */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-brand-ivory border border-brand-forest/10 text-xs">
               <div>
-                <span className="text-[10px] text-brand-charcoal/50 block font-mono">Enterprise Trade Name</span>
-                <strong className="text-brand-charcoal">{activePersona.business?.tradeName}</strong>
+                <span className="text-xs text-brand-charcoal/60 block font-mono">Trade Name</span>
+                <strong className="text-sm text-brand-charcoal block mt-0.5">{activePersona.business?.tradeName}</strong>
               </div>
               <div>
-                <span className="text-[10px] text-brand-charcoal/50 block font-mono">PAN / Entity ID</span>
-                <strong className="text-brand-charcoal font-mono">{activePersona.business?.pan}</strong>
+                <span className="text-xs text-brand-charcoal/60 block font-mono">PAN / Entity ID</span>
+                <strong className="text-sm text-brand-charcoal font-mono block mt-0.5">{activePersona.business?.pan}</strong>
               </div>
               <div>
-                <span className="text-[10px] text-brand-charcoal/50 block font-mono">Operating Vintage</span>
-                <strong className="text-brand-charcoal">{activePersona.business?.yearsInOperation} Years Continuous</strong>
+                <span className="text-xs text-brand-charcoal/60 block font-mono">Operating Vintage</span>
+                <strong className="text-sm text-brand-charcoal block mt-0.5">{activePersona.business?.yearsInOperation} Yrs Continuous</strong>
               </div>
               <div>
-                <span className="text-[10px] text-brand-charcoal/50 block font-mono">Credit Vitality</span>
-                <strong className="text-brand-forest font-mono">{activePersona.acieReport?.creditVitalityScore || 768}/900</strong>
+                <span className="text-xs text-brand-charcoal/60 block font-mono">Credit Vitality</span>
+                <strong className="text-sm text-brand-forest font-mono block mt-0.5">{activePersona.acieReport?.creditVitalityScore || 768}/900</strong>
               </div>
             </div>
 
             {/* 5 Dimensions Summary Grid */}
             <div className="space-y-2">
-              <span className="text-xs font-semibold text-brand-charcoal block">5-Dimension Enterprise DNA</span>
-              <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-[11px]">
+              <span className="text-sm font-semibold text-brand-charcoal block">5-Dimension Enterprise DNA</span>
+              <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs">
                 <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
-                  <span className="text-[10px] text-emerald-800 font-semibold block">1. Vitality</span>
-                  <strong className="text-emerald-950 block mt-0.5">84/100 Strong</strong>
+                  <span className="text-xs text-emerald-800 font-semibold block">1. Vitality</span>
+                  <strong className="text-sm text-emerald-950 block mt-0.5">84/100</strong>
                 </div>
                 <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
-                  <span className="text-[10px] text-emerald-800 font-semibold block">2. Continuity</span>
-                  <strong className="text-emerald-950 block mt-0.5">79/100 Good</strong>
+                  <span className="text-xs text-emerald-800 font-semibold block">2. Continuity</span>
+                  <strong className="text-sm text-emerald-950 block mt-0.5">79/100</strong>
                 </div>
                 <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
-                  <span className="text-[10px] text-emerald-800 font-semibold block">3. Reliability</span>
-                  <strong className="text-emerald-950 block mt-0.5">88/100 Excellent</strong>
+                  <span className="text-xs text-emerald-800 font-semibold block">3. Reliability</span>
+                  <strong className="text-sm text-emerald-950 block mt-0.5">88/100</strong>
                 </div>
                 <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-200">
-                  <span className="text-[10px] text-blue-800 font-semibold block">4. Resilience</span>
-                  <strong className="text-blue-950 block mt-0.5">68/100 Moderate</strong>
+                  <span className="text-xs text-blue-800 font-semibold block">4. Resilience</span>
+                  <strong className="text-sm text-blue-950 block mt-0.5">68/100</strong>
                 </div>
                 <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
-                  <span className="text-[10px] text-emerald-800 font-semibold block">5. Confidence</span>
-                  <strong className="text-emerald-950 block mt-0.5">92/100 High</strong>
+                  <span className="text-xs text-emerald-800 font-semibold block">5. Confidence</span>
+                  <strong className="text-sm text-emerald-950 block mt-0.5">92/100</strong>
                 </div>
               </div>
             </div>
 
             {/* Approved Terms and Cryptographic Seal */}
-            <div className="p-4 rounded-2xl bg-brand-charcoal text-white text-xs space-y-2">
+            <div className="p-4 rounded-2xl bg-brand-charcoal text-white text-xs space-y-2.5">
               <div className="flex justify-between items-center pb-2 border-b border-white/10">
-                <span>Indicative Borrowing Capacity:</span>
-                <strong className="text-brand-mint font-mono text-sm">{formatINR(approvedLimit)} @ 14.2% APR</strong>
+                <span className="text-sm">Indicative Borrowing Capacity:</span>
+                <strong className="text-brand-mint font-mono text-base">{formatINR(approvedLimit)} @ 14.2% APR</strong>
               </div>
-              <div className="flex justify-between items-center text-[11px] text-white/70">
+              <div className="flex justify-between items-center text-xs text-white/80">
                 <span>Verification Rail:</span>
                 <span>Sahamati Account Aggregator & NPCI AutoPay</span>
               </div>
-              <div className="text-[11px] text-white/75 pt-1 font-mono">
+              <div className="text-xs text-white/80 pt-1 font-mono">
                 SHA-256 Digest: 0x7f9a84b2e811c09930f7e...c3a1 (Anchored on Quai Cyprus-1)
               </div>
             </div>

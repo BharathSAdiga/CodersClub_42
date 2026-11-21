@@ -23,6 +23,13 @@ interface SidebarProps {
   onLogout?: () => void;
 }
 
+interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+}
+
 export const Sidebar: React.FC<SidebarProps> = ({
   currentRole,
   activePath,
@@ -34,23 +41,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const isLender = currentRole.startsWith('LENDER');
 
   // Necessary pages for MSME Borrower (Clear, professional, perfectly aligned)
-  const borrowerItems = [
+  const borrowerItems: NavItem[] = [
     { id: '/borrower/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: '/borrower/profile', label: 'Business Profile', icon: Building2 },
     { id: '/borrower/health', label: 'Cash Flow & Health', icon: Activity },
     { id: '/borrower/insights', label: 'What-If Simulator', icon: Sparkles },
-    { id: '/borrower/assessment', label: '7-Agent Underwriting (CAM)', icon: Sparkles },
+    { id: '/borrower/assessment', label: '7-Agent Underwriting', badge: 'CAM', icon: Sparkles },
     { id: '/borrower/apply', label: 'Apply for Credit', icon: Wallet },
     { id: '/borrower/consent', label: 'DPDP Consent', icon: ShieldCheck },
     { id: '/borrower/documents', label: 'Documents & Data', icon: Sliders },
   ];
 
-  const lenderItems = [
+  const lenderItems: NavItem[] = [
     { id: '/lender/dashboard', label: 'Overview', icon: LayoutDashboard },
     { id: '/lender/pipeline', label: 'Applications', icon: FileText },
   ];
 
-  const adminItems = [
+  const adminItems: NavItem[] = [
     { id: '/admin/overview', label: 'Overview', icon: LayoutDashboard },
     { id: '/admin/users', label: 'Users', icon: Users },
     { id: '/admin/businesses', label: 'Businesses', icon: Building2 },
@@ -72,13 +79,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="w-64 min-h-screen bg-brand-forest text-brand-ivory p-6 flex flex-col justify-between border-r border-white/10 select-none">
       <div>
         {/* Brand Header */}
-        <div className="flex items-center gap-2.5 mb-8">
-          <div className="w-9 h-9 rounded-2xl bg-white/15 flex items-center justify-center border border-white/20">
-            <span className="font-display font-black text-brand-mint text-base">U</span>
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center border border-white/20 shrink-0">
+            <span className="font-display font-black text-brand-mint text-lg">U</span>
           </div>
           <div>
-            <span className="font-display font-bold text-lg text-white tracking-tight">UDYOGA</span>
-            <span className="text-[10px] text-white/50 block font-mono">
+            <span className="font-display font-bold text-xl text-white tracking-tight block leading-tight">UDYOGA</span>
+            <span className="text-xs text-white/70 block font-mono mt-0.5">
               {isBorrower ? 'Borrower Portal' : isLender ? 'Lender Workbench' : 'Admin & Audit'}
             </span>
           </div>
@@ -86,10 +93,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Business / User Badge */}
         <div className="p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-sm border border-white/15 mb-6">
-          <span className="text-[10px] uppercase font-mono tracking-wider text-emerald-300 font-bold block">
+          <span className="text-xs uppercase font-mono tracking-wider text-emerald-300 font-bold block">
             Active Entity
           </span>
-          <h4 className="font-display font-semibold text-xs text-white truncate mt-0.5">
+          <h4 className="font-display font-semibold text-sm text-white truncate mt-1">
             {businessName}
           </h4>
         </div>
@@ -103,13 +110,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${active
-                  ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
-                  : 'text-white/80 hover:bg-white/10 hover:text-white'
-                  }`}
+                className={`w-full flex items-center justify-between text-left gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  active
+                    ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
+                    : 'text-white/85 hover:bg-white/10 hover:text-white'
+                }`}
               >
-                <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
-                <span className="text-left min-w-0 flex-1 truncate">{item.label}</span>
+                <div className="flex items-center gap-3 min-w-0">
+                  <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
+                  <span className="text-left min-w-0 truncate">{item.label}</span>
+                </div>
+                {item.badge && (
+                  <span
+                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 uppercase tracking-wider font-bold ${
+                      active
+                        ? 'bg-brand-charcoal/15 text-brand-charcoal'
+                        : 'bg-white/10 text-brand-mint border border-brand-mint/30'
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -118,7 +139,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {onLogout && (
           <button
             onClick={onLogout}
-            className="w-full mt-4 flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+            className="w-full mt-4 flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-white/75 hover:bg-white/10 hover:text-white transition-colors"
           >
             <LogOut className="w-4 h-4 shrink-0 text-brand-terracotta" />
             <span className="text-left">Sign Out Session</span>
@@ -127,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Footer Info */}
-      <div className="pt-6 border-t border-white/10 text-xs text-white/50">
+      <div className="pt-6 border-t border-white/10 text-xs text-white/70 font-medium">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-brand-mint animate-pulse" />
           <span>India Stack DPI Active</span>

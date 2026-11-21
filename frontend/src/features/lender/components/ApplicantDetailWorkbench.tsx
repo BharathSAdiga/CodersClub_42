@@ -399,27 +399,27 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
 
         <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
           <div className="p-3 rounded-2xl bg-brand-ivory border border-brand-forest/10 text-center min-w-[120px]">
-            <span className="text-[10px] uppercase text-brand-charcoal/50 block">Requested Loan</span>
+            <span className="text-xs uppercase text-brand-charcoal/60 block font-semibold">Requested Loan</span>
             <strong className="text-base text-brand-forest block mt-0.5">
               {formatINR(application.requestedAmount)}
             </strong>
-            <span className="text-[10px] text-brand-charcoal/60">{application.tenorDays}d · {application.repaymentFrequency === 'DAILY_SWEEP' ? 'Daily UPI' : 'Monthly'}</span>
+            <span className="text-xs text-brand-charcoal/70">{application.tenorDays}d · {application.repaymentFrequency === 'DAILY_SWEEP' ? 'Daily UPI' : 'Monthly'}</span>
           </div>
 
           <div className="p-3 rounded-2xl bg-brand-ivory border border-brand-forest/10 text-center min-w-[120px]">
-            <span className="text-[10px] uppercase text-brand-charcoal/50 block">Financial Vitality</span>
+            <span className="text-xs uppercase text-brand-charcoal/60 block font-semibold">Financial Vitality</span>
             <strong className="text-base text-emerald-800 block mt-0.5">
               {application.acieScore} / 900
             </strong>
-            <span className="text-[10px] text-emerald-700 font-semibold">{application.scoreBand} Band</span>
+            <span className="text-xs text-emerald-700 font-semibold">{application.scoreBand} Band</span>
           </div>
 
           <div className="p-3 rounded-2xl bg-brand-ivory border border-brand-forest/10 text-center min-w-[120px]">
-            <span className="text-[10px] uppercase text-brand-charcoal/50 block">Cross-Stream Match</span>
+            <span className="text-xs uppercase text-brand-charcoal/60 block font-semibold">Cross-Stream Match</span>
             <strong className="text-base text-brand-charcoal block mt-0.5">
               {application.congruenceScore}%
             </strong>
-            <span className="text-[10px] text-emerald-700 font-semibold">&lt; 5% Variance (Safe)</span>
+            <span className="text-xs text-emerald-700 font-semibold">&lt; 5% Variance (Safe)</span>
           </div>
         </div>
       </div>
@@ -452,9 +452,9 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
 
           {/* Desktop Vertical Side Navigation Card */}
           <Card className="border-brand-forest/15 shadow-soft overflow-hidden p-2 bg-white hidden lg:block">
-            <div className="px-3 py-2 text-[10px] font-mono uppercase tracking-wider text-brand-forest font-bold border-b border-brand-forest/10 mb-1 flex items-center justify-between">
+            <div className="px-3 py-2 text-xs font-mono uppercase tracking-wider text-brand-forest font-bold border-b border-brand-forest/10 mb-1 flex items-center justify-between">
               <span>Underwriting File</span>
-              <span className="text-brand-charcoal/40 font-mono">8 Steps</span>
+              <span className="text-brand-charcoal/50 font-mono text-xs">8 Steps</span>
             </div>
             <nav className="space-y-1">
               {WORKBENCH_TABS.map((tab) => {
@@ -471,15 +471,15 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
                     }`}
                   >
                     <div
-                      className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-[11px] font-mono font-bold ${
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-xs font-mono font-bold ${
                         isActive ? 'bg-white/20 text-white' : 'bg-brand-forest/10 text-brand-forest'
                       }`}
                     >
                       {tab.num}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="truncate font-semibold">{tab.label}</div>
-                      <div className={`text-[10px] truncate ${isActive ? 'text-white/70' : 'text-brand-charcoal/50'}`}>
+                      <div className="truncate font-semibold text-xs">{tab.label}</div>
+                      <div className={`text-xs truncate ${isActive ? 'text-white/80' : 'text-brand-charcoal/60'}`}>
                         {tab.hint}
                       </div>
                     </div>
