@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
 from ..schemas.business import BusinessProfile, BusinessProfileCreate, BusinessProfileUpdate
-from ..db import DatabaseBackedBusinessStore
+from ..db import DatabaseBackedBusinessStore, audit_repo
 
 router = APIRouter(prefix="/business", tags=["Business & Profiles"])
 
@@ -166,4 +166,25 @@ async def update_profile(business_id: str, payload: BusinessProfileUpdate):
 
     updated_profile = BusinessProfile(**current_data)
     BUSINESS_STORE[business_id] = updated_profile
+
+    # Keep Priya's alias synchronized
+    if business_id == "biz_artisan_02":
+        BUSINESS_STORE["msme_trading_surat_002"] = updated_profile
+    elif business_id == "msme_trading_surat_002":
+        BUSINESS_STORE["biz_artisan_02"] = updated_profile
+
+    try:
+        audit_repo.log_access(
+            user_id="usr_profile_updater",
+            username=business_id,
+            role="BORROWER",
+            business_id=business_id,
+            resource_type="BUSINESS_PROFILE",
+            action="UPDATE",
+            details=f"Updated profile for {updated_profile.trade_name} ({business_id}).",
+            outcome="SUCCESS"
+        )
+    except Exception:
+        pass
+
     return updated_profile

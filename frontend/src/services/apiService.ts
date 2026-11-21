@@ -540,7 +540,10 @@ class ApiService {
       },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) throw new Error(`Failed to grant consent: ${res.statusText}`);
+    if (!res.ok) {
+      const msg = await this.extractErrorMessage(res, 'Failed to grant consent');
+      throw new Error(msg);
+    }
     return res.json();
   }
 
@@ -549,7 +552,10 @@ class ApiService {
       method: 'POST',
       headers: this.getAuthHeaders(),
     });
-    if (!res.ok) throw new Error(`Failed to revoke consent: ${res.statusText}`);
+    if (!res.ok) {
+      const msg = await this.extractErrorMessage(res, 'Failed to revoke consent');
+      throw new Error(msg);
+    }
     return res.json();
   }
 
@@ -679,7 +685,10 @@ class ApiService {
     const res = await fetch(`${API_BASE}/business/profile/${encodeURIComponent(businessId)}`, {
       headers: this.getAuthHeaders(),
     });
-    if (!res.ok) throw new Error(`Failed to fetch business profile: ${res.statusText}`);
+    if (!res.ok) {
+      const err = await this.extractErrorMessage(res, `Failed to fetch business profile: ${res.statusText}`);
+      throw new Error(err);
+    }
     return res.json();
   }
 
@@ -695,7 +704,10 @@ class ApiService {
       },
       body: JSON.stringify(profile),
     });
-    if (!res.ok) throw new Error(`Failed to update business profile: ${res.statusText}`);
+    if (!res.ok) {
+      const err = await this.extractErrorMessage(res, `Failed to update business profile: ${res.statusText}`);
+      throw new Error(err);
+    }
     return res.json();
   }
 }

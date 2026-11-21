@@ -294,7 +294,7 @@ export function App() {
           <DocumentUploadView activePersona={activePersona} />
         )}
         {borrowerView === '/borrower/consent' && (
-          <ConsentManagementView />
+          <ConsentManagementView activePersona={activePersona} />
         )}
         {borrowerView === '/borrower/tracking' && (
           <ApplicationTrackingView activePersona={activePersona} />
