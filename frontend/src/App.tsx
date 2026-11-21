@@ -275,6 +275,7 @@ export function App() {
         )}
         {borrowerView === '/borrower/apply' && (
           <ApplicationCreationView
+            activePersona={activePersona}
             onComplete={() => setBorrowerView('/borrower/tracking')}
           />
         )}
@@ -305,7 +306,7 @@ export function App() {
           <AssessmentReportView activePersona={activePersona} />
         )}
         {borrowerView === '/borrower/insights' && (
-          <WhatIfSimulatorView />
+          <WhatIfSimulatorView activePersona={activePersona} />
         )}
 
         <PersonaSwitcher

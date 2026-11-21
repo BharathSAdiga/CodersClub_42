@@ -12,13 +12,28 @@ export const ApplicationTrackingView: React.FC<{ activePersona: PersonaProfile }
   const app = liveApp || activePersona.application;
 
   useEffect(() => {
+    // Check local storage cached submissions first
+    try {
+      const cached = JSON.parse(localStorage.getItem('udyoga_loan_applications') || '[]');
+      if (cached && cached.length > 0) {
+        setLiveApp({
+          id: cached[0].id,
+          requestedAmount: Number(cached[0].requested_amount) || 195000,
+          status: cached[0].status || 'SUBMITTED',
+          businessId: cached[0].business_id,
+        });
+      }
+    } catch (e) {
+      console.warn('Could not read cached applications:', e);
+    }
+
     apiService.getApplications()
       .then((apps) => {
         if (apps && apps.length > 0) {
           const latest = apps[0];
           setLiveApp({
             id: latest.id,
-            requestedAmount: Number(latest.requested_amount) || 150000,
+            requestedAmount: Number(latest.requested_amount) || 195000,
             status: latest.status,
             businessId: latest.business_id,
           });

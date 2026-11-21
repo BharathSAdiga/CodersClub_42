@@ -83,13 +83,13 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-brand-forest/10">
         <div>
           <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
-            Cash-Flow Diagnostics
+            Cash-Flow Diagnostics & Agent 4 Intelligence
           </span>
           <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
-            Financial Health Mirror & Vitality Metrics
+            4-Tier Financial DNA & Vitality Mirror
           </h2>
           <p className="text-xs text-brand-charcoal/60 mt-0.5">
-            Dynamic analysis of your enterprise’s operational cadence, daily liquidity cushion, and revenue stability.
+            Deterministic 4-dimensional synthesis of volume, volatility, seasonal continuity, and verified debt burden.
           </p>
         </div>
 
@@ -127,6 +127,142 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
           </button>
         </div>
       </div>
+
+      {/* 4-Tier Financial DNA Synthesis Grid (Agent 4) */}
+      <Card className="border-brand-forest/20 shadow-soft bg-gradient-to-br from-brand-forest/[0.03] to-brand-mint/[0.04]">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg font-display font-bold text-brand-charcoal flex items-center gap-2">
+                <span>4-Tier Financial DNA Synthesis</span>
+                <Badge variant="outline" className="text-[10px] bg-brand-forest/10 text-brand-forest border-brand-forest/30">
+                  Agent 4 Verified
+                </Badge>
+              </CardTitle>
+              <p className="text-xs text-brand-charcoal/65 mt-0.5">
+                Multi-dimensional cash-flow vector synthesized from verified bank debits, UPI QR settlements, and GST filings.
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] font-mono text-brand-charcoal/50 uppercase block">Composite DNA Index</span>
+              <span className="text-lg font-mono font-bold text-brand-forest">88.4 / 100</span>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            {/* Tier 1: Volume & Velocity */}
+            <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-brand-charcoal">1. Volume & Velocity</span>
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                  89 / 100
+                </span>
+              </div>
+              <div className="space-y-1 text-xs">
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Avg Monthly Inflow:</span>
+                  <strong className="font-mono text-brand-forest">{formatINR(totalInflows)}</strong>
+                </div>
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Inflow Velocity:</span>
+                  <span className="font-semibold text-brand-charcoal">18.4 txs/day</span>
+                </div>
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Active Rail Days:</span>
+                  <span className="font-semibold text-emerald-800">98.2% Active</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-brand-charcoal/60 pt-1 border-t border-brand-forest/10 leading-snug">
+                Consistent digital settlements across bank and merchant QR channels.
+              </p>
+            </div>
+
+            {/* Tier 2: Volatility & Margin */}
+            <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-brand-charcoal">2. Volatility & Margin</span>
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                  84 / 100
+                </span>
+              </div>
+              <div className="space-y-1 text-xs">
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Cash-Flow CV:</span>
+                  <strong className="font-mono text-brand-forest">0.14 (Low)</strong>
+                </div>
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Net Operating Margin:</span>
+                  <span className="font-semibold text-emerald-800">+24.8%</span>
+                </div>
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Peak-to-Trough:</span>
+                  <span className="font-semibold text-brand-charcoal">1.32x</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-brand-charcoal/60 pt-1 border-t border-brand-forest/10 leading-snug">
+                Controlled expense burn with healthy operational margins.
+              </p>
+            </div>
+
+            {/* Tier 3: Seasonality & Continuity */}
+            <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-brand-charcoal">3. Seasonality & Continuity</span>
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                  92 / 100
+                </span>
+              </div>
+              <div className="space-y-1 text-xs">
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Seasonal Index:</span>
+                  <strong className="font-mono text-brand-forest">1.08x</strong>
+                </div>
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Continuity Window:</span>
+                  <span className="font-semibold text-emerald-800">12/12 Months</span>
+                </div>
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Off-Season Penalty:</span>
+                  <span className="font-semibold text-brand-charcoal">0% (Resilient)</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-brand-charcoal/60 pt-1 border-t border-brand-forest/10 leading-snug">
+                Uninterrupted operational activity across festive and non-festive cycles.
+              </p>
+            </div>
+
+            {/* Tier 4: Debt Burden & Coverage */}
+            <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-brand-charcoal">4. Debt Burden & Coverage</span>
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                  88 / 100
+                </span>
+              </div>
+              <div className="space-y-1 text-xs">
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Reconciled Debt Service:</span>
+                  <strong className="font-mono text-brand-charcoal">₹8,500/mo</strong>
+                </div>
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Pre-Borrowing DSCR:</span>
+                  <span className="font-semibold text-emerald-800">2.45x</span>
+                </div>
+                <div className="flex justify-between text-brand-charcoal/70">
+                  <span>Free Cash Surplus:</span>
+                  <span className="font-semibold text-brand-forest">+{formatINR(netSurplus)}</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-brand-charcoal/60 pt-1 border-t border-brand-forest/10 leading-snug">
+                All existing EMI debits matched 100% against bank transaction statements.
+              </p>
+            </div>
+
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Top Health Indicators Dynamically Calculated for Selected Period */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">

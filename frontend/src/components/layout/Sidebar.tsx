@@ -36,7 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const borrowerItems = [
     { id: '/borrower/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: '/borrower/profile', label: 'Business Profile', icon: Building2 },
-    { id: '/borrower/health', label: 'Cashflow Mirror', icon: Activity },
+    { id: '/borrower/health', label: 'Financial DNA & Cashflow', icon: Activity },
     { id: '/borrower/insights', label: 'What-If Simulator', icon: Sparkles },
     { id: '/borrower/assessment', label: 'Underwriting Report (CAM)', icon: FileText },
     { id: '/borrower/apply', label: 'Apply for Credit', icon: Wallet },

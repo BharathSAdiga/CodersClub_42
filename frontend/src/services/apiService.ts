@@ -37,10 +37,13 @@ export interface TransactionIngestSummary {
 
 export interface ShockScenarioPayload {
   scenario_name: string;
-  revenue_shock_pct: number;
-  expense_inflation_pct: number;
-  receivables_delay_days: number;
-  shock_duration_months: number;
+  revenue_shock_pct?: number;
+  revenue_contraction_pct?: number;
+  expense_inflation_pct?: number;
+  cogs_inflation_pct?: number;
+  receivables_delay_days?: number;
+  receivable_delay_days?: number;
+  shock_duration_months?: number;
 }
 
 export interface AffordabilitySummary {
@@ -55,14 +58,17 @@ export interface AffordabilitySummary {
 export interface BackendShockResult {
   assessment_id: string;
   business_id: string;
-  pre_shock_monthly_surplus: number;
+  pre_shock_monthly_surplus?: number;
   post_shock_monthly_surplus: number;
   post_shock_dscr: number;
-  cash_runway_post_shock_days: number;
-  is_surplus_positive: boolean;
-  scenario_evaluation: string;
-  recommended_repayment_structure: string;
-  affordability: AffordabilitySummary;
+  cash_runway_post_shock_days?: number;
+  stressed_cash_runway_days?: number | null;
+  cash_runway_days?: number | null;
+  is_cash_generative_under_shock?: boolean;
+  is_surplus_positive?: boolean;
+  scenario_evaluation?: string;
+  recommended_repayment_structure?: string;
+  affordability?: AffordabilitySummary;
   scenario_suite_evaluations?: Array<{
     scenario_name: string;
     revenue_shock_pct: number;
@@ -638,7 +644,10 @@ class ApiService {
   }): Promise<any> {
     const res = await fetch(`${API_BASE}/auth/applications`, {
       method: 'POST',
-      headers: this.getAuthHeaders(),
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
+      },
       body: JSON.stringify({
         business_id: data.business_id,
         facility_type: data.facility_type || 'UNSECURED_WORKING_CAPITAL_LINE',
@@ -646,8 +655,8 @@ class ApiService {
       }),
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Failed to submit application' }));
-      throw new Error(err.detail || 'Failed to submit application');
+      const msg = await this.extractErrorMessage(res, 'Failed to submit application');
+      throw new Error(msg);
     }
     return res.json();
   }

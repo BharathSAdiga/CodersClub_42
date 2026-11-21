@@ -228,12 +228,12 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
           <div className="w-10 h-10 rounded-2xl bg-brand-forest/10 flex items-center justify-center text-brand-forest mb-4">
             <Activity className="w-5 h-5" />
           </div>
-          <h4 className="font-display font-bold text-base text-brand-charcoal">Real-Time Cash-Flow Pulse</h4>
+          <h4 className="font-display font-bold text-base text-brand-charcoal">4-Tier Financial DNA Pulse</h4>
           <p className="text-xs text-brand-charcoal/70 mt-1 leading-relaxed">
-            Track daily UPI inflows, expense burn ratios, and seasonal sales rhythm from your bank stream.
+            Inspect 4-dimensional synthesis (Volume, Volatility, Seasonality, Debt Burden) synthesized by Agent 4.
           </p>
           <span className="text-xs font-bold text-brand-forest mt-4 inline-flex items-center gap-1">
-            View Analytics <ArrowUpRight className="w-3 h-3" />
+            View Financial DNA <ArrowUpRight className="w-3 h-3" />
           </span>
         </div>
 
