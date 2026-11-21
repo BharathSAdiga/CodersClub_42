@@ -14,12 +14,17 @@ export const ContactSection: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !mobile) {
-      toast.error('Please enter your name and mobile number.');
+    if (!name.trim()) {
+      toast.error('Please enter your name.');
+      return;
+    }
+    const cleanMobile = mobile.replace(/\D/g, '');
+    if (cleanMobile.length < 10) {
+      toast.error('Please enter a valid 10-digit Indian mobile number.');
       return;
     }
     setSubmitted(true);
-    toast.success('Your query has been logged with our regional grievance team.');
+    toast.success('Your message has been received by our support desk.');
   };
 
   return (
@@ -33,7 +38,7 @@ export const ContactSection: React.FC = () => {
               <div>
                 <Badge variant="forest">Get in Touch</Badge>
                 <h2 className="text-3xl font-display font-bold text-brand-charcoal tracking-tight mt-2">
-                  Regional Support & Grievance Redressal
+                  Regional Support & Grievance Desk
                 </h2>
                 <p className="text-xs sm:text-sm text-brand-charcoal/70 mt-2 leading-relaxed">
                   Have questions about your application or need vernacular assistance in Hindi, Tamil, Kannada, or Marathi? Our team is available 6 days a week.
@@ -50,7 +55,7 @@ export const ContactSection: React.FC = () => {
                     <div className="w-8 h-8 rounded-full bg-brand-forest/10 flex items-center justify-center text-brand-forest">
                       <Mail className="w-4 h-4" />
                     </div>
-                    <span>nodal.officer@udyoga.fin.in</span>
+                    <span>support@udyoga.fin.in</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-brand-forest/10 flex items-center justify-center text-brand-forest">
@@ -61,7 +66,7 @@ export const ContactSection: React.FC = () => {
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-brand-forest/10 text-xs text-brand-charcoal/60">
-                  <span>Operating hours: Mon – Sat, 9:00 AM – 7:00 PM IST.</span>
+                  <span>Operating hours: Monday – Saturday, 9:00 AM – 7:00 PM IST.</span>
                 </div>
               </div>
             </ScrollReveal>
@@ -75,17 +80,17 @@ export const ContactSection: React.FC = () => {
                       <CheckCircle2 className="w-6 h-6" />
                     </div>
                     <h3 className="text-lg font-display font-bold text-brand-charcoal">
-                      Inquiry Dispatched
+                      Message Received
                     </h3>
                     <p className="text-xs text-brand-charcoal/70 mt-1 max-w-xs">
-                      A regional nodal support representative will contact you on <strong className="text-brand-charcoal">{mobile}</strong> within 2 business hours.
+                      A regional support representative will reach out on <strong className="text-brand-charcoal">{mobile}</strong> within one business day.
                     </p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                       <label className="text-xs font-semibold text-brand-charcoal block mb-1">
-                        Merchant / Enterprise Name
+                        Business Owner / Enterprise Name
                       </label>
                       <Input
                         type="text"
@@ -99,11 +104,11 @@ export const ContactSection: React.FC = () => {
 
                     <div>
                       <label className="text-xs font-semibold text-brand-charcoal block mb-1">
-                        Mobile Number (OTP linked)
+                        Mobile Number
                       </label>
                       <Input
                         type="tel"
-                        placeholder="+91 98450 XXXXX"
+                        placeholder="e.g. 9845012345"
                         value={mobile}
                         onChange={(e) => setMobile(e.target.value)}
                         className="text-xs bg-brand-ivory/50"
@@ -113,7 +118,7 @@ export const ContactSection: React.FC = () => {
 
                     <div>
                       <label className="text-xs font-semibold text-brand-charcoal block mb-1">
-                        Assistance Category / Query
+                        How can we help you?
                       </label>
                       <textarea
                         rows={3}
@@ -127,10 +132,10 @@ export const ContactSection: React.FC = () => {
                     <Button
                       type="submit"
                       variant="primary"
-                      className="w-full bg-brand-forest text-white hover:bg-brand-forest/90 text-xs py-2.5 flex items-center justify-center gap-2"
+                      className="w-full bg-brand-forest text-white hover:bg-brand-forest/90 text-xs py-2.5 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
                       <Send className="w-3.5 h-3.5" />
-                      <span>Connect with Regional Nodal Desk</span>
+                      <span>Send Message to Support Desk</span>
                     </Button>
                   </form>
                 )}

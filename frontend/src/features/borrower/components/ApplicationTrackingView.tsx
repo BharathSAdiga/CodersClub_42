@@ -52,19 +52,24 @@ export const ApplicationTrackingView: React.FC<{ activePersona: PersonaProfile }
       {/* Hero Status Card */}
       <div className="p-6 rounded-3xl bg-brand-charcoal text-brand-ivory border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-brand-mint font-bold block">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-300 font-bold block">
             Current Status
           </span>
           <h3 className="text-xl font-display font-bold text-white mt-0.5">
             Underwriting Desk Review (ETA ~12 mins)
           </h3>
-          <p className="text-xs text-white/70 mt-1">
+          <p className="text-xs text-white/80 mt-1">
             Target Sanction: <strong className="text-white font-mono">{formatINR(app?.requestedAmount || 150000)}</strong>
           </p>
         </div>
-        <Badge variant="mint" className="text-xs">
-          Fast-Track Priority
-        </Badge>
+        <div className="p-3 px-4 rounded-2xl bg-white/[0.08] backdrop-blur-sm border border-white/15 text-center shrink-0">
+          <Badge variant="mint-pill" className="text-xs">
+            Fast-Track Priority
+          </Badge>
+          <span className="text-[11px] font-mono text-white/80 block mt-1.5">
+            ETA &lt; 15 mins
+          </span>
+        </div>
       </div>
 
       {/* Stepped Timeline */}

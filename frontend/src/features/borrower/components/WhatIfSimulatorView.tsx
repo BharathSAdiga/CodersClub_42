@@ -348,16 +348,16 @@ export const WhatIfSimulatorView: React.FC = () => {
 
             <div className="space-y-3 pt-4 border-t border-white/10 text-xs">
               <div className="flex justify-between items-center">
-                <span className="text-white/60">Estimated APR:</span>
-                <span className="font-mono font-bold text-brand-mint">{projectedApr}% p.a.</span>
+                <span className="text-white/80">Estimated APR:</span>
+                <span className="font-mono font-bold text-emerald-300">{projectedApr}% p.a.</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/60">Target Timeline:</span>
+                <span className="text-white/80">Target Timeline:</span>
                 <span className="font-mono text-white">30 Days</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/60">Simulation Mode:</span>
-                <Badge variant="mint" className="text-[10px]">Deterministic Recourse</Badge>
+                <span className="text-white/80">Simulation Mode:</span>
+                <Badge variant="mint-pill" className="text-[10px]">Deterministic Recourse</Badge>
               </div>
             </div>
 

@@ -8,6 +8,7 @@ import { StickyProductStoryteller } from '@/components/interactive/StickyProduct
 import { ScrollReveal } from '@/components/interactive/ScrollReveal';
 import { ParallaxLayer } from '@/components/interactive/ParallaxLayer';
 import { CountUpNumber } from '@/components/interactive/CountUpNumber';
+import { MovingStatsTicker } from '@/components/interactive/MovingStatsTicker';
 import { ProblemSolution } from '@/features/public/components/ProblemSolution';
 import { HowItWorks } from '@/features/public/components/HowItWorks';
 import { AcieExplanation } from '@/features/public/components/AcieExplanation';
@@ -322,9 +323,14 @@ export function App() {
       <Navbar
         activePersonaName={`${activePersona.name} (${activePersona.badge.split(' ')[0]})`}
         onOpenPersonaModal={() => setIsPersonaModalOpen(true)}
+<<<<<<< HEAD
         isAuthenticated={apiService.isAuthenticated()}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onLogout={handleLogout}
+=======
+        isAuthenticated={false}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+>>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
         onNavigate={(sec) => {
           if (sec === 'how-it-works') handleScrollTo('how-it-works-sec');
           if (sec === 'stories') handleScrollTo('stories-sec');
@@ -369,7 +375,7 @@ export function App() {
             {/* Subheading */}
             <ScrollReveal direction="up" delay={0.2} duration={0.7}>
               <p className="text-lg sm:text-xl text-brand-charcoal/80 max-w-2xl mx-auto leading-relaxed mb-10 font-normal">
-                Empowering India’s credit-invisible micro and small enterprises through verifiable cash-flow intelligence, instant Account Aggregator consent, and explainable underwriting.
+                Financial visibility for growing Indian businesses. Turn your real daily sales and transaction history into verified credit eligibility—without physical property collateral.
               </p>
             </ScrollReveal>
 
@@ -385,7 +391,7 @@ export function App() {
                   }}
                   className="w-full sm:w-auto px-8 py-4 text-base shadow-elevated bg-brand-forest hover:bg-brand-forest/90 text-white rounded-full flex items-center justify-center gap-2 group transition-all duration-200 active:scale-95"
                 >
-                  <span>Check Credit Vitality</span>
+                  <span>Check Loan Eligibility</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
 
@@ -411,7 +417,7 @@ export function App() {
                   className="w-full sm:w-auto px-6 py-4 text-sm border-brand-forest/30 text-brand-forest hover:bg-brand-forest/5 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95"
                 >
                   <Scale className="w-4 h-4" />
-                  <span>Fairness & Audit</span>
+                  <span>Fair Lending & Governance</span>
                 </Button>
               </div>
             </ScrollReveal>
@@ -419,42 +425,22 @@ export function App() {
 
           {/* Interactive Flagship: Split Waveform Comparison with Controlled Parallax */}
           <ParallaxLayer speed={20} className="mb-20">
-            <SplitWaveformHero />
+            <SplitWaveformHero
+              onClaim={() => {
+                setAppMode('BORROWER_PORTAL');
+                setBorrowerView('/borrower/apply');
+              }}
+            />
           </ParallaxLayer>
 
-          {/* Key Value Statistics Bar with Dynamic Count-Up Numbers */}
+          {/* Key Value Statistics Bar with Live Moving Text Animation */}
           <ScrollReveal direction="up" delay={0.1} duration={0.8}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 sm:p-8 rounded-3xl bg-brand-forest text-brand-ivory shadow-elevated hover:shadow-2xl transition-shadow duration-300">
-              <div>
-                <div className="text-3xl sm:text-4xl font-display font-bold text-brand-mint font-mono">
-                  ₹<CountUpNumber end={25} />L Cr
-                </div>
-                <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">MSME Credit Gap in India</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-display font-bold text-white font-mono">
-                  <CountUpNumber end={85} suffix="%" />
-                </div>
-                <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">Lack Formal Collateral Assets</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-display font-bold text-brand-mint font-mono">
-                  &lt; <CountUpNumber end={15} /> Mins
-                </div>
-                <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">Average Flow Assessment Turnaround</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-display font-bold text-brand-terracotta font-mono">
-                  0 Bias
-                </div>
-                <div className="text-xs sm:text-sm text-brand-ivory/70 mt-1">Audit-Ready Explainable Decisions</div>
-              </div>
-            </div>
+            <MovingStatsTicker />
           </ScrollReveal>
         </div>
       </section>
 
-      {/* Sticky Product Storytelling Walkthrough (Section 5 Requirement) */}
+      {/* Sticky Product Storytelling Walkthrough */}
       <div id="stories-sec">
         <StickyProductStoryteller />
       </div>
@@ -474,20 +460,25 @@ export function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal direction="up" duration={0.6}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <Badge variant="outline" className="border-brand-mint/40 text-brand-mint bg-brand-mint/10 mb-4">
+              <Badge variant="mint-pill" className="text-xs mb-4">
                 INTERACTIVE DEMONSTRATION
               </Badge>
               <h2 className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-white mb-4">
-                Cash-flow vitality calibration.
+                Calculate your borrowing capacity.
               </h2>
               <p className="text-white/70 text-sm sm:text-base leading-relaxed">
-                Experience how alternative daily digital flows dynamically calibrate borrowing capacity, factoring in GST turnover, UPI velocity, and customer loyalty retention.
+                See how your daily digital transactions translate into manageable working capital. Adjust loan size, tenor, and repayment cadence to fit your business cash flow.
               </p>
             </div>
           </ScrollReveal>
 
           <ParallaxLayer speed={15}>
-            <LiveTunerWidget />
+            <LiveTunerWidget
+              onApply={() => {
+                setAppMode('BORROWER_PORTAL');
+                setBorrowerView('/borrower/apply');
+              }}
+            />
           </ParallaxLayer>
         </div>
       </section>
@@ -501,7 +492,9 @@ export function App() {
       <section className="py-24 bg-brand-ivory overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ParallaxLayer speed={10}>
-            <PhoneSimulator />
+            <PhoneSimulator
+              onOpenDemo={() => setIsAuthModalOpen(true)}
+            />
           </ParallaxLayer>
         </div>
       </section>
@@ -526,7 +519,7 @@ export function App() {
         <ContactSection />
       </div>
 
-      {/* Full-width Brand Footer (Inspired by reference video) */}
+      {/* Full-width Brand Footer */}
       <footer className="w-full bg-brand-charcoal text-white pt-16 pb-12 overflow-hidden border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between min-h-[400px]">
 
@@ -595,11 +588,17 @@ export function App() {
 
           {/* Bottom Copyright & Regulatory Disclosure */}
           <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs text-white/50 gap-4">
-            <p>© 2026 UDYOGA Technologies Pvt. Ltd. All rights reserved. The Big Hack 2.0.</p>
+            <p>© 2026 UDYOGA Technologies Pvt. Ltd. All rights reserved.</p>
             <div className="flex gap-6">
-              <a href="#trust-sec" className="hover:text-white transition-colors">RBI Compliance</a>
-              <a href="#trust-sec" className="hover:text-white transition-colors">DPDP Policy</a>
-              <a href="#how-it-works-sec" className="hover:text-white transition-colors">Account Aggregator</a>
+              <button onClick={() => handleScrollTo('trust-sec')} className="hover:text-white transition-colors cursor-pointer">
+                RBI Compliance
+              </button>
+              <button onClick={() => handleScrollTo('trust-sec')} className="hover:text-white transition-colors cursor-pointer">
+                DPDP Policy
+              </button>
+              <button onClick={() => handleScrollTo('how-it-works-sec')} className="hover:text-white transition-colors cursor-pointer">
+                Account Aggregator
+              </button>
             </div>
           </div>
         </div>

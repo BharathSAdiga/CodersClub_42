@@ -2,35 +2,35 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollReveal } from '@/components/interactive/ScrollReveal';
-import { Database, ShieldCheck, Cpu, Banknote, ArrowRight } from 'lucide-react';
+import { Database, ShieldCheck, Cpu, Banknote } from 'lucide-react';
 
 export const HowItWorks: React.FC = () => {
   const steps = [
     {
       step: '01',
-      title: 'Consent & Triangulation',
-      desc: 'The borrower grants 3-click Account Aggregator and UPI QR consent. Encrypted data flows directly from certified rails with zero password sharing.',
+      title: 'Connect & Verify',
+      desc: 'The business owner securely links their Account Aggregator bank statement and UPI merchant records. Data is transferred securely without sharing passwords.',
       icon: Database,
       tag: 'India Stack DPI',
     },
     {
       step: '02',
-      title: 'ACIE Flow Analysis',
-      desc: 'The Alternative Credit Intelligence Engine checks transaction regularity, customer diversity, and cash burn rather than static land deeds.',
+      title: 'Cash-Flow Assessment',
+      desc: 'The assessment engine analyzes transaction regularity, customer variety, and operating cash cushion instead of requiring physical land titles.',
       icon: Cpu,
-      tag: 'Explainable AI',
+      tag: 'Cash-Flow Engine',
     },
     {
       step: '03',
-      title: 'Real-Time Sanction',
-      desc: 'Institutional partner lenders receive an automated 3-way reconciliation report, approving customized working capital in under 4 minutes.',
+      title: 'Underwriter Review',
+      desc: 'Lenders receive a structured, verified reconciliation report, allowing them to evaluate the application and propose suitable loan terms quickly.',
       icon: ShieldCheck,
-      tag: 'Instant Decision',
+      tag: 'Human Review',
     },
     {
       step: '04',
-      title: 'Sachet Disbursal & Sweep',
-      desc: 'Funds disburse to the borrower’s bank account. Repayments execute as frictionless daily micro-sweeps synchronized with daily shop revenues.',
+      title: 'Disbursal & Sachet Repayment',
+      desc: 'Approved funds reach your business bank account. Repayments can be scheduled in manageable daily or weekly amounts aligned with your business revenue.',
       icon: Banknote,
       tag: 'UPI AutoPay',
     },
@@ -40,12 +40,12 @@ export const HowItWorks: React.FC = () => {
     <section className="my-20">
       <ScrollReveal direction="up" duration={0.6}>
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <Badge variant="forest">The Architecture</Badge>
+          <Badge variant="forest">How It Works</Badge>
           <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-brand-charcoal tracking-tight mt-3">
-            How UDYOGA operates in four frictionless steps.
+            How UDYOGA works in four straightforward steps.
           </h2>
           <p className="text-sm sm:text-base text-brand-charcoal/70 mt-3 leading-relaxed">
-            From thin-file anonymity to institutional capital in under 5 minutes, backed by India's digital public infrastructure.
+            Turn your real daily business activity into clear financial evidence for institutional lenders, using India's digital public infrastructure.
           </p>
         </div>
       </ScrollReveal>
