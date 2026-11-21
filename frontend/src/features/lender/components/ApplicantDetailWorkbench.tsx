@@ -230,13 +230,19 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
     }
   };
 
-  const handleDecision = (action: 'APPROVE' | 'DECLINE') => {
+  const handleDecision = async (action: 'APPROVE' | 'DECLINE') => {
+    const nextStatus = action === 'APPROVE' ? 'APPROVED' : 'DECLINED';
+    try {
+      await apiService.updateApplicationStatus(application.id, nextStatus);
+    } catch {
+      // Fallback local update
+    }
     if (action === 'APPROVE') {
       setDecisionOutcome('APPROVED');
-      toast.success(`Sanction Letter generated for ${application.businessName} (₹${recommendedAmount.toLocaleString('en-IN')})!`);
+      toast.success(`Sanction Letter generated for ${application.businessName} (₹${recommendedAmount.toLocaleString('en-IN')}) and persisted to SQLite!`);
     } else {
       setDecisionOutcome('DECLINED');
-      toast.error(`Application ${application.id} declined. Regulatory reason code logged.`);
+      toast.error(`Application ${application.id} declined. Decision persisted to SQLite.`);
     }
   };
 

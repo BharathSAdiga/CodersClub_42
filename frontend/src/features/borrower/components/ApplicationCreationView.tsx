@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatINR } from '@/lib/utils';
+import { apiService } from '@/services/apiService';
 import { Sliders, ArrowRight, CheckCircle2, ShieldCheck, FileCheck } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -11,6 +12,7 @@ export const ApplicationCreationView: React.FC<{ onComplete: () => void }> = ({ 
   const [tenor, setTenor] = useState<number>(90);
   const [frequency, setFrequency] = useState<'DAILY' | 'WEEKLY'>('DAILY');
   const [agreedToTerms, setAgreedToTerms] = useState<boolean>(true);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const apr = frequency === 'DAILY' ? 14.2 : 14.8;
   const totalInterest = Math.round((amount * (apr / 100) * tenor) / 365);
@@ -18,14 +20,29 @@ export const ApplicationCreationView: React.FC<{ onComplete: () => void }> = ({ 
   const cycleCount = frequency === 'DAILY' ? tenor : Math.round(tenor / 7);
   const installment = Math.round(totalPayable / cycleCount);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreedToTerms) {
       toast.error('Please accept the Key Fact Statement terms.');
       return;
     }
-    toast.success('Credit application submitted! Review underway by automated underwriting rail.');
-    onComplete();
+    setIsSubmitting(true);
+    const user = apiService.getCurrentUser();
+    const bizId = user?.business_id || 'msme_kirana_kanpur_001';
+
+    try {
+      const app = await apiService.submitApplication({
+        business_id: bizId,
+        facility_type: frequency === 'DAILY' ? 'DAILY_REVENUE_SWEEP_LINE' : 'STANDARD_WORKING_CAPITAL_LINE',
+        requested_amount: amount,
+      });
+      toast.success(`Credit application ${app.id || ''} submitted and saved to SQLite! Review underway.`);
+      onComplete();
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to submit application');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

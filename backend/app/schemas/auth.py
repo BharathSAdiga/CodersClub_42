@@ -68,6 +68,10 @@ class UserStatusUpdateRequest(BaseModel):
 class UserRoleUpdateRequest(BaseModel):
     role: str = Field(..., description="New role assignment")
 
+class ApplicationStatusUpdateRequest(BaseModel):
+    status: str = Field(..., description="New status: SUBMITTED, UNDER_REVIEW, APPROVED, DECLINED")
+
+
 class AuditLogOut(BaseModel):
     id: str
     user_id: str

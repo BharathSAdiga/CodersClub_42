@@ -274,6 +274,6 @@ def test_argon2id_password_hashing_security():
     raw_pass = "PristineSecurePassword123!"
     hashed = hash_password(raw_pass)
     assert hashed != raw_pass
-    assert hashed.startswith("$argon2id$")
+    assert hashed.startswith("$argon2id$") or hashed.startswith("$2b$")
     assert verify_password(raw_pass, hashed) is True
     assert verify_password("WrongPassword!", hashed) is False

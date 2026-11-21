@@ -1,13 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Clock, ShieldCheck, ArrowRight, Phone } from 'lucide-react';
 import { formatINR } from '@/lib/utils';
 import { PersonaProfile } from '@/types';
+import { apiService } from '@/services/apiService';
 
 export const ApplicationTrackingView: React.FC<{ activePersona: PersonaProfile }> = ({ activePersona }) => {
-  const app = activePersona.application;
+  const [liveApp, setLiveApp] = useState<any>(null);
+  const app = liveApp || activePersona.application;
+
+  useEffect(() => {
+    apiService.getApplications()
+      .then((apps) => {
+        if (apps && apps.length > 0) {
+          const latest = apps[0];
+          setLiveApp({
+            id: latest.id,
+            requestedAmount: Number(latest.requested_amount) || 150000,
+            status: latest.status,
+            businessId: latest.business_id,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const timeline = [
     { title: 'Application Submitted', desc: 'Parameters and KYC verified via Udyam registry.', status: 'DONE', time: '10:14 AM' },

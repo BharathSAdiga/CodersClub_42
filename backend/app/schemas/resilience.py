@@ -156,6 +156,10 @@ class AffordabilityAnalysis(BaseModel):
         ge=Decimal("0.0"),
         description="Exact amortization formula limit; capped at 0 if surplus is negative"
     )
+    is_over_leveraged: bool = Field(
+        default=False,
+        description="True if unencumbered surplus <= 0 or post-borrowing debt service exceeds sustainable bounds"
+    )
     repayment_comparisons: List[RepaymentStructureComparison] = Field(default_factory=list)
 
 class ShockSimulationResult(BaseModel):

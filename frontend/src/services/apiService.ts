@@ -578,6 +578,117 @@ class ApiService {
     if (!res.ok) throw new Error(`Failed to load system audit logs: ${res.statusText}`);
     return res.json();
   }
+
+  // User Management
+  public async getUsers(): Promise<AuthUser[]> {
+    const res = await fetch(`${API_BASE}/auth/users`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to fetch users: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async updateUserStatus(userId: string, isActive: boolean): Promise<AuthUser> {
+    const res = await fetch(`${API_BASE}/auth/users/${encodeURIComponent(userId)}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
+      },
+      body: JSON.stringify({ is_active: isActive }),
+    });
+    if (!res.ok) throw new Error(`Failed to update user status: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async updateUserRole(userId: string, role: string): Promise<AuthUser> {
+    const res = await fetch(`${API_BASE}/auth/users/${encodeURIComponent(userId)}/role`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
+      },
+      body: JSON.stringify({ role }),
+    });
+    if (!res.ok) throw new Error(`Failed to update user role: ${res.statusText}`);
+    return res.json();
+  }
+
+  // Application Management
+  public async getApplications(limit = 50): Promise<any[]> {
+    const res = await fetch(`${API_BASE}/auth/applications?limit=${limit}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to fetch applications: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async getApplication(applicationId: string): Promise<any> {
+    const res = await fetch(`${API_BASE}/auth/applications/${encodeURIComponent(applicationId)}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to fetch application: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async submitApplication(data: {
+    business_id: string;
+    facility_type?: string;
+    requested_amount: number;
+  }): Promise<any> {
+    const res = await fetch(`${API_BASE}/auth/applications`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify({
+        business_id: data.business_id,
+        facility_type: data.facility_type || 'UNSECURED_WORKING_CAPITAL_LINE',
+        requested_amount: data.requested_amount,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: 'Failed to submit application' }));
+      throw new Error(err.detail || 'Failed to submit application');
+    }
+    return res.json();
+  }
+
+  public async updateApplicationStatus(applicationId: string, status: string): Promise<any> {
+    const res = await fetch(`${API_BASE}/auth/applications/${encodeURIComponent(applicationId)}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
+      },
+      body: JSON.stringify({ status }),
+    });
+    if (!res.ok) throw new Error(`Failed to update application status: ${res.statusText}`);
+    return res.json();
+  }
+
+  // Business Profile Management
+  public async getBusinessProfile(businessId: string): Promise<BackendBusinessProfile> {
+    const res = await fetch(`${API_BASE}/business/profile/${encodeURIComponent(businessId)}`, {
+      headers: this.getAuthHeaders(),
+    });
+    if (!res.ok) throw new Error(`Failed to fetch business profile: ${res.statusText}`);
+    return res.json();
+  }
+
+  public async updateBusinessProfile(
+    businessId: string,
+    profile: Partial<BackendBusinessProfile>
+  ): Promise<BackendBusinessProfile> {
+    const res = await fetch(`${API_BASE}/business/profile/${encodeURIComponent(businessId)}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
+      },
+      body: JSON.stringify(profile),
+    });
+    if (!res.ok) throw new Error(`Failed to update business profile: ${res.statusText}`);
+    return res.json();
+  }
 }
 
 export interface BackendConsentRecord {

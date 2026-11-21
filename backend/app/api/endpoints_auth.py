@@ -14,7 +14,8 @@ from ..schemas.auth import (
     UserRoleUpdateRequest,
     AuditLogOut,
     ApplicationCreateRequest,
-    ApplicationOut
+    ApplicationOut,
+    ApplicationStatusUpdateRequest
 )
 from ..core.config import settings
 from ..core.security import (
@@ -463,6 +464,7 @@ async def list_users_admin(
     ]
 
 @router.patch("/users/{user_id}/status", response_model=UserOut)
+@router.put("/users/{user_id}/status", response_model=UserOut)
 async def update_user_status_admin(
     user_id: str,
     req: UserStatusUpdateRequest,
@@ -550,8 +552,6 @@ async def submit_loan_application(
         updated_at=app.updated_at
     )
 
-
-
 @router.get("/applications", response_model=List[ApplicationOut])
 async def list_loan_applications(
     status: Optional[str] = None,
@@ -616,4 +616,55 @@ async def get_application_detail(
         updated_at=app.updated_at
     )
 
+@router.put("/applications/{application_id}/status", response_model=ApplicationOut)
+async def update_loan_application_status(
+    application_id: str,
+    req: ApplicationStatusUpdateRequest,
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
+    """
+    Updates the status of a loan application (e.g. APPROVED, DECLINED, UNDER_REVIEW).
+    Lenders and Admins only.
+    """
+    role = normalize_role(current_user.get("role", "BORROWER"))
+    if role not in ["LENDER", "ADMIN"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only lenders and administrators can update application statuses."
+        )
+
+    valid_statuses = {"SUBMITTED", "IN_REVIEW", "APPROVED", "DECLINED", "REJECTED", "SANCTIONED", "DISBURSED", "CLOSED", "WITHDRAWN"}
+    norm_status = req.status.upper().strip()
+    if norm_status not in valid_statuses:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid application status '{req.status}'. Must be one of {sorted(list(valid_statuses))}."
+        )
+
+    updated = application_repo.update_status(application_id, norm_status)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    audit_repo.log_access(
+        user_id=current_user["id"],
+        username=current_user.get("username"),
+        role=current_user.get("role", "LENDER"),
+        business_id=updated.business_id,
+        resource_type="APPLICATION",
+        action="UPDATE_STATUS",
+        details=f"Application '{application_id}' status updated to '{req.status}' by {current_user.get('username')}.",
+        outcome="SUCCESS"
+    )
+
+    return ApplicationOut(
+        id=updated.id,
+        business_id=updated.business_id,
+        applicant_user_id=updated.applicant_user_id,
+        assigned_lender_id=updated.assigned_lender_id,
+        facility_type=updated.facility_type,
+        requested_amount=updated.requested_amount,
+        status=updated.status,
+        created_at=updated.created_at,
+        updated_at=updated.updated_at
+    )
 

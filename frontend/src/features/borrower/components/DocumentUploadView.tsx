@@ -27,7 +27,11 @@ interface MockDocument {
   fileHash?: string;
 }
 
-export const DocumentUploadView: React.FC = () => {
+interface DocumentUploadViewProps {
+  activePersona?: any;
+}
+
+export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePersona }) => {
   const [activeTab, setActiveTab] = useState<'REGULATORY' | 'CSV_CASHBOOK'>('REGULATORY');
   const [documents, setDocuments] = useState<MockDocument[]>([
     { id: 'doc_1', name: 'PAN_Card_SriBalaji.pdf', size: '1.2 MB', type: 'PAN_CARD', status: 'VERIFIED', provenance: 'SOURCE_LABELLED' },
@@ -38,9 +42,52 @@ export const DocumentUploadView: React.FC = () => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
+  const bizId = activePersona?.business?.id || 'msme_kirana_kanpur_001';
+
+  const handleDownloadSampleCsv = () => {
+    const csvContent = `date,amount,direction,channel,counterparty_name,category,narration
+2026-08-01,45000.00,CREDIT,UPI_QR,Customer Retail Store,CUSTOMER_REVENUE,UPI sale retail settlement
+2026-08-03,12000.00,DEBIT,IMPS,Sri Ganesh Wholesalers,SUPPLIER_PURCHASE,Raw material fabric purchase
+2026-08-05,28000.00,CREDIT,NEFT_RTGS,Modern Garments Hub,CUSTOMER_REVENUE,Bulk wholesale order invoice 104
+2026-08-10,8500.00,DEBIT,NEFT_RTGS,SBI MSME Loan,EXISTING_LOAN_EMI,Monthly loan installment repayment
+2026-08-15,6500.00,DEBIT,UPI_QR,BESCOM Electricity,RENT_UTILITIES,Commercial power bill settlement
+2026-08-18,52000.00,CREDIT,UPI_QR,Direct Walk-in Counter,CUSTOMER_REVENUE,Weekend festive retail turnover
+2026-08-22,18000.00,DEBIT,IMPS,Krishna Yarn Mills,SUPPLIER_PURCHASE,Cotton yarn delivery payment
+2026-08-28,34000.00,CREDIT,POS_SWIPE,Card Terminal HDFC,CUSTOMER_REVENUE,POS merchant settlement batch
+2026-09-02,48000.00,CREDIT,UPI_QR,Customer Retail Store,CUSTOMER_REVENUE,UPI store sales collection
+2026-09-05,15000.00,DEBIT,IMPS,Sri Ganesh Wholesalers,SUPPLIER_PURCHASE,Inventory restock batch 2
+2026-09-10,8500.00,DEBIT,NEFT_RTGS,SBI MSME Loan,EXISTING_LOAN_EMI,Monthly loan installment repayment
+2026-09-14,72000.00,CREDIT,NEFT_RTGS,Southern Retailers Pvt,CUSTOMER_REVENUE,Corporate gifting textile order
+2026-09-20,22000.00,DEBIT,IMPS,Shree Dyeing Works,SUPPLIER_PURCHASE,Processing and dyeing charges
+2026-09-25,39000.00,CREDIT,UPI_QR,Store Collection QR,CUSTOMER_REVENUE,Daily QR collections
+2026-10-02,51000.00,CREDIT,UPI_QR,Customer Retail Store,CUSTOMER_REVENUE,Festival opening sales
+2026-10-06,16500.00,DEBIT,IMPS,Sri Ganesh Wholesalers,SUPPLIER_PURCHASE,Dussehra stock replenishment
+2026-10-10,8500.00,DEBIT,NEFT_RTGS,SBI MSME Loan,EXISTING_LOAN_EMI,Monthly loan installment repayment
+2026-10-18,88000.00,CREDIT,NEFT_RTGS,Karnataka Silk Emporium,CUSTOMER_REVENUE,Festive bulk saree consignment
+2026-10-24,25000.00,DEBIT,IMPS,Balaji Transport Fleet,RENT_UTILITIES,Interstate logistics freight
+2026-10-29,42000.00,CREDIT,POS_SWIPE,Card Terminal HDFC,CUSTOMER_REVENUE,Card payment batch settlement
+2026-11-02,55000.00,CREDIT,UPI_QR,Customer Retail Store,CUSTOMER_REVENUE,November regular revenue
+2026-11-05,14000.00,DEBIT,IMPS,Sri Ganesh Wholesalers,SUPPLIER_PURCHASE,Monthly wholesale supplies
+2026-11-10,8500.00,DEBIT,NEFT_RTGS,SBI MSME Loan,EXISTING_LOAN_EMI,Monthly loan installment repayment
+2026-11-15,62000.00,CREDIT,UPI_QR,Store Collection QR,CUSTOMER_REVENUE,Mid-month retail collections
+2026-11-18,7000.00,DEBIT,UPI_QR,Commercial Hub Lease,RENT_UTILITIES,Store shop floor monthly lease
+2026-11-20,49000.00,CREDIT,POS_SWIPE,Card Terminal HDFC,CUSTOMER_REVENUE,Card payment batch settlement`;
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'sample_msme_bank_statement.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success('Downloaded sample_msme_bank_statement.csv — You can now upload this directly!');
+  };
+
   useEffect(() => {
     let isMounted = true;
-    apiService.getEvidenceAuditTrail('msme_kirana_kanpur_001')
+    apiService.getEvidenceAuditTrail(bizId)
       .then((records) => {
         if (!isMounted || !records || records.length === 0) return;
         const mapped: MockDocument[] = records.map((r) => ({
@@ -78,7 +125,7 @@ export const DocumentUploadView: React.FC = () => {
     if (isCsv) {
       try {
         setUploadProgress(50);
-        const result = await apiService.uploadCsv('msme_kirana_kanpur_001', file);
+        const result = await apiService.uploadCsv(bizId, file);
         setUploadProgress(100);
         setIsUploading(false);
         const newDoc: MockDocument = {
@@ -146,30 +193,43 @@ export const DocumentUploadView: React.FC = () => {
         </p>
       </div>
 
-      {/* Tab Switcher: Regulatory KYC vs CSV Cashbook */}
-      <div className="flex gap-2 p-1 bg-brand-charcoal/5 rounded-2xl w-fit">
-        <button
-          onClick={() => setActiveTab('REGULATORY')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-            activeTab === 'REGULATORY'
-              ? 'bg-white text-brand-charcoal shadow-sm'
-              : 'text-brand-charcoal/60 hover:text-brand-charcoal'
-          }`}
+      {/* Tab Switcher & Sample Download */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-2 p-1 bg-brand-charcoal/5 rounded-2xl w-fit">
+          <button
+            onClick={() => setActiveTab('REGULATORY')}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
+              activeTab === 'REGULATORY'
+                ? 'bg-white text-brand-charcoal shadow-sm'
+                : 'text-brand-charcoal/60 hover:text-brand-charcoal'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5 inline mr-1.5" />
+            KYC & Licenses
+          </button>
+          <button
+            onClick={() => setActiveTab('CSV_CASHBOOK')}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
+              activeTab === 'CSV_CASHBOOK'
+                ? 'bg-white text-brand-forest shadow-sm'
+                : 'text-brand-charcoal/60 hover:text-brand-charcoal'
+            }`}
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 inline mr-1.5" />
+            Bank & Sales Statement CSV
+          </button>
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleDownloadSampleCsv}
+          className="text-xs border-brand-forest/30 text-brand-forest hover:bg-brand-forest/10"
         >
-          <FileText className="w-3.5 h-3.5 inline mr-1.5" />
-          KYC & Licenses
-        </button>
-        <button
-          onClick={() => setActiveTab('CSV_CASHBOOK')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-            activeTab === 'CSV_CASHBOOK'
-              ? 'bg-white text-brand-forest shadow-sm'
-              : 'text-brand-charcoal/60 hover:text-brand-charcoal'
-          }`}
-        >
-          <FileSpreadsheet className="w-3.5 h-3.5 inline mr-1.5" />
-          Offline Sales Register & Cashbook CSV
-        </button>
+          <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5" />
+          Download Sample Statement (CSV)
+        </Button>
       </div>
 
       {/* Upload Dropzone */}

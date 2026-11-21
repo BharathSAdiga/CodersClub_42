@@ -1269,6 +1269,21 @@ class ApplicationRepository:
             if not self._session:
                 db.close()
 
+    def update_status(self, app_id: str, status: str) -> Optional[LoanApplicationModel]:
+        db = self._get_session()
+        try:
+            row = db.query(LoanApplicationModel).filter(LoanApplicationModel.id == app_id).first()
+            if row:
+                row.status = status
+                row.updated_at = utc_now()
+                db.commit()
+                return row
+            return None
+        finally:
+            if not self._session:
+                db.close()
+
+
 class AuditAccessLogRepository:
     def __init__(self, session: Optional[Session] = None):
         self._session = session
@@ -1349,7 +1364,7 @@ class AuditAccessLogRepository:
                 db.close()
 
     def delete(self, *args, **kwargs):
-        raise PermissionError("Audit trail is strictly immutable and append-only. Historical audit logs cannot be modified or deleted.")
+        raise PermissionError("Audit trail is strictly immutable and cannot be deleted. Historical audit logs cannot be modified or deleted.")
 
 def migrate_schema(target_engine=None):
     """Safely applies missing columns to existing SQLite tables without data loss."""

@@ -53,3 +53,25 @@ class BusinessProfileCreate(BaseModel):
     gstin: Optional[str] = None
     has_udyam_registration: bool = False
     udyam_reg_number: Optional[str] = None
+
+class BusinessProfileUpdate(BaseModel):
+    legal_name: Optional[str] = None
+    trade_name: Optional[str] = None
+    sector: Optional[Literal[
+        "RETAIL_KIRANA",
+        "LIGHT_MANUFACTURING",
+        "TEXTILE_WEAVING",
+        "FOOD_SERVICES",
+        "LOGISTICS_TRANSPORT",
+        "HANDICRAFTS_ARTISAN",
+        "GENERAL_SERVICES"
+    ]] = None
+    vintage_months: Optional[int] = Field(default=None, ge=0)
+    location_tier: Optional[Literal["TIER_1", "TIER_2", "TIER_3", "RURAL"]] = None
+    entity_type: Optional[Literal["PROPRIETORSHIP", "PARTNERSHIP", "LLP", "PRIVATE_LIMITED", "INFORMAL_ENTERPRISE"]] = None
+    declared_monthly_turnover: Optional[Decimal] = Field(default=None, ge=Decimal("0.0"))
+    declared_existing_monthly_emi: Optional[Decimal] = Field(default=None, ge=Decimal("0.0"))
+    has_gstin: Optional[bool] = None
+    gstin: Optional[str] = None
+    has_udyam_registration: Optional[bool] = None
+    udyam_reg_number: Optional[str] = None

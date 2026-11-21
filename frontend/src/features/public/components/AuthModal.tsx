@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { X, Lock, Sparkles, User, Mail, ShieldCheck, LogIn, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { apiService } from '@/services/apiService';
+import { mockService } from '@/mocks/mockService';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -50,8 +51,59 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         personaKey = 'PERSONA_VIKRAM';
       } else if (resp.role.includes('ADMIN') || resp.role.includes('AUDITOR')) {
         personaKey = 'SUPER_ADMIN';
-      } else if (resp.username === 'priya') {
+      } else if (resp.username === 'priya' || resp.username?.toLowerCase().includes('priya')) {
         personaKey = 'PERSONA_PRIYA';
+      } else if (resp.username === 'ramesh' || resp.username?.toLowerCase().includes('ramesh')) {
+        personaKey = 'PERSONA_RAMESH';
+      } else {
+        const userId = resp.user?.id || `usr_${resp.username}`;
+        const customId = `CUSTOM_${userId}`;
+        const newPersona: any = {
+          id: customId,
+          name: resp.full_name || resp.username,
+          role: resp.role || 'BORROWER_MICRO',
+          tagline: `${resp.full_name || resp.username} — Registered MSME Profile`,
+          user: {
+            id: userId,
+            mobile: '+91 98765 43210',
+            fullName: resp.full_name || resp.username,
+            role: resp.role || 'BORROWER_MICRO',
+            preferredLanguage: 'en',
+            createdAt: new Date().toISOString(),
+            lastLoginAt: new Date().toISOString(),
+          },
+          business: {
+            id: resp.business_id || `biz_${resp.username}`,
+            userId: userId,
+            tradeName: `${resp.full_name || resp.username} Enterprises`,
+            legalName: `${resp.full_name || resp.username} Pvt Ltd`,
+            constitution: 'PROPRIETORSHIP',
+            enterpriseClass: 'MICRO',
+            udyamRegistrationNumber: 'UDYAM-KA-03-0091823',
+            pan: 'AABCP1234K',
+            gstin: '29AABCP1234K1Z5',
+            industrySector: 'Retail & General Trade',
+            operatingAddress: {
+              street: '12 Commercial Road',
+              city: 'Bengaluru',
+              state: 'Karnataka',
+              pincode: '560001',
+              tier: 'TIER_1',
+            },
+            yearsInOperation: 3,
+            verifiedAt: new Date().toISOString(),
+          },
+          financials: {
+            businessId: resp.business_id || `biz_${resp.username}`,
+            accounts: [],
+            turnoverHistory: [],
+            operatingSurplus: { monthlyAverage: 45000, marginPct: 18.5, trend: 'STABLE' },
+            existingDebt: { totalOutstanding: 50000, monthlyServiceCost: 4500, activeFacilitiesCount: 1 },
+            syntheticMetadata: { isSynthetic: false, dataQualityScore: 92, evidenceCount: 3, verifiedClaimsCount: 3, unverifiedClaimsCount: 0 }
+          }
+        };
+        mockService.registerCustomPersona(newPersona);
+        personaKey = customId;
       }
       onLoginSuccess(personaKey);
       onClose();
@@ -84,8 +136,60 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       toast.success(`Account registered successfully as ${resp.role}!`);
 
       let personaKey = 'PERSONA_RAMESH';
-      if (resp.role === 'LENDER') personaKey = 'PERSONA_VIKRAM';
-      if (resp.role === 'ADMIN') personaKey = 'SUPER_ADMIN';
+      if (resp.role === 'LENDER') {
+        personaKey = 'PERSONA_VIKRAM';
+      } else if (resp.role === 'ADMIN') {
+        personaKey = 'SUPER_ADMIN';
+      } else {
+        const userId = resp.user?.id || `usr_${resp.username}`;
+        const customId = `CUSTOM_${userId}`;
+        const newPersona: any = {
+          id: customId,
+          name: resp.full_name || regFullName,
+          role: resp.role || 'BORROWER_MICRO',
+          tagline: `${resp.full_name || regFullName} — Registered MSME Profile`,
+          user: {
+            id: userId,
+            mobile: '+91 98765 43210',
+            fullName: resp.full_name || regFullName,
+            role: resp.role || 'BORROWER_MICRO',
+            preferredLanguage: 'en',
+            createdAt: new Date().toISOString(),
+            lastLoginAt: new Date().toISOString(),
+          },
+          business: {
+            id: resp.business_id || `biz_${resp.username}`,
+            userId: userId,
+            tradeName: `${regFullName} Enterprises`,
+            legalName: `${regFullName} Pvt Ltd`,
+            constitution: 'PROPRIETORSHIP',
+            enterpriseClass: 'MICRO',
+            udyamRegistrationNumber: 'UDYAM-KA-03-0091823',
+            pan: 'AABCP1234K',
+            gstin: '29AABCP1234K1Z5',
+            industrySector: 'Retail & General Trade',
+            operatingAddress: {
+              street: '12 Commercial Road',
+              city: 'Bengaluru',
+              state: 'Karnataka',
+              pincode: '560001',
+              tier: 'TIER_1',
+            },
+            yearsInOperation: 3,
+            verifiedAt: new Date().toISOString(),
+          },
+          financials: {
+            businessId: resp.business_id || `biz_${resp.username}`,
+            accounts: [],
+            turnoverHistory: [],
+            operatingSurplus: { monthlyAverage: 45000, marginPct: 18.5, trend: 'STABLE' },
+            existingDebt: { totalOutstanding: 50000, monthlyServiceCost: 4500, activeFacilitiesCount: 1 },
+            syntheticMetadata: { isSynthetic: false, dataQualityScore: 92, evidenceCount: 3, verifiedClaimsCount: 3, unverifiedClaimsCount: 0 }
+          }
+        };
+        mockService.registerCustomPersona(newPersona);
+        personaKey = customId;
+      }
 
       onLoginSuccess(personaKey);
       onClose();

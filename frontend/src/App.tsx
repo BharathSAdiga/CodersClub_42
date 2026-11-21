@@ -47,6 +47,7 @@ import { SystemTelemetryView } from '@/features/admin/components/SystemTelemetry
 import { ReportsExportsView } from '@/features/admin/components/ReportsExportsView';
 
 import { mockService } from '@/mocks/mockService';
+import { apiService } from '@/services/apiService';
 import { PersonaProfile } from '@/types';
 import { CheckCircle2, ShieldCheck, ArrowRight, Sparkles, Building2, Wallet, Scale, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -63,6 +64,48 @@ export function App() {
   const [isPersonaModalOpen, setIsPersonaModalOpen] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
+  // Restore authenticated session on page load
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const storedCustom = JSON.parse(sessionStorage.getItem('udyoga_custom_personas') || '[]');
+        storedCustom.forEach((cp: any) => {
+          mockService.registerCustomPersona(cp);
+        });
+      } catch (e) {
+        console.error('Failed to restore custom personas from session storage', e);
+      }
+    }
+
+    if (apiService.isAuthenticated()) {
+      const user = apiService.getCurrentUser();
+      const savedPersona = typeof window !== 'undefined' ? sessionStorage.getItem('udyoga_active_persona') : null;
+      let targetPersona: PersonaProfile | null = null;
+      if (savedPersona) {
+        targetPersona = mockService.setActivePersona(savedPersona);
+      } else if (user) {
+        let pKey = 'PERSONA_RAMESH';
+        if (user.role.includes('LENDER')) pKey = 'PERSONA_VIKRAM';
+        else if (user.role.includes('ADMIN') || user.role.includes('AUDITOR')) pKey = 'SUPER_ADMIN';
+        else if (user.username === 'priya') pKey = 'PERSONA_PRIYA';
+        targetPersona = mockService.setActivePersona(pKey);
+      }
+      if (targetPersona) {
+        setActivePersona({ ...targetPersona });
+        if (targetPersona.role.startsWith('LENDER')) {
+          setAppMode('LENDER_PORTAL');
+          setLenderView('/lender/dashboard');
+        } else if (targetPersona.role === 'SUPER_ADMIN' || targetPersona.role === 'ETHICS_AUDITOR') {
+          setAppMode('ADMIN_PORTAL');
+          setAdminView(targetPersona.role === 'ETHICS_AUDITOR' ? '/admin/fairness' : '/admin/overview');
+        } else {
+          setAppMode('BORROWER_PORTAL');
+          setBorrowerView('/borrower/dashboard');
+        }
+      }
+    }
+  }, []);
+
   const handleSelectPersona = (id: string) => {
     const updated = mockService.setActivePersona(id);
     setActivePersona({ ...updated });
@@ -75,6 +118,16 @@ export function App() {
       setAppMode('ADMIN_PORTAL');
       setAdminView(updated.role === 'ETHICS_AUDITOR' ? '/admin/fairness' : '/admin/overview');
     }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await apiService.logout();
+    } catch {
+      apiService.clearSession();
+    }
+    toast.success('Signed out of session successfully.');
+    setAppMode('PUBLIC');
   };
 
   const handleAuthSuccess = (personaKey: string) => {
@@ -112,6 +165,7 @@ export function App() {
         onNavigate={(v) => setAdminView(v)}
         onReturnToPublic={() => setAppMode('PUBLIC')}
         onOpenPersonaModal={() => setIsPersonaModalOpen(true)}
+        onLogout={handleLogout}
       >
         {adminView === '/admin/overview' && (
           <AdminDashboard onNavigate={(v) => setAdminView(v)} />
@@ -160,6 +214,7 @@ export function App() {
         onNavigate={(v) => setLenderView(v)}
         onReturnToPublic={() => setAppMode('PUBLIC')}
         onOpenPersonaModal={() => setIsPersonaModalOpen(true)}
+        onLogout={handleLogout}
       >
         {lenderView === '/lender/dashboard' && (
           <LenderDashboard
@@ -204,6 +259,7 @@ export function App() {
         onNavigate={(v) => setBorrowerView(v)}
         onReturnToPublic={() => setAppMode('PUBLIC')}
         onOpenPersonaModal={() => setIsPersonaModalOpen(true)}
+        onLogout={handleLogout}
       >
         {borrowerView === '/borrower/dashboard' && (
           <BorrowerDashboard
@@ -228,7 +284,7 @@ export function App() {
           <FinancialsView activePersona={activePersona} />
         )}
         {borrowerView === '/borrower/documents' && (
-          <DocumentUploadView />
+          <DocumentUploadView activePersona={activePersona} />
         )}
         {borrowerView === '/borrower/consent' && (
           <ConsentManagementView />
@@ -266,6 +322,9 @@ export function App() {
       <Navbar
         activePersonaName={`${activePersona.name} (${activePersona.badge.split(' ')[0]})`}
         onOpenPersonaModal={() => setIsPersonaModalOpen(true)}
+        isAuthenticated={apiService.isAuthenticated()}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onLogout={handleLogout}
         onNavigate={(sec) => {
           if (sec === 'how-it-works') handleScrollTo('how-it-works-sec');
           if (sec === 'stories') handleScrollTo('stories-sec');

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { PersonaProfile } from '@/types';
+import { apiService, BackendCreditAppraisalMemo } from '@/services/apiService';
+import { formatINR } from '@/lib/utils';
 import { 
   Sparkles, 
   Check, 
@@ -13,12 +16,65 @@ import {
   ShieldAlert, 
   FileCheck2, 
   TrendingUp,
-  Scale
+  Scale,
+  Play,
+  RotateCw,
+  Wallet
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> = ({ activePersona }) => {
   const report = activePersona.acieReport;
   const drivers = report?.topDrivers || [];
+
+  // Live Assessment State
+  const [isAssessing, setIsAssessing] = useState(false);
+  const [assessmentProgress, setAssessmentProgress] = useState(0);
+  const [currentAgentName, setCurrentAgentName] = useState<string>('');
+  const [agentLogs, setAgentLogs] = useState<string[]>([]);
+  const [liveMemo, setLiveMemo] = useState<BackendCreditAppraisalMemo | null>(null);
+
+  const handleStartLiveAssessment = async () => {
+    setIsAssessing(true);
+    setAssessmentProgress(10);
+    setCurrentAgentName('ForensicAuditAgent');
+    setAgentLogs(['[INITIALIZING] Connecting to UDYOGA Multi-Agent Orchestrator...']);
+
+    const bizId = activePersona.business?.id || 'msme_kirana_kanpur_001';
+    const reqAmount = activePersona.application?.requestedAmount || 150000;
+
+    try {
+      const runRes = await apiService.triggerAssessment(bizId, reqAmount);
+      setAgentLogs((prev) => [...prev, `[ORCHESTRATOR] Assessment ID issued: ${runRes.assessment_id}`]);
+
+      apiService.subscribeAssessmentStream(
+        runRes.assessment_id,
+        (event) => {
+          setCurrentAgentName(event.agent_name);
+          setAgentLogs((prev) => [...prev, `[${event.agent_name}] ${event.step_name}: ${event.message}`]);
+          setAssessmentProgress((prev) => Math.min(95, prev + 14));
+        },
+        (err: any) => {
+          setIsAssessing(false);
+          toast.error(err?.message || 'Assessment pipeline encountered an error');
+        },
+        async () => {
+          setIsAssessing(false);
+          setAssessmentProgress(100);
+          toast.success('Autonomous multi-agent assessment completed successfully!');
+          try {
+            const memo = await apiService.getAssessmentResult(runRes.assessment_id);
+            setLiveMemo(memo);
+          } catch (e) {
+            console.warn('Could not fetch final memo details:', e);
+          }
+        }
+      );
+    } catch (err: any) {
+      setIsAssessing(false);
+      toast.error(err.message || 'Failed to trigger live assessment');
+    }
+  };
 
   // Canonical 5-Dimension Business Financial DNA Breakdown
   const financialDnaDimensions = [
@@ -76,17 +132,117 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
-      <div>
-        <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
-          Explainable Credit Intelligence & Business DNA
-        </span>
-        <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
-          ACIE Assessment & 5-Dimension Business DNA
-        </h2>
-        <p className="text-xs text-brand-charcoal/60 mt-0.5">
-          Full mathematical transparency on every factor influencing your pre-approved working capital limit.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
+            Explainable Credit Intelligence & Business DNA
+          </span>
+          <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-1">
+            ACIE Assessment & 5-Dimension Business DNA
+          </h2>
+          <p className="text-xs text-brand-charcoal/60 mt-0.5">
+            Full mathematical transparency on every factor influencing your pre-approved working capital limit.
+          </p>
+        </div>
+
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={handleStartLiveAssessment}
+          disabled={isAssessing}
+          className="gap-2 bg-brand-forest text-white shadow-soft"
+        >
+          {isAssessing ? (
+            <>
+              <RotateCw className="w-3.5 h-3.5 animate-spin text-brand-mint" />
+              <span>Assessing ({assessmentProgress}%)...</span>
+            </>
+          ) : (
+            <>
+              <Play className="w-3.5 h-3.5 text-brand-mint" />
+              <span>Run Live AI Assessment</span>
+            </>
+          )}
+        </Button>
       </div>
+
+      {/* Live Agent Execution Terminal */}
+      {isAssessing && (
+        <Card className="border-brand-forest/30 bg-brand-charcoal text-white overflow-hidden shadow-elevated">
+          <CardHeader className="py-3 px-4 border-b border-white/10 bg-white/5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-brand-mint animate-pulse" />
+                <span className="text-xs font-mono uppercase tracking-wider text-brand-mint font-bold">
+                  Active Agent: {currentAgentName || 'Orchestrator'}
+                </span>
+              </div>
+              <span className="font-mono text-xs text-white/70">{assessmentProgress}% Complete</span>
+            </div>
+          </CardHeader>
+          <CardContent className="p-4 space-y-3">
+            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+              <div
+                className="bg-brand-mint h-full transition-all duration-300 rounded-full"
+                style={{ width: `${assessmentProgress}%` }}
+              />
+            </div>
+            <div className="bg-black/40 rounded-xl p-3 font-mono text-[11px] space-y-1 max-h-36 overflow-y-auto text-white/80">
+              {agentLogs.map((log, idx) => (
+                <div key={idx} className="leading-relaxed">
+                  <span className="text-brand-mint">›</span> {log}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Live CAM Underwriting Results if assessed */}
+      {liveMemo && (
+        <Card className="border-emerald-300 bg-emerald-50/50">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base text-emerald-900 flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                <span>Verified Credit Appraisal Memo (Live Engine)</span>
+              </CardTitle>
+              <Badge variant="mint" className="text-[10px] font-mono">
+                {liveMemo.assessment_status}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-white rounded-xl border border-emerald-200">
+              <div>
+                <span className="text-brand-charcoal/50 block font-mono text-[10px]">Risk Tier Band</span>
+                <strong className="text-emerald-900 font-mono text-sm">{liveMemo.financial_risk_band}</strong>
+              </div>
+              <div>
+                <span className="text-brand-charcoal/50 block font-mono text-[10px]">Recommended Loan (Pmax)</span>
+                <strong className="text-brand-forest font-mono text-sm">
+                  {formatINR(liveMemo.recommended_loan_amount_inr || 150000)}
+                </strong>
+              </div>
+              <div>
+                <span className="text-brand-charcoal/50 block font-mono text-[10px]">Tenure</span>
+                <strong className="text-brand-charcoal font-mono text-sm">
+                  {liveMemo.recommended_tenure_months || 12} Months
+                </strong>
+              </div>
+              <div>
+                <span className="text-brand-charcoal/50 block font-mono text-[10px]">Interest Rate (APR)</span>
+                <strong className="text-brand-forest font-mono text-sm">
+                  {liveMemo.indicative_apr_range || '14.2% - 16.5%'}
+                </strong>
+              </div>
+            </div>
+            <p className="text-[11px] text-emerald-950 leading-relaxed">
+              <strong>Underwriting Summary:</strong> {liveMemo.cam_narrative_markdown?.substring(0, 300) || 'Flow assessment verified.'}...
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Score Header Card */}
       <div className="p-8 rounded-3xl bg-brand-charcoal text-brand-ivory border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">

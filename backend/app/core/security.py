@@ -150,3 +150,6 @@ DEMO_PERSONAS = {
         "is_active": True
     }
 }
+
+# Alias PERSONA_SUNITA to PERSONA_AUDITOR for seamless hackathon persona evaluation
+DEMO_PERSONAS["PERSONA_SUNITA"] = DEMO_PERSONAS["PERSONA_AUDITOR"]

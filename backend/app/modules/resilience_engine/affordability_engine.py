@@ -83,6 +83,9 @@ def calculate_affordability(
     else:
         projected_dscr = None
 
+    # Over-leveraged status
+    is_over_leveraged = (unencumbered_surplus <= Decimal("0.0")) or (projected_dscr is not None and projected_dscr < 1.0)
+
     # 8. Repayment structures comparison
     target_principal_for_comparison = proposed_loan_amount_inr if proposed_loan_amount_inr > Decimal("0.0") else max_affordable_principal
     repayment_comparisons = compare_repayment_structures(
@@ -116,5 +119,6 @@ def calculate_affordability(
         projected_dscr=projected_dscr,
         maximum_affordable_monthly_emi=max_affordable_emi,
         maximum_affordable_loan_principal=max_affordable_principal,
+        is_over_leveraged=is_over_leveraged,
         repayment_comparisons=repayment_comparisons
     )
