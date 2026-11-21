@@ -46,7 +46,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: '/borrower/profile', label: 'Business Profile', icon: Building2 },
     { id: '/borrower/health', label: 'Cash Flow & Health', icon: Activity },
     { id: '/borrower/insights', label: 'What-If Simulator', icon: Sparkles },
-    { id: '/borrower/assessment', label: '7-Agent Underwriting', badge: 'CAM', icon: Sparkles },
+    { id: '/borrower/assessment', label: 'Assessment Report', icon: FileText },
     { id: '/borrower/apply', label: 'Apply for Credit', icon: Wallet },
     { id: '/borrower/consent', label: 'DPDP Consent', icon: ShieldCheck },
     { id: '/borrower/documents', label: 'Documents & Data', icon: Sliders },
@@ -110,11 +110,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center justify-between text-left gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  active
+                className={`w-full flex items-center justify-between text-left gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${active
                     ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
                     : 'text-white/85 hover:bg-white/10 hover:text-white'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
@@ -122,11 +121,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
                 {item.badge && (
                   <span
-                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 uppercase tracking-wider font-bold ${
-                      active
+                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 uppercase tracking-wider font-bold ${active
                         ? 'bg-brand-charcoal/15 text-brand-charcoal'
                         : 'bg-white/10 text-brand-mint border border-brand-mint/30'
-                    }`}
+                      }`}
                   >
                     {item.badge}
                   </span>

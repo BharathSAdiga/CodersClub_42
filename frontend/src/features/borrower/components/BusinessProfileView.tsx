@@ -5,15 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PersonaProfile } from '@/types';
 import { apiService } from '@/services/apiService';
-import { 
-  Building2, 
-  MapPin, 
-  Calendar, 
-  CheckCircle2, 
-  ShieldCheck, 
-  FileCheck, 
-  Edit3, 
-  Save, 
+import {
+  Building2,
+  MapPin,
+  Calendar,
+  CheckCircle2,
+  ShieldCheck,
+  FileCheck,
+  Edit3,
+  Save,
   X,
   AlertCircle,
   IndianRupee,
@@ -83,7 +83,7 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
             };
             try {
               localStorage.setItem(storageKey, JSON.stringify(next));
-            } catch (_) {}
+            } catch (_) { }
             return next;
           });
         }
@@ -130,7 +130,7 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Explicit check for negative turnover or EMI (Test 2.1 validation requirement)
     if (Number(formData.monthlyTurnover) < 0 || Number(formData.existingEmi) < 0) {
       toast.error('Turnover and EMI must be non-negative values.');
@@ -188,7 +188,7 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
 
   return (
     <div className="space-y-6 w-full animate-in fade-in duration-300">
-      
+
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-brand-forest/10">
         <div>
@@ -215,7 +215,7 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
+
         {/* Commercial Registration Card */}
         <Card className="border-brand-forest/15 shadow-soft">
           <CardHeader>
@@ -349,7 +349,7 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
       {isEditing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-charcoal/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="w-full max-w-lg bg-white rounded-3xl border border-brand-forest/20 shadow-elevated p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
-            
+
             <div className="flex items-center justify-between pb-3 border-b border-brand-forest/10">
               <div>
                 <h3 className="font-display font-bold text-lg text-brand-charcoal">
@@ -368,7 +368,7 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
             </div>
 
             <form onSubmit={handleSave} className="space-y-4 text-xs">
-              
+
               {/* Trade Name */}
               <div className="space-y-1">
                 <label className="font-semibold text-brand-charcoal block">Trade Name *</label>
@@ -507,7 +507,7 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
               {/* Establishment Address */}
               <div className="space-y-2 pt-2 border-t border-brand-forest/10">
                 <span className="font-semibold text-brand-charcoal block">Establishment Address</span>
-                
+
                 <div className="space-y-1">
                   <label className="text-brand-charcoal/70 block text-[11px]">Street & Landmark</label>
                   <Input

@@ -95,7 +95,7 @@ export const BorrowerLayout: React.FC<BorrowerLayoutProps> = ({
         </header>
 
         {/* View Canvas */}
-        <main className="p-4 sm:p-8 max-w-6xl w-full mx-auto flex-1">
+        <main className="p-4 sm:p-8 max-w-7xl w-full mx-auto flex-1">
           {children}
         </main>
       </div>

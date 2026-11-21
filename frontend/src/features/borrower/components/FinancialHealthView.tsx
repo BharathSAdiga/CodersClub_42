@@ -4,33 +4,33 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PersonaProfile } from '@/types';
 import { formatINR } from '@/lib/utils';
-import { 
-  Activity, 
-  TrendingUp, 
-  ShieldAlert, 
-  CheckCircle2, 
-  ShieldCheck, 
-  Calendar, 
-  Clock, 
+import {
+  Activity,
+  TrendingUp,
+  ShieldAlert,
+  CheckCircle2,
+  ShieldCheck,
+  Calendar,
+  Clock,
   AlertTriangle,
   FileSpreadsheet,
   HelpCircle,
   ArrowUpRight
 } from 'lucide-react';
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  ResponsiveContainer 
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer
 } from 'recharts';
 
 export type ReportingPeriod = '7D' | '30D' | '90D';
 
 export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = ({ activePersona }) => {
   const [selectedPeriod, setSelectedPeriod] = useState<ReportingPeriod>('30D');
-  
+
   const fin = activePersona.financials;
   const rawWaveform = fin?.cashFlowWaveform || [];
   const bankAcc = fin?.accounts[0];
@@ -78,7 +78,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
 
   return (
     <div className="space-y-6 w-full animate-in fade-in duration-300">
-      
+
       {/* Header with Period Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-brand-forest/10">
         <div>
@@ -97,31 +97,28 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
         <div className="flex items-center gap-1.5 p-1 bg-brand-charcoal/5 rounded-2xl shrink-0">
           <button
             onClick={() => setSelectedPeriod('7D')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              selectedPeriod === '7D'
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${selectedPeriod === '7D'
                 ? 'bg-brand-forest text-white shadow-sm'
                 : 'text-brand-charcoal/70 hover:text-brand-charcoal hover:bg-white/60'
-            }`}
+              }`}
           >
             7 Days
           </button>
           <button
             onClick={() => setSelectedPeriod('30D')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              selectedPeriod === '30D'
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${selectedPeriod === '30D'
                 ? 'bg-brand-forest text-white shadow-sm'
                 : 'text-brand-charcoal/70 hover:text-brand-charcoal hover:bg-white/60'
-            }`}
+              }`}
           >
             30 Days
           </button>
           <button
             onClick={() => setSelectedPeriod('90D')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              selectedPeriod === '90D'
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${selectedPeriod === '90D'
                 ? 'bg-brand-forest text-white shadow-sm'
                 : 'text-brand-charcoal/70 hover:text-brand-charcoal hover:bg-white/60'
-            }`}
+              }`}
           >
             90 Days (Quarter)
           </button>
@@ -151,7 +148,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            
+
             {/* Tier 1: Volume & Velocity */}
             <div className="p-4 rounded-2xl bg-white border border-brand-forest/15 space-y-2 shadow-sm">
               <div className="flex items-center justify-between">
@@ -266,7 +263,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
 
       {/* Top Health Indicators Dynamically Calculated for Selected Period */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        
+
         {/* Metric 1: Liquidity Cushion */}
         <Card className="border-brand-forest/15 shadow-soft">
           <CardHeader className="pb-1.5">
@@ -365,8 +362,8 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} tickFormatter={(v) => `₹${Math.round(v/1000)}k`} />
-                <Tooltip 
+                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} tickFormatter={(v) => `₹${Math.round(v / 1000)}k`} />
+                <Tooltip
                   formatter={(val: number) => [formatINR(val), 'Volume']}
                   contentStyle={{ backgroundColor: '#1A1A1A', color: '#F7F4EC', borderRadius: '12px', border: 'none', fontSize: '11px' }}
                 />
@@ -390,7 +387,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
         </CardHeader>
         <CardContent className="pt-2">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            
+
             <div className="p-3 rounded-2xl bg-brand-ivory border border-brand-forest/10 space-y-1">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-brand-charcoal">Bank Account Aggregator</span>

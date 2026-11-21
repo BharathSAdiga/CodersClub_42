@@ -5,11 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { formatINR } from '@/lib/utils';
 import { PersonaProfile } from '@/types';
 import { apiService, BackendShockResult } from '@/services/apiService';
-import { 
-  Sparkles, 
-  Sliders, 
-  TrendingUp, 
-  CheckCircle2, 
+import {
+  Sparkles,
+  Sliders,
+  TrendingUp,
+  CheckCircle2,
   ArrowRight,
   ShieldAlert,
   Flame,
@@ -22,12 +22,12 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-export type StressPresetKey = 
-  | 'NORMAL' 
-  | 'REV_DROP_15' 
-  | 'REV_DROP_30_TWO_MOS' 
-  | 'OPEX_SURGE_15' 
-  | 'RECEIVABLES_DELAY_30' 
+export type StressPresetKey =
+  | 'NORMAL'
+  | 'REV_DROP_15'
+  | 'REV_DROP_30_TWO_MOS'
+  | 'OPEX_SURGE_15'
+  | 'RECEIVABLES_DELAY_30'
   | 'COMBINED_SHOCK';
 
 export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> = ({ activePersona }) => {
@@ -40,7 +40,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
   const [revenueShockPct, setRevenueShockPct] = useState<number>(30);
   const [expenseInflationPct, setExpenseInflationPct] = useState<number>(15);
   const [receivablesDelayDays, setReceivablesDelayDays] = useState<number>(30);
-  
+
   const [liveStressResult, setLiveStressResult] = useState<BackendShockResult | null>(null);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
 
@@ -119,15 +119,15 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
       cogs_inflation_pct: opex,
       receivable_delay_days: delay,
     })
-    .then((res) => {
-      setLiveStressResult(res);
-      setIsSimulating(false);
-      toast.success(`Stress test simulated: Stressed DSCR ${res.post_shock_dscr?.toFixed(2) || '1.18'}x`);
-    })
-    .catch((err) => {
-      console.warn('Simulation fallback notice:', err);
-      setIsSimulating(false);
-    });
+      .then((res) => {
+        setLiveStressResult(res);
+        setIsSimulating(false);
+        toast.success(`Stress test simulated: Stressed DSCR ${res.post_shock_dscr?.toFixed(2) || '1.18'}x`);
+      })
+      .catch((err) => {
+        console.warn('Simulation fallback notice:', err);
+        setIsSimulating(false);
+      });
   };
 
   useEffect(() => {
@@ -144,11 +144,11 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
 
   // Active metrics
   const activeCfads = liveStressResult ? Math.round(liveStressResult.post_shock_monthly_surplus) : stressedMonthlySurplus;
-  
+
   const totalDebtObligations = existingMonthlyEmi + 15000; // existing + benchmark proposed line
   const localDscr = totalDebtObligations > 0 ? Number((stressedSurplusPreDebt / totalDebtObligations).toFixed(2)) : 2.14;
-  const activeDscr = liveStressResult && liveStressResult.post_shock_dscr != null 
-    ? Number(liveStressResult.post_shock_dscr.toFixed(2)) 
+  const activeDscr = liveStressResult && liveStressResult.post_shock_dscr != null
+    ? Number(liveStressResult.post_shock_dscr.toFixed(2))
     : Math.max(0.05, localDscr);
 
   const activeViability = activeDscr >= 1.25 ? 'SAFE' : activeDscr >= 1.0 ? 'CONDITIONAL' : 'HIGH_RISK';
@@ -156,7 +156,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
   // Runway calculation (never NaN)
   const monthlyDeficit = Math.max(0, stressedExpenses + existingMonthlyEmi - stressedInflow);
   const liquidBuffer = baselineMonthlyTurnover * 0.40;
-  const localRunwayDays = monthlyDeficit > 0 
+  const localRunwayDays = monthlyDeficit > 0
     ? Math.max(1, Math.round(liquidBuffer / (monthlyDeficit / 30)))
     : null;
 
@@ -215,15 +215,14 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
                 <Cpu className="w-3.5 h-3.5 text-brand-mint" />
                 Live Twin Engine
               </Badge>
-              <Badge 
-                variant="outline" 
-                className={`text-xs font-semibold ${
-                  activeViability === 'SAFE' 
-                    ? 'border-emerald-300 bg-emerald-50 text-emerald-800' 
-                    : activeViability === 'CONDITIONAL' 
-                    ? 'border-amber-300 bg-amber-50 text-amber-800' 
-                    : 'border-rose-300 bg-rose-50 text-rose-800'
-                }`}
+              <Badge
+                variant="outline"
+                className={`text-xs font-semibold ${activeViability === 'SAFE'
+                    ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
+                    : activeViability === 'CONDITIONAL'
+                      ? 'border-amber-300 bg-amber-50 text-amber-800'
+                      : 'border-rose-300 bg-rose-50 text-rose-800'
+                  }`}
               >
                 DSCR {activeDscr}x • {activeViability.replace('_', ' ')}
               </Badge>
@@ -231,7 +230,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
           </div>
         </CardHeader>
         <CardContent className="space-y-5">
-          
+
           {/* Quick Preset Buttons */}
           <div>
             <span className="text-xs font-mono uppercase tracking-wider text-brand-charcoal/70 font-semibold block mb-2">
@@ -245,11 +244,10 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
                   <button
                     key={key}
                     onClick={() => handleSelectPreset(key)}
-                    className={`p-2.5 rounded-xl border text-center transition-all ${
-                      isSelected 
-                        ? 'border-brand-forest bg-brand-forest text-white shadow-sm font-semibold' 
+                    className={`p-2.5 rounded-xl border text-center transition-all ${isSelected
+                        ? 'border-brand-forest bg-brand-forest text-white shadow-sm font-semibold'
                         : 'border-brand-forest/15 bg-brand-ivory/60 hover:bg-brand-ivory text-brand-charcoal text-xs'
-                    }`}
+                      }`}
                   >
                     <span className="text-xs font-medium block leading-tight">{item.label}</span>
                   </button>
@@ -278,7 +276,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              
+
               {/* Slider 1: Revenue Contraction Shock */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center text-xs">
@@ -385,7 +383,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
 
       {/* Part 2: Counterfactual Path-to-Yes Levers (Feature 12) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
+
         {/* Sliders (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           <Card>
@@ -398,7 +396,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              
+
               {/* Slider 1: Average Daily Balance */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-xs">

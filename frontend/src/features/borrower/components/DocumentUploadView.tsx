@@ -3,14 +3,14 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { apiService } from '@/services/apiService';
-import { 
-  UploadCloud, 
-  FileText, 
-  CheckCircle2, 
-  Lock, 
-  AlertCircle, 
-  Trash2, 
-  FileSpreadsheet, 
+import {
+  UploadCloud,
+  FileText,
+  CheckCircle2,
+  Lock,
+  AlertCircle,
+  Trash2,
+  FileSpreadsheet,
   ShieldAlert,
   Info
 } from 'lucide-react';
@@ -150,7 +150,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
           }
           const headers = lines[0].toLowerCase().split(',').map((h) => h.trim());
           const amountIdx = headers.findIndex((h) => h.includes('amount') || h.includes('inflow') || h.includes('credit') || h.includes('total'));
-          
+
           let validRows = 0;
           let totalInflow = 0;
 
@@ -297,22 +297,20 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
         <div className="flex gap-2 p-1 bg-brand-charcoal/5 rounded-2xl w-fit">
           <button
             onClick={() => setActiveTab('REGULATORY')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'REGULATORY'
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'REGULATORY'
                 ? 'bg-white text-brand-charcoal shadow-sm'
                 : 'text-brand-charcoal/60 hover:text-brand-charcoal'
-            }`}
+              }`}
           >
             <FileText className="w-3.5 h-3.5 inline mr-1.5" />
             KYC & Licenses
           </button>
           <button
             onClick={() => setActiveTab('CSV_CASHBOOK')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'CSV_CASHBOOK'
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'CSV_CASHBOOK'
                 ? 'bg-white text-brand-forest shadow-sm'
                 : 'text-brand-charcoal/60 hover:text-brand-charcoal'
-            }`}
+              }`}
           >
             <FileSpreadsheet className="w-3.5 h-3.5 inline mr-1.5" />
             Bank & Sales Statement CSV
@@ -333,7 +331,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
 
       {/* Upload Dropzone */}
       <div className="p-8 rounded-3xl bg-white border-2 border-dashed border-brand-forest/25 hover:border-brand-forest transition-colors text-center relative overflow-hidden">
-        <input 
+        <input
           type="file"
           accept={activeTab === 'CSV_CASHBOOK' ? '.csv,.xlsx,.txt' : '.pdf,.png,.jpg,.jpeg'}
           onChange={(e) => handleSimulateUpload(e, activeTab === 'CSV_CASHBOOK')}
@@ -365,7 +363,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
               <span className="font-mono">{uploadProgress}%</span>
             </div>
             <div className="w-full bg-brand-forest/10 h-2 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="bg-brand-mint h-full transition-all duration-200"
                 style={{ width: `${uploadProgress}%` }}
               />
@@ -414,15 +412,14 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-center">
-                  <Badge 
-                    variant="outline" 
-                    className={`text-xs ${
-                      doc.provenance === 'INDEPENDENTLY_VERIFIED'
+                  <Badge
+                    variant="outline"
+                    className={`text-xs ${doc.provenance === 'INDEPENDENTLY_VERIFIED'
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
                         : doc.provenance === 'SOURCE_LABELLED'
-                        ? 'bg-blue-50 text-blue-700 border-blue-300'
-                        : 'bg-amber-50 text-amber-800 border-amber-300'
-                    }`}
+                          ? 'bg-blue-50 text-blue-700 border-blue-300'
+                          : 'bg-amber-50 text-amber-800 border-amber-300'
+                      }`}
                   >
                     {doc.provenance.replace('_', ' ')}
                   </Badge>
@@ -432,7 +429,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
                     Verified
                   </span>
 
-                  <button 
+                  <button
                     onClick={() => handleDelete(doc.id)}
                     className="p-1.5 rounded-lg text-brand-charcoal/40 hover:text-red-600 hover:bg-red-50 transition-colors"
                     title="Delete document"

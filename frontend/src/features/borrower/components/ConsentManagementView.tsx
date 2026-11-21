@@ -30,7 +30,7 @@ export const ConsentManagementView: React.FC<{ activePersona?: PersonaProfile }>
           setConsents(data);
           try {
             localStorage.setItem(storageKey, JSON.stringify(data));
-          } catch (e) {}
+          } catch (e) { }
           return;
         }
       } else {
@@ -51,7 +51,7 @@ export const ConsentManagementView: React.FC<{ activePersona?: PersonaProfile }>
         setConsents(activeTab === 'ACTIVE' ? cached.filter((c: any) => c.status === 'ACTIVE') : cached);
         return;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Fallback default initial consents
     const defaultConsents: BackendConsentRecord[] = [
@@ -88,7 +88,7 @@ export const ConsentManagementView: React.FC<{ activePersona?: PersonaProfile }>
     setConsents(defaultConsents);
     try {
       localStorage.setItem(storageKey, JSON.stringify(defaultConsents));
-    } catch (e) {}
+    } catch (e) { }
     setIsLoading(false);
   };
 
@@ -110,7 +110,7 @@ export const ConsentManagementView: React.FC<{ activePersona?: PersonaProfile }>
           const cached = JSON.parse(localStorage.getItem(storageKey) || '[]');
           const updatedCache = cached.map((c: any) => c.id === id ? { ...c, status: 'REVOKED' } : c);
           localStorage.setItem(storageKey, JSON.stringify(updatedCache));
-        } catch (e) {}
+        } catch (e) { }
         return updated.filter((c) => activeTab === 'ACTIVE' ? c.status === 'ACTIVE' : true);
       });
       toast.warning(`Data consent revoked for ${providerName}. Background data access immediately ceased.`);
@@ -151,7 +151,7 @@ export const ConsentManagementView: React.FC<{ activePersona?: PersonaProfile }>
       try {
         const cached = JSON.parse(localStorage.getItem(storageKey) || '[]');
         localStorage.setItem(storageKey, JSON.stringify([newRec, ...cached]));
-      } catch (e) {}
+      } catch (e) { }
       toast.success(`Consent granted for ${selectedProvider} with ${validityDays} days validity.`);
       setShowGrantModal(false);
     } finally {
@@ -195,22 +195,20 @@ export const ConsentManagementView: React.FC<{ activePersona?: PersonaProfile }>
       <div className="flex gap-2 p-1 bg-brand-charcoal/5 rounded-2xl w-fit">
         <button
           onClick={() => setActiveTab('ACTIVE')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-            activeTab === 'ACTIVE'
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'ACTIVE'
               ? 'bg-white text-brand-charcoal shadow-sm'
               : 'text-brand-charcoal/60 hover:text-brand-charcoal'
-          }`}
+            }`}
         >
           <CheckCircle2 className="w-3.5 h-3.5 inline mr-1.5 text-emerald-600" />
           Active Authorizations
         </button>
         <button
           onClick={() => setActiveTab('HISTORY')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-            activeTab === 'HISTORY'
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'HISTORY'
               ? 'bg-white text-brand-charcoal shadow-sm'
               : 'text-brand-charcoal/60 hover:text-brand-charcoal'
-          }`}
+            }`}
         >
           <History className="w-3.5 h-3.5 inline mr-1.5 text-brand-forest" />
           Complete Audit Lifecycle
@@ -234,9 +232,9 @@ export const ConsentManagementView: React.FC<{ activePersona?: PersonaProfile }>
                     <div className="flex items-center gap-2">
                       <CardTitle className="text-base font-bold text-brand-charcoal">
                         {c.data_provider === 'ACCOUNT_AGGREGATOR' ? 'Sahamati Account Aggregator (Bank Data)' :
-                         c.data_provider === 'NPCI_UPI' ? 'NPCI UPI Merchant Feed' :
-                         c.data_provider === 'GSTN' ? 'GSTN Tax Filing Gateway' :
-                         c.data_provider === 'DIGILOCKER' ? 'DigiLocker Identity Gateway' : c.data_provider}
+                          c.data_provider === 'NPCI_UPI' ? 'NPCI UPI Merchant Feed' :
+                            c.data_provider === 'GSTN' ? 'GSTN Tax Filing Gateway' :
+                              c.data_provider === 'DIGILOCKER' ? 'DigiLocker Identity Gateway' : c.data_provider}
                       </CardTitle>
                       <Badge variant={c.status === 'ACTIVE' ? 'mint' : c.status === 'REVOKED' ? 'outline' : 'terracotta'}>
                         {c.status}

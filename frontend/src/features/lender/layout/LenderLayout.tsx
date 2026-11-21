@@ -50,7 +50,7 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
 
   return (
     <div className="min-h-screen bg-brand-ivory text-brand-charcoal flex flex-col selection:bg-brand-forest selection:text-white">
-      
+
       {/* Liquid Glass Institutional Header */}
       <header className="h-16 px-4 sm:px-8 bg-brand-charcoal/90 backdrop-blur-md text-white flex items-center justify-between sticky top-0 z-40 border-b border-white/10 shadow-elevated">
         <div className="flex items-center gap-4">
@@ -92,11 +92,10 @@ export const LenderLayout: React.FC<LenderLayoutProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                    isActive
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${isActive
                       ? 'text-brand-charcoal'
                       : 'text-white/80 hover:text-white hover:bg-white/5'
-                  }`}
+                    }`}
                 >
                   {isActive && (
                     <motion.div
