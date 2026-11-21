@@ -4,13 +4,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatINR } from '@/lib/utils';
-import { 
-  FileText, 
-  Clock, 
-  AlertCircle, 
-  CheckCircle2, 
-  ArrowRight, 
-  Search, 
+import {
+  FileText,
+  Clock,
+  AlertCircle,
+  CheckCircle2,
+  ArrowRight,
+  Search,
   Building2, 
   MapPin, 
   Calendar, 
@@ -31,7 +31,7 @@ interface LenderDashboardProps {
   onNavigateToPipeline: () => void;
 }
 
-export type SummaryFilterType = 
+export type SummaryFilterType =
   | 'ALL'
   | 'NEW_APPLICATIONS'
   | 'UNDER_REVIEW'
@@ -204,7 +204,7 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
 
   return (
     <div className="space-y-6 w-full animate-in fade-in duration-300 text-brand-charcoal">
-      
+
       {/* ============================================================== */}
       {/* 1. TOP SECTION: Welcome, Context, and Primary Action          */}
       {/* ============================================================== */}
@@ -253,15 +253,14 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
       {/* 2. SUMMARY METRICS SECTION (4 Compact & Informative Cards)    */}
       {/* ============================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
+
         {/* Metric 1: New Applications */}
         <div
           onClick={() => setSelectedFilter(selectedFilter === 'NEW_APPLICATIONS' ? 'ALL' : 'NEW_APPLICATIONS')}
-          className={`cursor-pointer p-4 rounded-2xl border transition-all duration-200 select-none ${
-            selectedFilter === 'NEW_APPLICATIONS'
-              ? 'bg-blue-50/90 border-blue-400 shadow-sm ring-2 ring-blue-400/20'
-              : 'bg-white hover:bg-brand-forest/5 border-brand-forest/15 hover:border-brand-forest/30 shadow-xs'
-          }`}
+          className={`cursor-pointer p-4 rounded-2xl border transition-all duration-200 select-none ${selectedFilter === 'NEW_APPLICATIONS'
+            ? 'bg-blue-50/90 border-blue-400 shadow-sm ring-2 ring-blue-400/20'
+            : 'bg-white hover:bg-brand-forest/5 border-brand-forest/15 hover:border-brand-forest/30 shadow-xs'
+            }`}
         >
           <div className="flex items-center justify-between pb-1">
             <span className="text-xs font-semibold text-brand-charcoal/75">
@@ -284,11 +283,10 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
         {/* Metric 2: Under Review */}
         <div
           onClick={() => setSelectedFilter(selectedFilter === 'UNDER_REVIEW' ? 'ALL' : 'UNDER_REVIEW')}
-          className={`cursor-pointer p-4 rounded-2xl border transition-all duration-200 select-none ${
-            selectedFilter === 'UNDER_REVIEW'
-              ? 'bg-emerald-50/90 border-emerald-400 shadow-sm ring-2 ring-emerald-400/20'
-              : 'bg-white hover:bg-brand-forest/5 border-brand-forest/15 hover:border-brand-forest/30 shadow-xs'
-          }`}
+          className={`cursor-pointer p-4 rounded-2xl border transition-all duration-200 select-none ${selectedFilter === 'UNDER_REVIEW'
+            ? 'bg-emerald-50/90 border-emerald-400 shadow-sm ring-2 ring-emerald-400/20'
+            : 'bg-white hover:bg-brand-forest/5 border-brand-forest/15 hover:border-brand-forest/30 shadow-xs'
+            }`}
         >
           <div className="flex items-center justify-between pb-1">
             <span className="text-xs font-semibold text-brand-charcoal/75">
@@ -311,11 +309,10 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
         {/* Metric 3: Need Information */}
         <div
           onClick={() => setSelectedFilter(selectedFilter === 'NEED_INFORMATION' ? 'ALL' : 'NEED_INFORMATION')}
-          className={`cursor-pointer p-4 rounded-2xl border transition-all duration-200 select-none ${
-            selectedFilter === 'NEED_INFORMATION'
-              ? 'bg-amber-50/90 border-amber-400 shadow-sm ring-2 ring-amber-400/20'
-              : 'bg-white hover:bg-brand-forest/5 border-brand-forest/15 hover:border-brand-forest/30 shadow-xs'
-          }`}
+          className={`cursor-pointer p-4 rounded-2xl border transition-all duration-200 select-none ${selectedFilter === 'NEED_INFORMATION'
+            ? 'bg-amber-50/90 border-amber-400 shadow-sm ring-2 ring-amber-400/20'
+            : 'bg-white hover:bg-brand-forest/5 border-brand-forest/15 hover:border-brand-forest/30 shadow-xs'
+            }`}
         >
           <div className="flex items-center justify-between pb-1">
             <span className="text-xs font-semibold text-brand-charcoal/75">
@@ -338,11 +335,10 @@ export const LenderDashboard: React.FC<LenderDashboardProps> = ({
         {/* Metric 4: Decisions Pending */}
         <div
           onClick={() => setSelectedFilter(selectedFilter === 'DECISIONS_PENDING' ? 'ALL' : 'DECISIONS_PENDING')}
-          className={`cursor-pointer p-4 rounded-2xl border transition-all duration-200 select-none ${
-            selectedFilter === 'DECISIONS_PENDING'
-              ? 'bg-purple-50/90 border-purple-400 shadow-sm ring-2 ring-purple-400/20'
-              : 'bg-white hover:bg-brand-forest/5 border-brand-forest/15 hover:border-brand-forest/30 shadow-xs'
-          }`}
+          className={`cursor-pointer p-4 rounded-2xl border transition-all duration-200 select-none ${selectedFilter === 'DECISIONS_PENDING'
+            ? 'bg-purple-50/90 border-purple-400 shadow-sm ring-2 ring-purple-400/20'
+            : 'bg-white hover:bg-brand-forest/5 border-brand-forest/15 hover:border-brand-forest/30 shadow-xs'
+            }`}
         >
           <div className="flex items-center justify-between pb-1">
             <span className="text-xs font-semibold text-brand-charcoal/75">

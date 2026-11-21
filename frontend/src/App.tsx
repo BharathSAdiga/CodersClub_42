@@ -66,7 +66,7 @@ export function App() {
   const [isPersonaModalOpen, setIsPersonaModalOpen] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
-  // Restore authenticated session on page load
+  // Restore authenticated session on page load or URL portal parameter
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -76,6 +76,28 @@ export function App() {
         });
       } catch (e) {
         console.error('Failed to restore custom personas from session storage', e);
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const portalParam = (params.get('portal') || params.get('mode') || window.location.hash.replace('#', '')).toLowerCase();
+      if (portalParam === 'lender') {
+        const p = mockService.setActivePersona('PERSONA_PRIYA');
+        setActivePersona({ ...p });
+        setAppMode('LENDER_PORTAL');
+        setLenderView('/lender/dashboard');
+        return;
+      } else if (portalParam === 'admin') {
+        const p = mockService.setActivePersona('SUPER_ADMIN');
+        setActivePersona({ ...p });
+        setAppMode('ADMIN_PORTAL');
+        setAdminView('/admin/overview');
+        return;
+      } else if (portalParam === 'borrower') {
+        const p = mockService.setActivePersona('PERSONA_RAMESH');
+        setActivePersona({ ...p });
+        setAppMode('BORROWER_PORTAL');
+        setBorrowerView('/borrower/dashboard');
+        return;
       }
     }
 
