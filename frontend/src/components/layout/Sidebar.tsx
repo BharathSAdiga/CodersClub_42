@@ -3,14 +3,15 @@ import {
   LayoutDashboard,
   Wallet,
   FileText,
-  ShieldCheck,
-  Sliders,
   Activity,
+  Building2,
+  Users,
+  Server,
   Scale,
-  Settings,
-  LogOut,
+  ShieldCheck,
   Sparkles,
-  Building2
+  Sliders,
+  LogOut
 } from 'lucide-react';
 import { UserRole } from '@/types';
 
@@ -31,8 +32,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const isBorrower = currentRole.startsWith('BORROWER');
   const isLender = currentRole.startsWith('LENDER');
-  const isAdminOrAuditor = currentRole === 'SUPER_ADMIN' || currentRole === 'ETHICS_AUDITOR';
 
+  // Necessary pages for MSME Borrower (Clear, comprehensive, matches all user testing steps)
   const borrowerItems = [
     { id: '/borrower/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: '/borrower/profile', label: 'Business Profile', icon: Building2 },
@@ -45,21 +46,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const lenderItems = [
-    { id: '/lender/dashboard', label: 'Portfolio Cockpit', icon: LayoutDashboard },
-    { id: '/lender/pipeline', label: 'Application Queue', icon: FileText },
-    { id: '/lender/triangulation', label: 'Triangulation Radar', icon: Activity },
-    { id: '/lender/risk', label: 'Anomaly Matrix', icon: ShieldCheck },
-    { id: '/lender/decision', label: 'Sanction Notes', icon: Wallet },
+    { id: '/lender/dashboard', label: 'Overview', icon: LayoutDashboard },
+    { id: '/lender/pipeline', label: 'Applications', icon: FileText },
   ];
 
   const adminItems = [
-    { id: '/admin/overview', label: 'System Overview', icon: LayoutDashboard },
-    { id: '/admin/fairness', label: 'Fairness Console', icon: Scale },
-    { id: '/admin/audit-logs', label: 'Audit Trail', icon: FileText },
-    { id: '/admin/system', label: 'Connector Telemetry', icon: Settings },
+    { id: '/admin/overview', label: 'Overview', icon: LayoutDashboard },
+    { id: '/admin/users', label: 'Users', icon: Users },
+    { id: '/admin/businesses', label: 'Businesses', icon: Building2 },
+    { id: '/admin/applications', label: 'Applications', icon: FileText },
+    { id: '/admin/system', label: 'System Health', icon: Server },
+    { id: '/admin/fairness', label: 'Fairness & Reports', icon: Scale },
+    { id: '/admin/audit-logs', label: 'Activity History', icon: ShieldCheck },
   ];
 
   const items = isBorrower ? borrowerItems : isLender ? lenderItems : adminItems;
+
+  const isItemActive = (itemId: string) => {
+    if (activePath === itemId) return true;
+    if (itemId === '/borrower/apply' && activePath === '/borrower/tracking') return true;
+    return false;
+  };
 
   return (
     <aside className="w-64 min-h-screen bg-brand-forest text-brand-ivory p-6 flex flex-col justify-between border-r border-white/10 select-none">
@@ -91,17 +98,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <nav className="space-y-1.5">
           {items.map((item) => {
             const Icon = item.icon;
-            const isActive = activePath === item.id;
+            const active = isItemActive(item.id);
             return (
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${isActive
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${active
                   ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
                   : 'text-white/80 hover:bg-white/10 hover:text-white'
                   }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
+                <Icon className={`w-4 h-4 ${active ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
                 <span>{item.label}</span>
               </button>
             );
