@@ -391,7 +391,7 @@ export function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal direction="up" duration={0.6}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <Badge variant="outline" className="border-brand-mint/40 text-brand-mint bg-brand-mint/10 mb-4">
+              <Badge variant="mint-pill" className="text-xs mb-4">
                 INTERACTIVE DEMONSTRATION
               </Badge>
               <h2 className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-white mb-4">
@@ -512,7 +512,7 @@ export function App() {
 
           {/* Bottom Copyright & Regulatory Disclosure */}
           <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs text-white/50 gap-4">
-            <p>© 2026 UDYOGA Technologies Pvt. Ltd. All rights reserved. The Big Hack 2.0.</p>
+            <p>© 2026 UDYOGA Technologies Pvt. Ltd. All rights reserved.</p>
             <div className="flex gap-6">
               <a href="#trust-sec" className="hover:text-white transition-colors">RBI Compliance</a>
               <a href="#trust-sec" className="hover:text-white transition-colors">DPDP Policy</a>

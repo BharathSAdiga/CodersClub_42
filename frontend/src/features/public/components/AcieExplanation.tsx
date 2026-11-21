@@ -16,7 +16,7 @@ export const AcieExplanation: React.FC = () => {
 
           <div className="relative z-10 max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <Badge variant="mint">Explainable AI (XAI)</Badge>
+              <Badge variant="mint-pill" className="text-xs">Explainable AI (XAI)</Badge>
               <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight mt-3">
                 No black boxes. Mathematical transparency.
               </h2>

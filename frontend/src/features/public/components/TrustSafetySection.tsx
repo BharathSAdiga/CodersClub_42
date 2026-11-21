@@ -10,7 +10,7 @@ export const TrustSafetySection: React.FC = () => {
         <div className="rounded-3xl bg-brand-forest text-brand-ivory p-8 sm:p-12 border border-brand-forest/30 shadow-card">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10">
-              <Badge variant="mint">Regulatory Integrity</Badge>
+              <Badge variant="mint-pill" className="text-xs">Regulatory Integrity</Badge>
               <h2 className="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight mt-2">
                 Built strictly compliant with RBI & DPDP standards.
               </h2>

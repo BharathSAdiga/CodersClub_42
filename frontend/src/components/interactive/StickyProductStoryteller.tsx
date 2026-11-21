@@ -188,7 +188,7 @@ export const StickyProductStoryteller: React.FC = () => {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <Badge variant="outline" className="border-brand-mint/40 text-brand-mint bg-brand-mint/10 mb-4">
+          <Badge variant="mint-pill" className="text-xs mb-4">
             STICKY INTERACTIVE WALKTHROUGH
           </Badge>
           <h2 className="text-3xl sm:text-5xl font-display font-extrabold tracking-tight text-white mb-4">
@@ -272,7 +272,7 @@ export const StickyProductStoryteller: React.FC = () => {
                     <span className="text-white/60">
                       Acting Principal: <strong className="text-white font-medium">{activeStep.actor}</strong>
                     </span>
-                    <Badge variant="outline" className="border-brand-mint/40 text-brand-mint bg-brand-mint/10 text-[10px]">
+                    <Badge variant="mint-pill" className="text-[10px]">
                       {activeStep.visualCard.statusBadge}
                     </Badge>
                   </div>

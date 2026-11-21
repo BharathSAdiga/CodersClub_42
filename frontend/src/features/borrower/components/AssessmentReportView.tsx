@@ -2,16 +2,16 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PersonaProfile } from '@/types';
-import { 
-  Sparkles, 
-  Check, 
-  AlertCircle, 
-  Info, 
-  ShieldCheck, 
-  Activity, 
-  Clock, 
-  ShieldAlert, 
-  FileCheck2, 
+import {
+  Sparkles,
+  Check,
+  AlertCircle,
+  Info,
+  ShieldCheck,
+  Activity,
+  Clock,
+  ShieldAlert,
+  FileCheck2,
   TrendingUp,
   Scale
 } from 'lucide-react';
@@ -105,11 +105,11 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white/10 border border-white/10 text-center sm:text-right">
-          <Badge variant="mint-bright" className="text-xs font-mono tracking-wide">
+        <div className="p-3.5 px-5 rounded-2xl bg-white/[0.08] backdrop-blur-sm border border-white/15 text-center sm:text-right shrink-0 flex flex-col items-center sm:items-end justify-center">
+          <Badge variant="mint-pill" className="text-xs">
             {report?.scoreBand || 'PRIME'} BAND
           </Badge>
-          <span className="text-[11px] text-white/60 block mt-2">
+          <span className="text-xs font-medium text-white/90 block mt-2">
             Eligible for immediate institutional sanction up to ₹1,50,000.
           </span>
         </div>
@@ -147,13 +147,12 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <Badge 
-                        variant="outline" 
-                        className={`text-[10px] ${
-                          dim.status === 'STRONG' || dim.status === 'EXCELLENT'
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] ${dim.status === 'STRONG' || dim.status === 'EXCELLENT'
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
                             : 'bg-blue-50 text-blue-700 border-blue-300'
-                        }`}
+                          }`}
                       >
                         {dim.status}
                       </Badge>
@@ -194,19 +193,17 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
           {drivers.map((d, idx) => {
             const isPositive = d.impactDirection === 'POSITIVE';
             return (
-              <div 
+              <div
                 key={idx}
-                className={`p-4 rounded-2xl border transition-all ${
-                  isPositive 
-                    ? 'bg-emerald-50/60 border-emerald-200' 
+                className={`p-4 rounded-2xl border transition-all ${isPositive
+                    ? 'bg-emerald-50/60 border-emerald-200'
                     : 'bg-rose-50/60 border-rose-200'
-                }`}
+                  }`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3">
-                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
-                      isPositive ? 'bg-brand-forest text-brand-ivory' : 'bg-rose-500 text-white'
-                    }`}>
+                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${isPositive ? 'bg-brand-forest text-brand-ivory' : 'bg-rose-500 text-white'
+                      }`}>
                       {isPositive ? '+' : '-'}
                     </span>
                     <div>
@@ -219,9 +216,8 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
                     </div>
                   </div>
 
-                  <span className={`text-sm font-mono font-bold shrink-0 ${
-                    isPositive ? 'text-brand-forest' : 'text-rose-600'
-                  }`}>
+                  <span className={`text-sm font-mono font-bold shrink-0 ${isPositive ? 'text-brand-forest' : 'text-rose-600'
+                    }`}>
                     {isPositive ? `+${d.weightPoints}` : `${d.weightPoints}`} pts
                   </span>
                 </div>
