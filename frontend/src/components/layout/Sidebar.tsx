@@ -33,16 +33,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const isBorrower = currentRole.startsWith('BORROWER');
   const isLender = currentRole.startsWith('LENDER');
 
-  // Necessary pages for MSME Borrower (Clear, comprehensive, matches all user testing steps)
+  // Necessary pages for MSME Borrower (Clear, professional, perfectly aligned)
   const borrowerItems = [
     { id: '/borrower/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: '/borrower/profile', label: 'Business Profile', icon: Building2 },
-    { id: '/borrower/health', label: 'Financial DNA & Cashflow', icon: Activity },
+    { id: '/borrower/health', label: 'Cash Flow & Health', icon: Activity },
     { id: '/borrower/insights', label: 'What-If Simulator', icon: Sparkles },
-    { id: '/borrower/assessment', label: 'Underwriting Report (CAM)', icon: FileText },
+    { id: '/borrower/assessment', label: 'Assessment Report', icon: FileText },
     { id: '/borrower/apply', label: 'Apply for Credit', icon: Wallet },
     { id: '/borrower/consent', label: 'DPDP Consent', icon: ShieldCheck },
-    { id: '/borrower/documents', label: 'Documents & Bank Data', icon: Sliders },
+    { id: '/borrower/documents', label: 'Documents & Data', icon: Sliders },
   ];
 
   const lenderItems = [
@@ -103,13 +103,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${active
+                className={`w-full flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${active
                   ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
                   : 'text-white/80 hover:bg-white/10 hover:text-white'
                   }`}
               >
-                <Icon className={`w-4 h-4 ${active ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
-                <span>{item.label}</span>
+                <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
+                <span className="text-left min-w-0 flex-1 truncate">{item.label}</span>
               </button>
             );
           })}
@@ -118,10 +118,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {onLogout && (
           <button
             onClick={onLogout}
-            className="w-full mt-4 flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+            className="w-full mt-4 flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
           >
-            <LogOut className="w-4 h-4 text-brand-terracotta" />
-            <span>Sign Out Session</span>
+            <LogOut className="w-4 h-4 shrink-0 text-brand-terracotta" />
+            <span className="text-left">Sign Out Session</span>
           </button>
         )}
       </div>

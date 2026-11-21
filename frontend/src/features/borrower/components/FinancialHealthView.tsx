@@ -77,7 +77,7 @@ export const FinancialHealthView: React.FC<{ activePersona: PersonaProfile }> = 
   }, [selectedPeriod, rawWaveform, bankAcc]);
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
+    <div className="space-y-6 w-full animate-in fade-in duration-300">
       
       {/* Header with Period Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-brand-forest/10">
