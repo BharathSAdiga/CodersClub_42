@@ -439,7 +439,7 @@ export const AssessmentReportView: React.FC<{ activePersona: PersonaProfile }> =
   };
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto animate-in fade-in duration-300">
+    <div className="space-y-8 w-full animate-in fade-in duration-300">
       
       {/* ================================================================= */}
       {/* HEADER: Flagship Multi-Agent Engine Title & Live Trigger          */}

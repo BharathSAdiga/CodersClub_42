@@ -91,14 +91,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   onNavigate(item.id);
                   setMobileSidebarOpen(false);
                 }}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                className={`w-full flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-brand-mint text-brand-charcoal font-bold shadow-sm'
                     : 'text-white/80 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
-                <span>{item.label}</span>
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-brand-charcoal' : 'text-brand-mint'}`} />
+                <span className="text-left min-w-0 flex-1 truncate">{item.label}</span>
               </button>
             );
           })}
@@ -110,10 +110,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         {onLogout && (
           <button
             onClick={onLogout}
-            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors mb-3"
+            className="w-full flex items-center justify-start text-left gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors mb-3"
           >
-            <LogOut className="w-4 h-4 text-brand-terracotta" />
-            <span>Sign Out Session</span>
+            <LogOut className="w-4 h-4 shrink-0 text-brand-terracotta" />
+            <span className="text-left">Sign Out Session</span>
           </button>
         )}
 

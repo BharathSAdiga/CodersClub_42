@@ -109,7 +109,7 @@ export const BorrowerDashboard: React.FC<BorrowerDashboardProps> = ({
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-6 w-full animate-in fade-in duration-300">
       
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-brand-forest text-brand-ivory shadow-soft">

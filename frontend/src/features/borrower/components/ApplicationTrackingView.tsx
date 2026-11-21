@@ -51,7 +51,7 @@ export const ApplicationTrackingView: React.FC<{ activePersona: PersonaProfile }
   ];
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
+    <div className="space-y-6 w-full animate-in fade-in duration-300">
       <div>
         <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
           Live Application Lifecycle
