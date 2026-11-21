@@ -73,6 +73,17 @@ export type WorkbenchTab =
   | 'ASSESSMENT_EXPLANATION'
   | 'DECISION';
 
+const WORKBENCH_TABS: { id: WorkbenchTab; num: number; label: string; icon: React.ElementType; hint: string }[] = [
+  { id: 'OVERVIEW', num: 1, label: 'Overview', icon: Building2, hint: 'Executive verdict & 5 core metrics' },
+  { id: 'FINANCIAL_HEALTH', num: 2, label: 'Financial Health', icon: Activity, hint: 'Cash flows & 3-way match' },
+  { id: 'TRANSACTIONS', num: 3, label: 'Transactions', icon: Clock, hint: 'Inflows, outflows & velocity' },
+  { id: 'DOCUMENTS', num: 4, label: 'Evidence & Documents', icon: FileText, hint: 'Provenance & certificates' },
+  { id: 'AFFORDABILITY', num: 5, label: 'Loan Affordability', icon: Scale, hint: 'Repayment & safe EMI' },
+  { id: 'STRESS_TEST', num: 6, label: 'Stress Test', icon: Sliders, hint: 'Revenue dip & delay shocks' },
+  { id: 'ASSESSMENT_EXPLANATION', num: 7, label: 'Assessment Explanation', icon: Sparkles, hint: 'SHAP factors & agent traces' },
+  { id: 'DECISION', num: 8, label: 'Decision Desk', icon: CheckCircle2, hint: 'Sanction letter signoff' },
+];
+
 export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> = ({
   applicationId,
   onBackToPipeline,
@@ -414,84 +425,105 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
       </div>
 
       {/* ============================================================== */}
-      {/* 2. EIGHT CLEAR UNDERWRITING TABS                               */}
-      {/* Simple Information First. Advanced Information on Demand.      */}
+      {/* 2. WORKBENCH TWO-COLUMN LAYOUT WITH STICKY VERTICAL SIDE NAV  */}
       {/* ============================================================== */}
-      <div className="flex flex-wrap gap-1.5 p-1.5 bg-brand-charcoal/5 rounded-2xl w-full overflow-x-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        <button
-          onClick={() => setActiveTab('OVERVIEW')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-            activeTab === 'OVERVIEW' ? 'bg-brand-forest text-white shadow-sm' : 'text-brand-charcoal/70 hover:bg-white/60'
-          }`}
-        >
-          1. Overview
-        </button>
+        {/* LEFT COLUMN: Vertical Side Navigation (3 cols) */}
+        <div className="lg:col-span-3 space-y-4 lg:sticky lg:top-20">
+          
+          {/* Mobile Tab Selector */}
+          <div className="lg:hidden p-2 rounded-2xl bg-white border border-brand-forest/15">
+            <label className="text-[10px] font-mono uppercase text-brand-forest font-bold block mb-1">
+              Select Underwriting Section:
+            </label>
+            <select
+              value={activeTab}
+              onChange={(e) => setActiveTab(e.target.value as WorkbenchTab)}
+              className="w-full h-10 px-3 text-xs rounded-xl border border-brand-forest/20 bg-brand-ivory text-brand-charcoal font-semibold"
+            >
+              {WORKBENCH_TABS.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.num}. {t.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <button
-          onClick={() => setActiveTab('FINANCIAL_HEALTH')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-            activeTab === 'FINANCIAL_HEALTH' ? 'bg-brand-forest text-white shadow-sm' : 'text-brand-charcoal/70 hover:bg-white/60'
-          }`}
-        >
-          2. Financial Health
-        </button>
+          {/* Desktop Vertical Side Navigation Card */}
+          <Card className="border-brand-forest/15 shadow-soft overflow-hidden p-2 bg-white hidden lg:block">
+            <div className="px-3 py-2 text-[10px] font-mono uppercase tracking-wider text-brand-forest font-bold border-b border-brand-forest/10 mb-1 flex items-center justify-between">
+              <span>Underwriting File</span>
+              <span className="text-brand-charcoal/40 font-mono">8 Steps</span>
+            </div>
+            <nav className="space-y-1">
+              {WORKBENCH_TABS.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all text-left ${
+                      isActive
+                        ? 'bg-brand-forest text-white shadow-xs'
+                        : 'text-brand-charcoal/70 hover:bg-brand-forest/5 hover:text-brand-charcoal'
+                    }`}
+                  >
+                    <div
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-[11px] font-mono font-bold ${
+                        isActive ? 'bg-white/20 text-white' : 'bg-brand-forest/10 text-brand-forest'
+                      }`}
+                    >
+                      {tab.num}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate font-semibold">{tab.label}</div>
+                      <div className={`text-[10px] truncate ${isActive ? 'text-white/70' : 'text-brand-charcoal/50'}`}>
+                        {tab.hint}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </nav>
+          </Card>
 
-        <button
-          onClick={() => setActiveTab('TRANSACTIONS')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-            activeTab === 'TRANSACTIONS' ? 'bg-brand-forest text-white shadow-sm' : 'text-brand-charcoal/70 hover:bg-white/60'
-          }`}
-        >
-          3. Transactions
-        </button>
+          {/* Quick File Summary Card in the Sidebar */}
+          <Card className="border-brand-forest/15 p-4 bg-brand-forest/5 space-y-3 text-xs hidden lg:block">
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase text-brand-charcoal/50 block font-bold">
+                Active Applicant
+              </span>
+              <strong className="text-sm font-display font-bold text-brand-charcoal block truncate">
+                {application.businessName}
+              </strong>
+              <span className="text-brand-charcoal/60 text-[11px] block">
+                {application.applicantName} · {application.city}
+              </span>
+            </div>
 
-        <button
-          onClick={() => setActiveTab('DOCUMENTS')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-            activeTab === 'DOCUMENTS' ? 'bg-brand-forest text-white shadow-sm' : 'text-brand-charcoal/70 hover:bg-white/60'
-          }`}
-        >
-          4. Evidence & Documents
-        </button>
+            <div className="pt-2 border-t border-brand-forest/10 flex justify-between items-center font-mono">
+              <span className="text-brand-charcoal/60 text-[11px]">Requested:</span>
+              <strong className="text-brand-forest font-bold text-sm">
+                {formatINR(application.requestedAmount)}
+              </strong>
+            </div>
 
-        <button
-          onClick={() => setActiveTab('AFFORDABILITY')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-            activeTab === 'AFFORDABILITY' ? 'bg-brand-forest text-white shadow-sm' : 'text-brand-charcoal/70 hover:bg-white/60'
-          }`}
-        >
-          5. Loan Affordability
-        </button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setActiveTab('DECISION')}
+              className="w-full text-xs h-8 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold shadow-xs"
+            >
+              <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
+              <span>Make Decision</span>
+            </Button>
+          </Card>
+        </div>
 
-        <button
-          onClick={() => setActiveTab('STRESS_TEST')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-            activeTab === 'STRESS_TEST' ? 'bg-brand-forest text-white shadow-sm' : 'text-brand-charcoal/70 hover:bg-white/60'
-          }`}
-        >
-          6. Stress Test
-        </button>
-
-        <button
-          onClick={() => setActiveTab('ASSESSMENT_EXPLANATION')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-            activeTab === 'ASSESSMENT_EXPLANATION' ? 'bg-brand-forest text-white shadow-sm' : 'text-brand-charcoal/70 hover:bg-white/60'
-          }`}
-        >
-          7. Assessment Explanation
-        </button>
-
-        <button
-          onClick={() => setActiveTab('DECISION')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-            activeTab === 'DECISION' ? 'bg-emerald-700 text-white shadow-sm font-bold' : 'text-brand-charcoal/70 hover:bg-white/60'
-          }`}
-        >
-          8. Decision History
-        </button>
-
-      </div>
+        {/* RIGHT COLUMN: Active Tab Content (9 cols) */}
+        <div className="lg:col-span-9 min-w-0 space-y-6">
 
       {/* ============================================================== */}
       {/* TAB 1: OVERVIEW & EXECUTIVE DECISION BRIEFING                  */}
@@ -1578,6 +1610,9 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
 
         </div>
       )}
+
+        </div>
+      </div>
 
       {/* Interactive Decision Confirmation Dialog */}
       {isConfirmModalOpen && pendingDecisionAction && (
