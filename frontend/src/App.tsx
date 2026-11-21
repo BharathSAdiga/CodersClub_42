@@ -323,14 +323,9 @@ export function App() {
       <Navbar
         activePersonaName={`${activePersona.name} (${activePersona.badge.split(' ')[0]})`}
         onOpenPersonaModal={() => setIsPersonaModalOpen(true)}
-<<<<<<< HEAD
         isAuthenticated={apiService.isAuthenticated()}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onLogout={handleLogout}
-=======
-        isAuthenticated={false}
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
         onNavigate={(sec) => {
           if (sec === 'how-it-works') handleScrollTo('how-it-works-sec');
           if (sec === 'stories') handleScrollTo('stories-sec');

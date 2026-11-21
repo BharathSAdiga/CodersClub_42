@@ -3,11 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-<<<<<<< HEAD
-import { Search, ShieldCheck, UserX, UserCheck, Key, Lock, RefreshCw } from 'lucide-react';
-=======
-import { Search, ShieldCheck, UserX, UserCheck, Key, Lock, Info, Users } from 'lucide-react';
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
+import { Search, ShieldCheck, UserX, UserCheck, Key, Lock, RefreshCw, Info, Users } from 'lucide-react';
 import { mockAdminUsers, AdminUserItem } from '../data/mockAdminData';
 import { apiService, AuthUser } from '@/services/apiService';
 import { toast } from 'sonner';
@@ -96,46 +92,16 @@ export const UserManagementView: React.FC = () => {
   };
 
   const handleTerminateSession = (name: string) => {
-<<<<<<< HEAD
-    toast.success(`Active JWT sessions terminated for ${name}. Refresh tokens revoked.`);
-=======
-    toast.success(`Active sessions revoked for ${name}.`);
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
+    toast.success(`Active sessions revoked for ${name}. Refresh tokens invalidated.`);
   };
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto animate-in fade-in duration-300">
-<<<<<<< HEAD
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
-            Role-Based Access Control
-          </span>
-          <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-0.5">
-            User & Identity Management
-          </h2>
-          <p className="text-xs text-brand-charcoal/60">
-            Enforce institutional RBAC access policies across MSME borrowers, institutional credit officers, and auditors.
-          </p>
-        </div>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={fetchUsers}
-          disabled={isLoading}
-          className="gap-1.5 border-brand-forest/20 text-brand-forest hover:bg-brand-forest/10"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-          <span>Refresh Users</span>
-        </Button>
-=======
-      
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-brand-charcoal/10">
         <div>
           <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
-            User Access & Permissions
+            Role-Based Access Control
           </span>
           <h2 className="text-2xl font-display font-bold text-brand-charcoal mt-0.5">
             User Directory & Access Controls
@@ -145,10 +111,21 @@ export const UserManagementView: React.FC = () => {
           </p>
         </div>
 
-        <Badge variant="mint" className="text-xs font-semibold self-start sm:self-center">
-          <ShieldCheck className="w-3.5 h-3.5 mr-1 inline" /> {users.filter(u => u.status === 'ACTIVE').length} Active Accounts
-        </Badge>
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
+        <div className="flex items-center gap-2">
+          <Badge variant="mint" className="text-xs font-semibold">
+            <ShieldCheck className="w-3.5 h-3.5 mr-1 inline" /> {users.filter(u => u.status === 'ACTIVE').length} Active Accounts
+          </Badge>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchUsers}
+            disabled={isLoading}
+            className="gap-1.5 border-brand-forest/20 text-brand-forest hover:bg-brand-forest/10 h-8 text-xs"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+            <span>Refresh</span>
+          </Button>
+        </div>
       </div>
 
       {/* Filter & Search Bar */}
@@ -170,25 +147,15 @@ export const UserManagementView: React.FC = () => {
                 onChange={(e) => setSelectedRole(e.target.value)}
                 className="w-full h-10 px-3 text-xs rounded-xl border border-brand-forest/20 bg-brand-ivory text-brand-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-forest"
               >
-<<<<<<< HEAD
-                <option value="ALL">All Roles</option>
-                <option value="BORROWER">Borrower</option>
-                <option value="BORROWER_MICRO">Borrower (Micro)</option>
-                <option value="BORROWER_GROWTH">Borrower (Growth)</option>
-                <option value="LENDER">Lender</option>
-                <option value="LENDER_OFFICER">Lender (Officer)</option>
-                <option value="LENDER_MANAGER">Lender (Manager)</option>
-                <option value="ETHICS_AUDITOR">Ethics Auditor</option>
-                <option value="SUPER_ADMIN">Super Administrator</option>
-=======
                 <option value="ALL">All Account Roles</option>
+                <option value="BORROWER">All Borrowers</option>
                 <option value="BORROWER_MICRO">Micro Enterprise Borrower</option>
                 <option value="BORROWER_GROWTH">Growth SME Borrower</option>
+                <option value="LENDER">All Lenders</option>
                 <option value="LENDER_OFFICER">Credit Underwriter</option>
                 <option value="LENDER_MANAGER">Senior Credit Manager</option>
                 <option value="ETHICS_AUDITOR">Statutory Ethics Auditor</option>
                 <option value="SUPER_ADMIN">Platform Administrator</option>
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
               </select>
             </div>
           </div>
@@ -210,60 +177,6 @@ export const UserManagementView: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-forest/10">
-<<<<<<< HEAD
-              {filteredUsers.map((u) => (
-                <tr key={u.id} className="hover:bg-brand-forest/5 transition-colors">
-                  <td className="py-3 px-4">
-                    <div className="font-semibold text-brand-charcoal">{u.name}</div>
-                    <div className="text-[11px] font-mono text-brand-charcoal/50">{u.email}</div>
-                  </td>
-                  <td className="py-3 px-4">
-                    <Badge variant="outline" className="text-[10px] font-mono">
-                      {u.role}
-                    </Badge>
-                  </td>
-                  <td className="py-3 px-4 text-brand-charcoal/70">{u.organization}</td>
-                  <td className="py-3 px-4">
-                    <Badge
-                      variant={u.status === 'ACTIVE' ? 'mint' : 'terracotta'}
-                      className="text-[10px]"
-                    >
-                      {u.status}
-                    </Badge>
-                  </td>
-                  <td className="py-3 px-4 text-brand-charcoal/60 font-mono text-[11px]">
-                    {u.lastActive}
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleToggleStatus(u.id)}
-                        className="text-[11px] h-7 px-2"
-                        title={u.status === 'ACTIVE' ? 'Suspend User' : 'Activate User'}
-                      >
-                        {u.status === 'ACTIVE' ? (
-                          <UserX className="w-3.5 h-3.5 text-rose-600" />
-                        ) : (
-                          <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-                        )}
-                        <span className="ml-1">{u.status === 'ACTIVE' ? 'Suspend' : 'Activate'}</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleTerminateSession(u.name)}
-                        className="text-[11px] h-7 px-2 text-brand-charcoal/60 hover:text-brand-charcoal"
-                        title="Revoke Sessions"
-                      >
-                        <Key className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-=======
               {filteredUsers.map((u) => {
                 const roleInfo = getRoleLabel(u.role);
                 return (
@@ -308,7 +221,6 @@ export const UserManagementView: React.FC = () => {
                   </tr>
                 );
               })}
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
             </tbody>
           </table>
         </CardContent>

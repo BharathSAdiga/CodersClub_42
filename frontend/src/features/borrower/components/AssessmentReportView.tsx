@@ -3,20 +3,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PersonaProfile } from '@/types';
-<<<<<<< HEAD
 import { apiService, BackendCreditAppraisalMemo } from '@/services/apiService';
 import { formatINR } from '@/lib/utils';
-import { 
-  Sparkles, 
-  Check, 
-  AlertCircle, 
-  Info, 
-  ShieldCheck, 
-  Activity, 
-  Clock, 
-  ShieldAlert, 
-  FileCheck2, 
-=======
 import {
   Sparkles,
   Check,
@@ -27,7 +15,6 @@ import {
   Clock,
   ShieldAlert,
   FileCheck2,
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
   TrendingUp,
   Scale,
   Play,

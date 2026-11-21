@@ -4,95 +4,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PersonaProfile } from '@/types';
-<<<<<<< HEAD
-import { apiService } from '@/services/apiService';
-import { Building2, MapPin, Calendar, CheckCircle2, ShieldCheck, FileCheck, Edit3, X, Save } from 'lucide-react';
-import { toast } from 'sonner';
-
-export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = ({ activePersona }) => {
-  const [biz, setBiz] = useState(activePersona.business);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-
-  // Form State
-  const [tradeName, setTradeName] = useState(biz?.tradeName || 'Sri Balaji Provisions');
-  const [legalName, setLegalName] = useState(biz?.legalName || activePersona.name);
-  const [constitution, setConstitution] = useState(biz?.constitution || 'PROPRIETORSHIP');
-  const [sector, setSector] = useState(biz?.industrySector || 'RETAIL_KIRANA');
-  const [monthlyTurnover, setMonthlyTurnover] = useState(285000);
-  const [existingEmi, setExistingEmi] = useState(4500);
-  const [udyamReg, setUdyamReg] = useState(biz?.udyamRegistrationNumber || 'UDYAM-KR-03-0048921');
-  const [gstin, setGstin] = useState(biz?.gstin || '');
-
-  // Synchronize on mount if backend profile exists
-  useEffect(() => {
-    const bizId = biz?.id || 'msme_kirana_kanpur_001';
-    apiService.getBusinessProfile(bizId)
-      .then((bp) => {
-        if (bp) {
-          setTradeName(bp.trade_name || tradeName);
-          setLegalName(bp.legal_name || legalName);
-          setMonthlyTurnover(Number(bp.declared_monthly_turnover) || 285000);
-          setExistingEmi(Number(bp.declared_existing_monthly_emi) || 4500);
-          if (bp.udyam_reg_number) setUdyamReg(bp.udyam_reg_number);
-          if (bp.gstin) setGstin(bp.gstin);
-          setBiz((prev) => prev ? {
-            ...prev,
-            tradeName: bp.trade_name || prev.tradeName,
-            legalName: bp.legal_name || prev.legalName,
-          } : prev);
-        }
-      })
-      .catch(() => {});
-  }, [biz?.id]);
-
-  const handleSaveProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!tradeName.trim()) {
-      toast.error('Trade name cannot be empty.');
-      return;
-    }
-    if (monthlyTurnover < 0 || existingEmi < 0) {
-      toast.error('Turnover and EMI must be non-negative values.');
-      return;
-    }
-
-    setIsSaving(true);
-    const bizId = biz?.id || 'msme_kirana_kanpur_001';
-    try {
-      const updated = await apiService.updateBusinessProfile(bizId, {
-        trade_name: tradeName,
-        legal_name: legalName,
-        declared_monthly_turnover: monthlyTurnover,
-        declared_existing_monthly_emi: existingEmi,
-        udyam_reg_number: udyamReg,
-        gstin: gstin || undefined,
-        has_gstin: Boolean(gstin),
-      });
-
-      setBiz((prev) => prev ? {
-        ...prev,
-        tradeName: updated.trade_name,
-        legalName: updated.legal_name,
-        udyamRegistrationNumber: updated.udyam_reg_number || prev.udyamRegistrationNumber,
-        gstin: updated.gstin || undefined,
-      } : prev);
-
-      if (updated.declared_monthly_turnover) {
-        setMonthlyTurnover(Number(updated.declared_monthly_turnover));
-      }
-      if (updated.declared_existing_monthly_emi) {
-        setExistingEmi(Number(updated.declared_existing_monthly_emi));
-      }
-
-      toast.success('Business profile updated and persisted to SQLite database!');
-      setIsEditModalOpen(false);
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to update business profile');
-    } finally {
-      setIsSaving(false);
-    }
-=======
 import { 
   Building2, 
   MapPin, 
@@ -193,18 +104,13 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
 
     setIsEditing(false);
     toast.success('Business profile updated and persisted successfully.');
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
   };
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
-<<<<<<< HEAD
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-=======
       
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-brand-forest/10">
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
         <div>
           <span className="text-xs font-mono uppercase tracking-wider text-brand-forest font-bold">
             Official Entity Records
@@ -218,15 +124,6 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
         </div>
 
         <Button
-<<<<<<< HEAD
-          variant="outline"
-          size="sm"
-          onClick={() => setIsEditModalOpen(true)}
-          className="gap-1.5 border-brand-forest/20 text-brand-forest hover:bg-brand-forest/10"
-        >
-          <Edit3 className="w-3.5 h-3.5" />
-          <span>Edit Profile</span>
-=======
           variant="primary"
           size="sm"
           onClick={handleOpenEdit}
@@ -234,7 +131,6 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
         >
           <Edit3 className="w-3.5 h-3.5" />
           <span>Edit Profile Details</span>
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
         </Button>
       </div>
 
@@ -267,10 +163,6 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
                 <span className="font-semibold text-brand-forest">{profile.enterpriseClass}</span>
               </div>
             </div>
-            <div className="pt-2 border-t border-brand-forest/10">
-              <span className="text-brand-charcoal/50 block">Declared Monthly Turnover</span>
-              <span className="font-mono font-bold text-brand-forest">₹{monthlyTurnover.toLocaleString('en-IN')}</span>
-            </div>
           </CardContent>
         </Card>
 
@@ -298,13 +190,8 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
               </div>
             )}
             <div className="pt-2 border-t border-brand-forest/10">
-<<<<<<< HEAD
-              <span className="text-brand-charcoal/50 block">Declared Existing EMI</span>
-              <span className="font-mono font-bold text-brand-terracotta">₹{existingEmi.toLocaleString('en-IN')} / month</span>
-=======
               <span className="text-brand-charcoal/50 block">Operating Vintage</span>
               <span className="font-semibold text-brand-charcoal">{profile.yearsInOperation} Years in Commercial Operation</span>
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
             </div>
           </CardContent>
         </Card>
@@ -326,17 +213,10 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
             <MapPin className="w-4 h-4 text-brand-forest shrink-0 mt-0.5" />
             <div>
               <p className="text-brand-charcoal font-medium">
-<<<<<<< HEAD
-                {biz?.operatingAddress?.street || '14 Market Road, Gandhi Nagar'}, {biz?.operatingAddress?.city || 'Hubli'}, {biz?.operatingAddress?.state || 'Karnataka'} — {biz?.operatingAddress?.pincode || '580020'}
-              </p>
-              <span className="text-[10px] text-brand-charcoal/50 font-mono block mt-1">
-                Tier: {biz?.operatingAddress?.tier || 'TIER_2'} · Geolocation Lat/Long: 15.3647° N, 75.1240° E (Accuracy ~4m)
-=======
                 {profile.street}, {profile.city}, {profile.state} — {profile.pincode}
               </p>
               <span className="text-[10px] text-brand-charcoal/50 font-mono block mt-1">
                 Classification: {profile.tier} Cluster · Verification: Digital Public Registry Match
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
               </span>
             </div>
           </div>
@@ -344,19 +224,6 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
       </Card>
 
       {/* Edit Profile Modal */}
-<<<<<<< HEAD
-      {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-charcoal/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-lg bg-white rounded-3xl border border-brand-forest/20 shadow-elevated p-6 space-y-4 text-brand-charcoal">
-            <div className="flex items-center justify-between pb-3 border-b border-brand-forest/10">
-              <div className="flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-brand-forest" />
-                <h3 className="font-display font-bold text-base">Edit Business Profile</h3>
-              </div>
-              <button
-                onClick={() => setIsEditModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-brand-forest/10 hover:bg-brand-forest/20 flex items-center justify-center text-brand-charcoal"
-=======
       {isEditing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-charcoal/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="w-full max-w-lg bg-white rounded-3xl border border-brand-forest/20 shadow-elevated p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
@@ -373,76 +240,11 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
               <button
                 onClick={() => setIsEditing(false)}
                 className="w-7 h-7 rounded-full bg-brand-charcoal/10 hover:bg-brand-charcoal/20 flex items-center justify-center text-brand-charcoal"
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-<<<<<<< HEAD
-            <form onSubmit={handleSaveProfile} className="space-y-3.5 text-xs">
-              <div>
-                <label className="font-semibold block mb-1">Trade Name *</label>
-                <Input
-                  value={tradeName}
-                  onChange={(e) => setTradeName(e.target.value)}
-                  placeholder="e.g. Sri Balaji Provisions"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold block mb-1">Legal Entity Name</label>
-                <Input
-                  value={legalName}
-                  onChange={(e) => setLegalName(e.target.value)}
-                  placeholder="e.g. Ramesh Kumar"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="font-semibold block mb-1">Declared Monthly Turnover (₹) *</label>
-                  <Input
-                    type="number"
-                    min="0"
-                    value={monthlyTurnover}
-                    onChange={(e) => setMonthlyTurnover(Number(e.target.value))}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="font-semibold block mb-1">Declared Existing EMI (₹) *</label>
-                  <Input
-                    type="number"
-                    min="0"
-                    value={existingEmi}
-                    onChange={(e) => setExistingEmi(Number(e.target.value))}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="font-semibold block mb-1">Udyam Registration Number</label>
-                <Input
-                  value={udyamReg}
-                  onChange={(e) => setUdyamReg(e.target.value)}
-                  placeholder="UDYAM-XX-00-0000000"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold block mb-1">GSTIN (Optional)</label>
-                <Input
-                  value={gstin}
-                  onChange={(e) => setGstin(e.target.value)}
-                  placeholder="e.g. 29ABCDE1234F1Z5"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-3 border-t border-brand-forest/10">
-=======
             <form onSubmit={handleSave} className="space-y-4 text-xs">
               
               {/* Trade Name */}
@@ -575,17 +377,12 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
 
               {/* Modal Buttons */}
               <div className="flex justify-end gap-2.5 pt-3 border-t border-brand-forest/10">
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
-<<<<<<< HEAD
-                  onClick={() => setIsEditModalOpen(false)}
-=======
                   onClick={() => setIsEditing(false)}
                   className="rounded-full text-xs"
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
                 >
                   Cancel
                 </Button>
@@ -593,16 +390,6 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
                   type="submit"
                   variant="primary"
                   size="sm"
-<<<<<<< HEAD
-                  disabled={isSaving}
-                  className="gap-1.5 bg-brand-forest text-white"
-                >
-                  <Save className="w-3.5 h-3.5" />
-                  <span>{isSaving ? 'Saving...' : 'Save & Persist'}</span>
-                </Button>
-              </div>
-            </form>
-=======
                   className="rounded-full text-xs font-semibold px-5 bg-brand-forest text-white hover:bg-brand-forest/90"
                 >
                   Save Profile Changes
@@ -611,7 +398,6 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
 
             </form>
 
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
           </div>
         </div>
       )}

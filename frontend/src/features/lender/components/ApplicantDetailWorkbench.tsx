@@ -55,6 +55,7 @@ import {
 } from 'recharts';
 import { mockPipelineApplications, PipelineItem } from '../data/mockPipeline';
 import { QuaiAnchorCard } from '@/components/interactive/QuaiAnchorCard';
+import { apiService, BackendCreditAppraisalMemo } from '@/services/apiService';
 import { toast } from 'sonner';
 
 interface ApplicantDetailWorkbenchProps {
@@ -189,8 +190,7 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
     },
   ];
 
-<<<<<<< HEAD
-  const [liveTraces, setLiveTraces] = useState(defaultAgentExecutionTraces);
+  const [liveTraces, setLiveTraces] = useState<any[]>(agentExecutionTraces);
   const [isAssessmentRunning, setIsAssessmentRunning] = useState(false);
   const [liveMemo, setLiveMemo] = useState<BackendCreditAppraisalMemo | null>(null);
 
@@ -205,12 +205,12 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
         : 'msme_weaver_erode_003';
       const runRes = await apiService.triggerAssessment(targetBiz, application.requestedAmount);
       
-      setLiveTraces((prev) => prev.map((item, idx) => idx === 0 ? { ...item, status: 'IN_PROGRESS', findings: 'Pipeline initialized. Executing concurrent stages...' } : item));
+      setLiveTraces((prev: any[]) => prev.map((item: any, idx: number) => idx === 0 ? { ...item, status: 'IN_PROGRESS', findings: 'Pipeline initialized. Executing concurrent stages...' } : item));
 
       apiService.subscribeAssessmentStream(
         runRes.assessment_id,
-        (evt) => {
-          setLiveTraces((prev) => {
+        (evt: any) => {
+          setLiveTraces((prev: any[]) => {
             const next = [...prev];
             const agentIndexMap: Record<string, number> = {
               'Orchestrator': 0,
@@ -234,7 +234,7 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
             return next;
           });
         },
-        (err) => {
+        (err: any) => {
           console.warn('Live SSE stream notice:', err);
           setIsAssessmentRunning(false);
         },
@@ -262,9 +262,6 @@ export const ApplicantDetailWorkbench: React.FC<ApplicantDetailWorkbenchProps> =
     } catch {
       // Fallback local update
     }
-=======
-  const handleDecision = (action: 'APPROVE' | 'DECLINE') => {
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
     if (action === 'APPROVE') {
       setDecisionOutcome('APPROVED');
       toast.success(`Sanction Letter generated for ${application.businessName} (₹${recommendedAmount.toLocaleString('en-IN')}) and persisted to SQLite!`);

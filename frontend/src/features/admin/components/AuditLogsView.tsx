@@ -137,19 +137,11 @@ export const AuditLogsView: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-<<<<<<< HEAD
-          <Button variant="outline" size="sm" onClick={handleExportCsv} className="border-brand-charcoal/20">
-            <Download className="w-4 h-4 mr-1.5" /> Export Signed CSV
+          <Button variant="outline" size="sm" onClick={handleExportCsv} className="border-brand-charcoal/20 text-xs h-9">
+            <Download className="w-3.5 h-3.5 mr-1.5" /> Export Signed CSV
           </Button>
-          <Button variant="primary" size="sm" onClick={handleVerifyMerkle} className="bg-brand-forest text-white">
-            <ShieldCheck className="w-4 h-4 mr-1.5" /> Verify Merkle Root
-=======
-          <Button variant="outline" size="sm" className="border-brand-charcoal/20 text-xs h-9">
-            <Download className="w-3.5 h-3.5 mr-1.5" /> Export Audit CSV
-          </Button>
-          <Button variant="primary" size="sm" className="bg-brand-forest text-white text-xs h-9 font-semibold">
-            <ShieldCheck className="w-3.5 h-3.5 mr-1.5" /> Verify Ledger Integrity
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
+          <Button variant="primary" size="sm" onClick={handleVerifyMerkle} className="bg-brand-forest text-white text-xs h-9 font-semibold">
+            <ShieldCheck className="w-3.5 h-3.5 mr-1.5" /> Verify Merkle Root
           </Button>
         </div>
       </div>

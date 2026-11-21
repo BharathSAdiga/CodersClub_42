@@ -27,13 +27,6 @@ interface MockDocument {
   fileHash?: string;
 }
 
-<<<<<<< HEAD
-interface DocumentUploadViewProps {
-  activePersona?: any;
-}
-
-export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePersona }) => {
-=======
 const DEFAULT_DOCS: MockDocument[] = [
   { id: 'doc_1', name: 'PAN_Card_SriBalaji.pdf', size: '1.2 MB', type: 'PAN_CARD', status: 'VERIFIED', provenance: 'SOURCE_LABELLED' },
   { id: 'doc_2', name: 'Udyam_Registration_Certificate.pdf', size: '850 KB', type: 'UDYAM', status: 'VERIFIED', provenance: 'SOURCE_LABELLED' },
@@ -43,8 +36,11 @@ const DEFAULT_DOCS: MockDocument[] = [
 
 const STORAGE_KEY = 'udyoga_borrower_docs';
 
-export const DocumentUploadView: React.FC = () => {
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
+interface DocumentUploadViewProps {
+  activePersona?: any;
+}
+
+export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePersona }) => {
   const [activeTab, setActiveTab] = useState<'REGULATORY' | 'CSV_CASHBOOK'>('REGULATORY');
   const [documents, setDocuments] = useState<MockDocument[]>(() => {
     try {
@@ -60,8 +56,16 @@ export const DocumentUploadView: React.FC = () => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-<<<<<<< HEAD
   const bizId = activePersona?.business?.id || 'msme_kirana_kanpur_001';
+
+  // Sync with localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(documents));
+    } catch (e) {
+      console.warn('Could not persist documents to localStorage:', e);
+    }
+  }, [documents]);
 
   const handleDownloadSampleCsv = () => {
     const csvContent = `date,amount,direction,channel,counterparty_name,category,narration
@@ -103,16 +107,6 @@ export const DocumentUploadView: React.FC = () => {
     URL.revokeObjectURL(url);
     toast.success('Downloaded sample_msme_bank_statement.csv — You can now upload this directly!');
   };
-=======
-  // Sync with localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(documents));
-    } catch (e) {
-      console.warn('Could not persist documents to localStorage:', e);
-    }
-  }, [documents]);
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
 
   useEffect(() => {
     let isMounted = true;
@@ -206,14 +200,8 @@ export const DocumentUploadView: React.FC = () => {
 
     if (isCsv) {
       try {
-<<<<<<< HEAD
         setUploadProgress(50);
         const result = await apiService.uploadCsv(bizId, file);
-=======
-        setUploadProgress(40);
-        // Attempt backend endpoint
-        const result = await apiService.uploadCsv('msme_kirana_kanpur_001', file);
->>>>>>> 712803a122347b0da321ca5e249ee1ec4da9aa08
         setUploadProgress(100);
         setIsUploading(false);
         const newDoc: MockDocument = {
