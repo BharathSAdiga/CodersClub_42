@@ -294,7 +294,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
                   onChange={(e) => setRevenueShockPct(Number(e.target.value))}
                   className="w-full accent-rose-600 cursor-pointer h-2 bg-rose-100 rounded-lg"
                 />
-                <span className="text-[10px] text-brand-charcoal/50 block">Simulate revenue drop</span>
+                <span className="text-xs text-brand-charcoal/70 block">Simulate revenue drop</span>
               </div>
 
               {/* Slider 2: Expense Inflation */}
@@ -312,7 +312,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
                   onChange={(e) => setExpenseInflationPct(Number(e.target.value))}
                   className="w-full accent-amber-600 cursor-pointer h-2 bg-amber-100 rounded-lg"
                 />
-                <span className="text-[10px] text-brand-charcoal/50 block">COGS / Raw material increase</span>
+                <span className="text-xs text-brand-charcoal/70 block">COGS / Raw material increase</span>
               </div>
 
               {/* Slider 3: Receivables Delay */}
@@ -330,7 +330,7 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
                   onChange={(e) => setReceivablesDelayDays(Number(e.target.value))}
                   className="w-full accent-brand-forest cursor-pointer h-2 bg-brand-forest/20 rounded-lg"
                 />
-                <span className="text-[10px] text-brand-charcoal/50 block">Delayed customer clearances</span>
+                <span className="text-xs text-brand-charcoal/70 block">Delayed customer clearances</span>
               </div>
 
             </div>
@@ -339,40 +339,40 @@ export const WhatIfSimulatorView: React.FC<{ activePersona?: PersonaProfile }> =
           {/* Active Stress Shock Output Box */}
           <div className="p-4 rounded-2xl bg-brand-ivory border border-brand-forest/15 grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
             <div>
-              <span className="text-brand-charcoal/60 block text-[10px] uppercase font-mono">
+              <span className="text-brand-charcoal/70 block text-xs uppercase font-mono font-semibold">
                 Cash Available for Debt (CFADS)
               </span>
               <span className={`text-base font-bold font-mono mt-0.5 block ${activeCfads >= 0 ? 'text-brand-charcoal' : 'text-rose-700'}`}>
                 {activeCfads >= 0 ? '+' : ''}{formatINR(activeCfads)}/mo
               </span>
-              <span className="text-[10px] text-brand-charcoal/60">Against ₹{existingMonthlyEmi.toLocaleString('en-IN')} existing EMI</span>
+              <span className="text-xs text-brand-charcoal/70">Against ₹{existingMonthlyEmi.toLocaleString('en-IN')} existing EMI</span>
             </div>
 
             <div>
-              <span className="text-brand-charcoal/60 block text-[10px] uppercase font-mono">
+              <span className="text-brand-charcoal/70 block text-xs uppercase font-mono font-semibold">
                 Stressed Cash Runway
               </span>
               <span className="text-base font-bold font-mono text-brand-forest mt-0.5 block">
                 {activeDepletion}
               </span>
-              <span className="text-[10px] text-brand-charcoal/60">Buffer liquidity cushion</span>
+              <span className="text-xs text-brand-charcoal/70">Buffer liquidity cushion</span>
             </div>
 
             <div>
-              <span className="text-brand-charcoal/60 block text-[10px] uppercase font-mono">
+              <span className="text-brand-charcoal/70 block text-xs uppercase font-mono font-semibold">
                 Safe Loan Ceiling (P_max)
               </span>
               <span className="text-base font-bold font-mono text-brand-forest mt-0.5 block">
                 {formatINR(maxSafeLoan)}
               </span>
-              <span className="text-[10px] text-brand-charcoal/60">Max conservative borrow limit</span>
+              <span className="text-xs text-brand-charcoal/70">Max conservative borrow limit</span>
             </div>
 
             <div>
-              <span className="text-brand-charcoal/60 block text-[10px] uppercase font-mono">
+              <span className="text-brand-charcoal/70 block text-xs uppercase font-mono font-semibold">
                 Stress Finding Summary
               </span>
-              <p className="text-[11px] text-brand-charcoal/80 mt-0.5 leading-snug">
+              <p className="text-xs text-brand-charcoal/80 mt-0.5 leading-snug">
                 {activeCfads >= 0
                   ? 'Inflows remain solvent under stress with positive operating cash cushion.'
                   : 'Stressed burn triggers debt service caution. Tenor extension or sachet sweep advised.'}

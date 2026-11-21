@@ -286,34 +286,34 @@ export const BusinessProfileView: React.FC<{ activePersona: PersonaProfile }> = 
               <Receipt className="w-5 h-5 text-brand-forest" />
               <CardTitle className="text-lg font-display font-bold text-brand-charcoal">Declared Baseline Financials</CardTitle>
             </div>
-            <Badge variant="outline" className="border-brand-forest/30 text-brand-forest text-[11px]">
+            <Badge variant="outline" className="border-brand-forest/30 text-brand-forest text-xs font-semibold">
               Self-Reported & Verified
             </Badge>
           </div>
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div className="p-4 rounded-2xl bg-white border border-brand-forest/10 space-y-1">
-            <span className="text-brand-charcoal/60 block font-medium">Declared Monthly Turnover</span>
+            <span className="text-brand-charcoal/70 block font-medium">Declared Monthly Turnover</span>
             <div className="flex items-center gap-1.5">
               <span className="text-xl font-display font-bold text-brand-forest">
                 ₹{Number(profile.monthlyTurnover || 0).toLocaleString('en-IN')}
               </span>
-              <span className="text-[10px] text-brand-charcoal/50 font-mono">/ month</span>
+              <span className="text-xs text-brand-charcoal/60 font-mono">/ month</span>
             </div>
-            <p className="text-[11px] text-brand-charcoal/60 pt-1">
+            <p className="text-xs text-brand-charcoal/65 pt-1">
               Used as upper baseline benchmark for working capital calibration.
             </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-white border border-brand-forest/10 space-y-1">
-            <span className="text-brand-charcoal/60 block font-medium">Declared Existing Monthly EMI</span>
+            <span className="text-brand-charcoal/70 block font-medium">Declared Existing Monthly EMI</span>
             <div className="flex items-center gap-1.5">
               <span className="text-xl font-display font-bold text-brand-charcoal">
                 ₹{Number(profile.existingEmi || 0).toLocaleString('en-IN')}
               </span>
-              <span className="text-[10px] text-brand-charcoal/50 font-mono">/ month</span>
+              <span className="text-xs text-brand-charcoal/60 font-mono">/ month</span>
             </div>
-            <p className="text-[11px] text-brand-charcoal/60 pt-1">
+            <p className="text-xs text-brand-charcoal/65 pt-1">
               Factored into Debt Service Coverage Ratio (DSCR) calculations.
             </p>
           </div>

@@ -360,7 +360,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
 
         {isUploading && (
           <div className="mt-4 max-w-xs mx-auto space-y-1">
-            <div className="flex justify-between text-[10px] text-brand-charcoal/60">
+            <div className="flex justify-between text-xs text-brand-charcoal/70">
               <span>Encrypting and validating schema...</span>
               <span className="font-mono">{uploadProgress}%</span>
             </div>
@@ -377,7 +377,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
       {/* Data Provenance Transparency Notice */}
       <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
         <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-        <p className="text-[11px] leading-relaxed">
+        <p className="text-xs leading-relaxed">
           <strong>Evidence Classification Notice:</strong> Offline CSV cashbooks are ingested as <em>Self-Reported Unverified</em> data. For maximum credit vitality and lowest APR, connect your Account Aggregator (AA) and merchant UPI QR stream for <em>Independently Verified</em> provenance.
         </p>
       </div>
@@ -407,7 +407,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
                   </div>
                   <div>
                     <strong className="text-brand-charcoal block">{doc.name}</strong>
-                    <span className="text-[10px] text-brand-charcoal/50">
+                    <span className="text-xs text-brand-charcoal/60">
                       {doc.size} · {doc.type} {doc.recordCount ? `(${doc.recordCount} records)` : ''}
                     </span>
                   </div>
@@ -416,7 +416,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
                 <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-center">
                   <Badge 
                     variant="outline" 
-                    className={`text-[10px] ${
+                    className={`text-xs ${
                       doc.provenance === 'INDEPENDENTLY_VERIFIED'
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
                         : doc.provenance === 'SOURCE_LABELLED'
@@ -427,7 +427,7 @@ export const DocumentUploadView: React.FC<DocumentUploadViewProps> = ({ activePe
                     {doc.provenance.replace('_', ' ')}
                   </Badge>
 
-                  <span className="flex items-center gap-1 text-emerald-700 font-semibold text-[11px]">
+                  <span className="flex items-center gap-1 text-emerald-700 font-semibold text-xs">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     Verified
                   </span>

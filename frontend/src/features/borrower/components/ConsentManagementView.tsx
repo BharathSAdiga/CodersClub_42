@@ -241,7 +241,7 @@ export const ConsentManagementView: React.FC<{ activePersona?: PersonaProfile }>
                       <Badge variant={c.status === 'ACTIVE' ? 'mint' : c.status === 'REVOKED' ? 'outline' : 'terracotta'}>
                         {c.status}
                       </Badge>
-                      <span className="text-[10px] font-mono text-brand-charcoal/50 bg-brand-charcoal/5 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-mono text-brand-charcoal/60 bg-brand-charcoal/5 px-2 py-0.5 rounded-full">
                         {c.consent_version || 'v1.0'}
                       </span>
                     </div>
