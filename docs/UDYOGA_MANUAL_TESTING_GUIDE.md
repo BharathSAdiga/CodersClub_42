@@ -184,7 +184,7 @@ Log in as **Priya Patel** (or switch to borrower persona) to execute these tests
 This is the centerpiece of UDYOGA. You will trigger and witness all 7 AI agents executing sequentially via Server-Sent Events (SSE).
 
 ### Where to Test:
-Left Sidebar -> **"Underwriting Report (CAM)"** (`/borrower/assessment`).
+Left Sidebar -> **"7 Agent CAM"** (`/borrower/assessment`).
 
 ### Step-by-Step Test Procedure:
 1. Navigate to `/borrower/assessment`.
